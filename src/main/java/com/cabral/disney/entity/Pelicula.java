@@ -2,11 +2,9 @@ package com.cabral.disney.entity;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 @Data
@@ -18,4 +16,7 @@ public class Pelicula {
     private LocalDate fecha_creacion;
     private Integer calificacion;
     private String imagen;
+
+    @ManyToMany(mappedBy = "peliculas_asociadas")
+    private Set<Personaje> personajes_asociados;
 }

@@ -2,10 +2,8 @@ package com.cabral.disney.entity;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Data
@@ -20,4 +18,12 @@ public class Personaje {
     private Double peso;
     private String historia;
     private String imagen;
+
+    @ManyToMany
+    @JoinTable(
+            name = "pelicula_personaje",
+            joinColumns = @JoinColumn(name = "personaje_id"),
+            inverseJoinColumns = @JoinColumn(name = "pelicula_id")
+    )
+    private Set<Pelicula> peliculas_asociadas;
 }
