@@ -19,4 +19,8 @@ public class Pelicula {
 
     @ManyToMany(mappedBy = "peliculas_asociadas")
     private Set<Personaje> personajes_asociados;
+
+    @ManyToMany(mappedBy = "peliculas_asociadas")
+    private Set<Genero> generos_asociados;
+
 }

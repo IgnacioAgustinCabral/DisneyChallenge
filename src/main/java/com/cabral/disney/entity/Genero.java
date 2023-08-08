@@ -2,10 +2,8 @@ package com.cabral.disney.entity;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Data
@@ -14,4 +12,12 @@ public class Genero {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nombre;
+
+    @ManyToMany
+    @JoinTable(
+            name = "pelicula_genero",
+            joinColumns = @JoinColumn(name = "genero_id"),
+            inverseJoinColumns = @JoinColumn(name = "pelicula_id")
+    )
+    private Set<Personaje> peliculas_asociadas;
 }
