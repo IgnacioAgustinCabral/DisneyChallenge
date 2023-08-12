@@ -1,5 +1,6 @@
 package com.cabral.disney.service;
 
+import com.cabral.disney.dto.PersonajeDTO;
 import com.cabral.disney.entity.Personaje;
 import com.cabral.disney.repository.PersonajeRepository;
 import com.cabral.disney.service.impl.PersonajeServiceImpl;
@@ -7,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
@@ -31,5 +33,16 @@ public class PersonajeServiceImplTest {
         List<Personaje> personajes = this.personajeService.getAllPersonajes();
 
         assertThat(personajes).isNotNull();
+    }
+
+    @Test
+    public void shouldCreateAPersonajeAndReturnPersonajeDTO(){
+        Personaje personaje = Personaje.builder().imagen("images/characters/aladin.jpg").nombre("Aladin").peso(34.4).edad(25).historia("TEXTOTEXTOTEXTOTEXTOOOO").build();
+        PersonajeDTO personajeDTO = PersonajeDTO.builder().imagen("images/characters/aladin.jpg").nombre("Aladin").peso(34.4).edad(25).historia("TEXTOTEXTOTEXTOTEXTOOOO").build();
+
+        when(this.personajeRepository.save(Mockito.any(Personaje.class))).thenReturn(personaje);
+        PersonajeDTO savedPersonaje = this.personajeService.createPersonaje(personajeDTO);
+        assertThat(savedPersonaje).isNotNull();
+        assertThat(savedPersonaje).isInstanceOf(PersonajeDTO.class);
     }
 }

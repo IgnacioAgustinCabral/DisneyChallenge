@@ -1,6 +1,8 @@
 package com.cabral.disney.service.impl;
 
+import com.cabral.disney.dto.PersonajeDTO;
 import com.cabral.disney.entity.Personaje;
+import com.cabral.disney.mapper.PersonajeMapper;
 import com.cabral.disney.repository.PersonajeRepository;
 import com.cabral.disney.service.PersonajeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,5 +22,11 @@ public class PersonajeServiceImpl implements PersonajeService {
     @Override
     public List<Personaje> getAllPersonajes() {
         return this.personajeRepository.findAll();
+    }
+
+    public PersonajeDTO createPersonaje(PersonajeDTO personajeDTO) {
+        Personaje newPersonaje = this.personajeRepository.save(PersonajeMapper.mapToEntity(personajeDTO));
+
+        return PersonajeMapper.mapToDTO(newPersonaje);
     }
 }
