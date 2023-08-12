@@ -16,6 +16,7 @@ public class Personaje {
     private String nombre;
     private Integer edad;
     private Double peso;
+    @Column(columnDefinition = "TEXT")
     private String historia;
     private String imagen;
 
