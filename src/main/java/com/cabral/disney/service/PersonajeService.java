@@ -14,4 +14,6 @@ public interface PersonajeService {
     PersonajeDTO getPersonajeById(Long id) throws PersonajeNotFoundException;
 
     PersonajeDTO updatePersonaje(Long id, PersonajeDTO personajeDTO) throws PersonajeNotFoundException;
+
+    void deletePersonaje(Long id) throws PersonajeNotFoundException;
 }

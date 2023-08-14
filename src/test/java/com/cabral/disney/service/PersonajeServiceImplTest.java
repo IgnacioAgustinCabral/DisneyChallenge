@@ -19,8 +19,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class PersonajeServiceImplTest {
@@ -69,5 +68,18 @@ public class PersonajeServiceImplTest {
         assertThat(personajeDTO).isNotNull();
         assertThat(personajeDTO).isInstanceOf(PersonajeDTO.class);
 
+    }
+
+    @Test
+    public void shouldDeleteAPersonaje() throws PersonajeNotFoundException {
+
+        Personaje mockPersonaje = Mockito.mock(Personaje.class);
+
+        when(this.personajeRepository.findById(anyLong())).thenReturn(Optional.ofNullable(mockPersonaje));
+
+        this.personajeService.deletePersonaje(1L);
+
+        //verify that delete was called
+        verify(this.personajeRepository).delete(mockPersonaje);
     }
 }

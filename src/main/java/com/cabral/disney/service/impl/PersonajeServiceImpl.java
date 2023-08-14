@@ -52,4 +52,11 @@ public class PersonajeServiceImpl implements PersonajeService {
 
         return PersonajeMapper.mapToDTO(savedPersonaje);
     }
+
+    @Override
+    public void deletePersonaje(Long id) throws PersonajeNotFoundException {
+        Personaje personajeToDelete = this.personajeRepository.findById(id).orElseThrow(() -> new PersonajeNotFoundException("Personaje could not be found"));
+
+        this.personajeRepository.delete(personajeToDelete);
+    }
 }
