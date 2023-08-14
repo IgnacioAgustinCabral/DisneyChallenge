@@ -2,6 +2,7 @@ package com.cabral.disney.service.impl;
 
 import com.cabral.disney.dto.PersonajeDTO;
 import com.cabral.disney.entity.Personaje;
+import com.cabral.disney.exception.PersonajeNotFoundException;
 import com.cabral.disney.mapper.PersonajeMapper;
 import com.cabral.disney.repository.PersonajeRepository;
 import com.cabral.disney.service.PersonajeService;
@@ -24,9 +25,17 @@ public class PersonajeServiceImpl implements PersonajeService {
         return this.personajeRepository.findAll();
     }
 
+    @Override
     public PersonajeDTO createPersonaje(PersonajeDTO personajeDTO) {
         Personaje newPersonaje = this.personajeRepository.save(PersonajeMapper.mapToEntity(personajeDTO));
 
         return PersonajeMapper.mapToDTO(newPersonaje);
+    }
+
+    @Override
+    public PersonajeDTO getPersonajeById(Long id) throws PersonajeNotFoundException {
+        Personaje personaje = this.personajeRepository.findById(id).orElseThrow(() -> new PersonajeNotFoundException("Personaje could not be found"));
+
+        return PersonajeMapper.mapToDTO(personaje);
     }
 }

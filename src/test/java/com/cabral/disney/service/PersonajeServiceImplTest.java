@@ -2,6 +2,7 @@ package com.cabral.disney.service;
 
 import com.cabral.disney.dto.PersonajeDTO;
 import com.cabral.disney.entity.Personaje;
+import com.cabral.disney.exception.PersonajeNotFoundException;
 import com.cabral.disney.repository.PersonajeRepository;
 import com.cabral.disney.service.impl.PersonajeServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -13,8 +14,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -44,5 +47,13 @@ public class PersonajeServiceImplTest {
         PersonajeDTO savedPersonaje = this.personajeService.createPersonaje(personajeDTO);
         assertThat(savedPersonaje).isNotNull();
         assertThat(savedPersonaje).isInstanceOf(PersonajeDTO.class);
+    }
+
+    @Test
+    public void shouldGetAPersonajeByIdAndReturnPersonajeDTO() throws PersonajeNotFoundException {
+        when(this.personajeRepository.findById(anyLong())).thenReturn(Optional.ofNullable(mock(Personaje.class)));
+        PersonajeDTO retrievedPersonaje = this.personajeService.getPersonajeById(1L);
+        assertThat(retrievedPersonaje).isNotNull();
+        assertThat(retrievedPersonaje).isInstanceOf(PersonajeDTO.class);
     }
 }
