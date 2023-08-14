@@ -1,12 +1,18 @@
 package com.cabral.disney.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Set;
 
-@Entity
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Entity
 public class Personaje {
 
     @Id
@@ -14,10 +20,14 @@ public class Personaje {
     private Long id;
 
     private String nombre;
+
     private Integer edad;
+
     private Double peso;
+
     @Column(columnDefinition = "TEXT")
     private String historia;
+
     private String imagen;
 
     @ManyToMany
