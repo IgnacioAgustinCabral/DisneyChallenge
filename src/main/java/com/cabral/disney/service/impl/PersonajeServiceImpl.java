@@ -38,4 +38,18 @@ public class PersonajeServiceImpl implements PersonajeService {
 
         return PersonajeMapper.mapToDTO(personaje);
     }
+
+    @Override
+    public PersonajeDTO updatePersonaje(Long id, PersonajeDTO personajeDTO) throws PersonajeNotFoundException {
+        Personaje personaje = this.personajeRepository.findById(id).orElseThrow(() -> new PersonajeNotFoundException("Personaje could not be found"));
+        personaje.setEdad(personajeDTO.getEdad());
+        personaje.setHistoria(personajeDTO.getHistoria());
+        personaje.setImagen(personajeDTO.getImagen());
+        personaje.setPeso(personajeDTO.getPeso());
+        personaje.setNombre(personajeDTO.getNombre());
+
+        Personaje savedPersonaje = this.personajeRepository.save(personaje);
+
+        return PersonajeMapper.mapToDTO(savedPersonaje);
+    }
 }

@@ -18,6 +18,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -55,5 +56,18 @@ public class PersonajeServiceImplTest {
         PersonajeDTO retrievedPersonaje = this.personajeService.getPersonajeById(1L);
         assertThat(retrievedPersonaje).isNotNull();
         assertThat(retrievedPersonaje).isInstanceOf(PersonajeDTO.class);
+    }
+
+    @Test
+    public void shouldUpdateAPersonajeAndReturnPersonajeDTO() throws PersonajeNotFoundException {
+
+        when(this.personajeRepository.findById(anyLong())).thenReturn(Optional.ofNullable(mock(Personaje.class)));
+        when(this.personajeRepository.save(any(Personaje.class))).thenReturn(mock(Personaje.class));
+
+        PersonajeDTO personajeDTO = this.personajeService.updatePersonaje(1L,mock(PersonajeDTO.class));
+
+        assertThat(personajeDTO).isNotNull();
+        assertThat(personajeDTO).isInstanceOf(PersonajeDTO.class);
+
     }
 }
