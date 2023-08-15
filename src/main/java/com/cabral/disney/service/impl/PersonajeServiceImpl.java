@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PersonajeServiceImpl implements PersonajeService {
@@ -21,8 +22,10 @@ public class PersonajeServiceImpl implements PersonajeService {
     }
 
     @Override
-    public List<Personaje> getAllPersonajes() {
-        return this.personajeRepository.findAll();
+    public List<PersonajeDTO> getAllPersonajes() {
+        List<Personaje> personajes = this.personajeRepository.findAll();
+        List<PersonajeDTO> personajeDTOS = personajes.stream().map(personaje -> PersonajeMapper.mapToDTO(personaje)).collect(Collectors.toList());
+        return personajeDTOS;
     }
 
     @Override

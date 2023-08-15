@@ -33,7 +33,7 @@ public class PersonajeServiceImplTest {
     public void shouldReturnAllPersonajes(){
         when(this.personajeRepository.findAll()).thenReturn(Arrays.asList(mock(Personaje.class)));
 
-        List<Personaje> personajes = this.personajeService.getAllPersonajes();
+        List<PersonajeDTO> personajes = this.personajeService.getAllPersonajes();
 
         assertThat(personajes).isNotNull();
     }
