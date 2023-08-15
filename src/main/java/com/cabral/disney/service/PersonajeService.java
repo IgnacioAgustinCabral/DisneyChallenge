@@ -1,13 +1,12 @@
 package com.cabral.disney.service;
 
 import com.cabral.disney.dto.PersonajeDTO;
-import com.cabral.disney.entity.Personaje;
 import com.cabral.disney.exception.PersonajeNotFoundException;
 
 import java.util.List;
 
 public interface PersonajeService {
-    List<Personaje> getAllPersonajes();
+    List<PersonajeDTO> getAllPersonajes();
 
     PersonajeDTO createPersonaje(PersonajeDTO personajeDTO);
 
