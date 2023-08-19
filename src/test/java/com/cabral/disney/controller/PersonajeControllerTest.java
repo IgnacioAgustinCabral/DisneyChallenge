@@ -3,6 +3,8 @@ package com.cabral.disney.controller;
 import com.cabral.disney.dto.PersonajeDTO;
 import com.cabral.disney.exception.PersonajeNotFoundException;
 import com.cabral.disney.service.PersonajeService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,6 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -31,6 +34,9 @@ public class PersonajeControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @MockBean
     private PersonajeService personajeService;
@@ -71,6 +77,19 @@ public class PersonajeControllerTest {
                 .contentType(MediaType.APPLICATION_JSON));
 
         response.andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
+    public void testUpdatePersonajeEndpointAndResponseIs200_OK() throws Exception {
+        PersonajeDTO updatedPersonajeDTO = new PersonajeDTO();
+
+        when(this.personajeService.updatePersonaje(anyLong(),eq(updatedPersonajeDTO))).thenReturn(updatedPersonajeDTO);
+
+        ResultActions response = mockMvc.perform(put("/personajes/personaje/{id}",1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updatedPersonajeDTO)));
+
+        response.andExpect(MockMvcResultMatchers.status().isOk());
     }
 }
 
