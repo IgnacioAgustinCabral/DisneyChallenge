@@ -1,6 +1,7 @@
 package com.cabral.disney.controller;
 
 import com.cabral.disney.dto.PersonajeDTO;
+import com.cabral.disney.exception.PersonajeNotFoundException;
 import com.cabral.disney.service.PersonajeService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -59,6 +60,17 @@ public class PersonajeControllerTest {
                 .contentType(MediaType.APPLICATION_JSON));
 
         response.andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void testGetPersonajeEndpointAndResponseIs404_NOT_FOUND() throws Exception {
+
+        when(this.personajeService.getPersonajeById(anyLong())).thenThrow(PersonajeNotFoundException.class);
+
+        ResultActions response = mockMvc.perform(get("/personajes/personaje/{id}",1)
+                .contentType(MediaType.APPLICATION_JSON));
+
+        response.andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 }
 
