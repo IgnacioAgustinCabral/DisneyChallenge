@@ -18,6 +18,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
@@ -37,11 +39,23 @@ public class PersonajeControllerTest {
 
 
     @Test
-    public void testGetAllPersonajesEndpointAndResponseIsOK() throws Exception {
+    public void testGetAllPersonajesEndpointAndResponseIs200_OK() throws Exception {
         List<PersonajeDTO> personajeDTOs = Arrays.asList(new PersonajeDTO());
 
         when(this.personajeService.getAllPersonajes()).thenReturn(personajeDTOs);
         ResultActions response = mockMvc.perform(get("/personajes/personaje/all")
+                .contentType(MediaType.APPLICATION_JSON));
+
+        response.andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void testGetPersonajeEndpointAndResponseIs200_OK() throws Exception {
+
+        PersonajeDTO personajeDTO = new PersonajeDTO();
+        when(this.personajeService.getPersonajeById(anyLong())).thenReturn(personajeDTO);
+
+        ResultActions response = mockMvc.perform(get("/personajes/personaje/{id}",1)
                 .contentType(MediaType.APPLICATION_JSON));
 
         response.andExpect(MockMvcResultMatchers.status().isOk());
