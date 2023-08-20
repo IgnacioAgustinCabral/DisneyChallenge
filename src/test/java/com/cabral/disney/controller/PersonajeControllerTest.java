@@ -106,5 +106,14 @@ public class PersonajeControllerTest {
 
         response.andExpect(MockMvcResultMatchers.status().isCreated());
     }
+
+    @Test
+    public void testDeletePersonajeEndpointAndResponseIs204_NO_CONTENT() throws Exception {
+
+        ResultActions response = mockMvc.perform(delete("/personajes/personaje/{id}", 1)
+                .contentType(MediaType.APPLICATION_JSON));
+
+        response.andExpect(MockMvcResultMatchers.status().isNoContent());
+    }
 }
 
