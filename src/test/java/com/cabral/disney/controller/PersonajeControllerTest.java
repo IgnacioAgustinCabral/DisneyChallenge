@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
@@ -53,7 +54,7 @@ public class PersonajeControllerTest {
 
         PersonajeDTO personajeDTO = new PersonajeDTO();
 
-        ResultActions response = mockMvc.perform(get("/personajes/personaje/{id}",1)
+        ResultActions response = mockMvc.perform(get("/personajes/personaje/{id}", 1)
                 .contentType(MediaType.APPLICATION_JSON));
 
         response.andExpect(MockMvcResultMatchers.status().isOk());
@@ -64,7 +65,7 @@ public class PersonajeControllerTest {
 
         when(this.personajeService.getPersonajeById(anyLong())).thenThrow(PersonajeNotFoundException.class);
 
-        ResultActions response = mockMvc.perform(get("/personajes/personaje/{id}",1)
+        ResultActions response = mockMvc.perform(get("/personajes/personaje/{id}", 1)
                 .contentType(MediaType.APPLICATION_JSON));
 
         response.andExpect(MockMvcResultMatchers.status().isNotFound());
@@ -74,11 +75,24 @@ public class PersonajeControllerTest {
     public void testUpdatePersonajeEndpointAndResponseIs200_OK() throws Exception {
         PersonajeDTO updatedPersonajeDTO = new PersonajeDTO();
 
-        ResultActions response = mockMvc.perform(put("/personajes/personaje/{id}",1)
+        ResultActions response = mockMvc.perform(put("/personajes/personaje/{id}", 1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updatedPersonajeDTO)));
 
         response.andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void testUpdatePersonajeEndpointAndResponseIs404_NOT_FOUND() throws Exception {
+        PersonajeDTO updatedPersonajeDTO = new PersonajeDTO();
+
+        when(this.personajeService.updatePersonaje(anyLong(), eq(updatedPersonajeDTO))).thenThrow(PersonajeNotFoundException.class);
+
+        ResultActions response = mockMvc.perform(put("/personajes/personaje/{id}", 1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updatedPersonajeDTO)));
+
+        response.andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test

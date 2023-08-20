@@ -22,12 +22,12 @@ public class PersonajeController {
     }
 
     @GetMapping("/personaje/all")
-    public ResponseEntity<List<PersonajeDTO>> getPersonajes(){
+    public ResponseEntity<List<PersonajeDTO>> getPersonajes() {
         return new ResponseEntity<>(this.personajeService.getAllPersonajes(), HttpStatus.OK);
     }
 
     @GetMapping("/personaje/{id}")
-    public ResponseEntity<?> getPersonaje(@PathVariable Long id){
+    public ResponseEntity<?> getPersonaje(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(this.personajeService.getPersonajeById(id));
         } catch (PersonajeNotFoundException exception) {
@@ -36,17 +36,17 @@ public class PersonajeController {
     }
 
     @PutMapping("/personaje/{id}")
-    public ResponseEntity<?> updatePersonaje(@PathVariable Long id, @RequestBody PersonajeDTO personaje){
+    public ResponseEntity<?> updatePersonaje(@PathVariable Long id, @RequestBody PersonajeDTO personaje) {
         try {
-            return ResponseEntity.ok(this.personajeService.updatePersonaje(id,personaje));
+            return ResponseEntity.ok(this.personajeService.updatePersonaje(id, personaje));
         } catch (PersonajeNotFoundException exception) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
         }
     }
 
     @PostMapping("/personaje")
-    public ResponseEntity<PersonajeDTO> createPersonaje(@RequestBody PersonajeDTO personajeDTO){
-        return new ResponseEntity<>(this.personajeService.createPersonaje(personajeDTO),HttpStatus.CREATED);
+    public ResponseEntity<PersonajeDTO> createPersonaje(@RequestBody PersonajeDTO personajeDTO) {
+        return new ResponseEntity<>(this.personajeService.createPersonaje(personajeDTO), HttpStatus.CREATED);
     }
 }
 
