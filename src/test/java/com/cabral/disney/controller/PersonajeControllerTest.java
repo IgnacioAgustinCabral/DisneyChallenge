@@ -3,7 +3,6 @@ package com.cabral.disney.controller;
 import com.cabral.disney.dto.PersonajeDTO;
 import com.cabral.disney.exception.PersonajeNotFoundException;
 import com.cabral.disney.service.PersonajeService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,12 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.Arrays;
-import java.util.List;
-
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
@@ -47,9 +41,7 @@ public class PersonajeControllerTest {
 
     @Test
     public void testGetAllPersonajesEndpointAndResponseIs200_OK() throws Exception {
-        List<PersonajeDTO> personajeDTOs = Arrays.asList(new PersonajeDTO());
 
-        when(this.personajeService.getAllPersonajes()).thenReturn(personajeDTOs);
         ResultActions response = mockMvc.perform(get("/personajes/personaje/all")
                 .contentType(MediaType.APPLICATION_JSON));
 
@@ -60,7 +52,6 @@ public class PersonajeControllerTest {
     public void testGetPersonajeEndpointAndResponseIs200_OK() throws Exception {
 
         PersonajeDTO personajeDTO = new PersonajeDTO();
-        when(this.personajeService.getPersonajeById(anyLong())).thenReturn(personajeDTO);
 
         ResultActions response = mockMvc.perform(get("/personajes/personaje/{id}",1)
                 .contentType(MediaType.APPLICATION_JSON));
@@ -82,8 +73,6 @@ public class PersonajeControllerTest {
     @Test
     public void testUpdatePersonajeEndpointAndResponseIs200_OK() throws Exception {
         PersonajeDTO updatedPersonajeDTO = new PersonajeDTO();
-
-        when(this.personajeService.updatePersonaje(anyLong(),eq(updatedPersonajeDTO))).thenReturn(updatedPersonajeDTO);
 
         ResultActions response = mockMvc.perform(put("/personajes/personaje/{id}",1)
                 .contentType(MediaType.APPLICATION_JSON)
