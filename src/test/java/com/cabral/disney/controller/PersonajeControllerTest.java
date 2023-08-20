@@ -91,5 +91,17 @@ public class PersonajeControllerTest {
 
         response.andExpect(MockMvcResultMatchers.status().isOk());
     }
+
+    @Test
+    public void testCreatePersonajeEndpointAndResponseIs201_CREATED() throws Exception {
+
+        PersonajeDTO personajeDTO = new PersonajeDTO();
+
+        ResultActions response = mockMvc.perform(post("/personajes/personaje")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(personajeDTO)));
+
+        response.andExpect(MockMvcResultMatchers.status().isCreated());
+    }
 }
 
