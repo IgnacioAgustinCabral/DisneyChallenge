@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
@@ -114,6 +115,17 @@ public class PersonajeControllerTest {
                 .contentType(MediaType.APPLICATION_JSON));
 
         response.andExpect(MockMvcResultMatchers.status().isNoContent());
+    }
+
+    @Test
+    public void testDeletePersonajeEndpointAndResponseIs404_NOT_FOUND() throws Exception {
+
+        doThrow(PersonajeNotFoundException.class).when(this.personajeService).deletePersonaje(anyLong());
+
+        ResultActions response = mockMvc.perform(delete("/personajes/personaje/{id}", 1)
+                .contentType(MediaType.APPLICATION_JSON));
+
+        response.andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 }
 
