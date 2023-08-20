@@ -48,5 +48,15 @@ public class PersonajeController {
     public ResponseEntity<PersonajeDTO> createPersonaje(@RequestBody PersonajeDTO personajeDTO) {
         return new ResponseEntity<>(this.personajeService.createPersonaje(personajeDTO), HttpStatus.CREATED);
     }
+
+    @DeleteMapping("/personaje/{id}")
+    public ResponseEntity<String> deletePersonaje(@PathVariable Long id) {
+        try {
+            this.personajeService.deletePersonaje(id);
+            return ResponseEntity.noContent().build();
+        } catch (PersonajeNotFoundException exception) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
+        }
+    }
 }
 
