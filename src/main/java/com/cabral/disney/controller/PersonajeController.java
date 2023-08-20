@@ -35,7 +35,7 @@ public class PersonajeController {
         }
     }
 
-    @PutMapping("personaje/{id}")
+    @PutMapping("/personaje/{id}")
     public ResponseEntity<?> updatePersonaje(@PathVariable Long id, @RequestBody PersonajeDTO personaje){
         try {
             return ResponseEntity.ok(this.personajeService.updatePersonaje(id,personaje));
@@ -43,4 +43,10 @@ public class PersonajeController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
         }
     }
+
+    @PostMapping("/personaje")
+    public ResponseEntity<PersonajeDTO> createPersonaje(@RequestBody PersonajeDTO personajeDTO){
+        return new ResponseEntity<>(this.personajeService.createPersonaje(personajeDTO),HttpStatus.CREATED);
+    }
 }
+
