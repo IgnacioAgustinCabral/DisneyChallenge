@@ -12,7 +12,10 @@ public class Pelicula {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private String titulo;
+
     private LocalDate fecha_creacion;
     private Integer calificacion;
     private String imagen;

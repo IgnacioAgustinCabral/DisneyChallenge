@@ -19,10 +19,13 @@ public class Personaje {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String nombre;
 
+    @Column(nullable = false)
     private Integer edad;
 
+    @Column(nullable = false)
     private Double peso;
 
     @Column(columnDefinition = "TEXT")
