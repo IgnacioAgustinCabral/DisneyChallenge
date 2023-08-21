@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -29,7 +30,7 @@ public class PeliculaServiceImplTest {
     private PeliculaServiceImpl peliculaService;
 
     @Test
-    public void shouldGetAllPeliculasAndReturnListOfPeliculaDTO(){
+    public void shouldGetAllPeliculasAndReturnListOfPeliculaDTO() {
         when(this.peliculaRepository.findAll()).thenReturn(Arrays.asList(mock(Pelicula.class)));
         List<PeliculaDTO> peliculas = this.peliculaService.getAllPeliculas();
 
@@ -44,5 +45,15 @@ public class PeliculaServiceImplTest {
         PeliculaDTO peliculaDTO = this.peliculaService.getPeliculaById(anyLong());
 
         assertThat(peliculaDTO).isInstanceOf(PeliculaDTO.class);
+    }
+
+    @Test
+    public void shouldCreateAPeliculaAndReturnPeliculaDTO() {
+
+        when(this.peliculaRepository.save(any(Pelicula.class))).thenReturn(mock(Pelicula.class));
+
+        PeliculaDTO createdPelicula = this.peliculaService.createPelicula(mock(PeliculaDTO.class));
+
+        assertThat(createdPelicula).isInstanceOf(PeliculaDTO.class);
     }
 }

@@ -33,4 +33,11 @@ public class PeliculaServiceImpl implements PeliculaService {
 
         return PeliculaMapper.mapToDTO(pelicula);
     }
+
+    @Override
+    public PeliculaDTO createPelicula(PeliculaDTO peliculaDTO) {
+        Pelicula newPelicula = this.peliculaRepository.save(PeliculaMapper.mapToEntity(peliculaDTO));
+
+        return PeliculaMapper.mapToDTO(newPelicula);
+    }
 }
