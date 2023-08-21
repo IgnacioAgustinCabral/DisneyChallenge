@@ -2,6 +2,7 @@ package com.cabral.disney.controller;
 
 import com.cabral.disney.dto.PersonajeDTO;
 import com.cabral.disney.exception.PersonajeNotFoundException;
+import com.cabral.disney.exception.PersonajeSearchResultEmptyException;
 import com.cabral.disney.service.PersonajeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -17,8 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -135,6 +135,19 @@ public class PersonajeControllerTest {
                 .contentType(MediaType.APPLICATION_JSON));
 
         response.andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void testSearchPersonajeEndpointAndResponseIs404_NOT_FOUND() throws Exception {
+
+        when(this.personajeService.searchPersonaje(anyString())).thenThrow(PersonajeSearchResultEmptyException.class);
+
+        ResultActions response = mockMvc.perform(get("/personajes/personaje")
+                .param("name","something")
+                .contentType(MediaType.APPLICATION_JSON));
+
+        response.andExpect(MockMvcResultMatchers.status().isNotFound());
+
     }
 }
 
