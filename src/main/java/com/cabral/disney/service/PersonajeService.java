@@ -2,7 +2,7 @@ package com.cabral.disney.service;
 
 import com.cabral.disney.dto.PersonajeDTO;
 import com.cabral.disney.exception.PersonajeNotFoundException;
-import com.cabral.disney.exception.PersonajeSearchResultEmptyException;
+import com.cabral.disney.exception.PersonajeSearchEmptyResultException;
 
 import java.util.List;
 
@@ -17,5 +17,5 @@ public interface PersonajeService {
 
     void deletePersonaje(Long id) throws PersonajeNotFoundException;
 
-    List<PersonajeDTO> searchPersonaje(String name) throws PersonajeSearchResultEmptyException;
+    List<PersonajeDTO> searchPersonaje(String name) throws PersonajeSearchEmptyResultException;
 }

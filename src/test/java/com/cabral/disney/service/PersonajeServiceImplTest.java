@@ -3,7 +3,7 @@ package com.cabral.disney.service;
 import com.cabral.disney.dto.PersonajeDTO;
 import com.cabral.disney.entity.Personaje;
 import com.cabral.disney.exception.PersonajeNotFoundException;
-import com.cabral.disney.exception.PersonajeSearchResultEmptyException;
+import com.cabral.disney.exception.PersonajeSearchEmptyResultException;
 import com.cabral.disney.repository.PersonajeRepository;
 import com.cabral.disney.service.impl.PersonajeServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -87,7 +87,7 @@ public class PersonajeServiceImplTest {
     }
 
     @Test
-    public void shouldSearchAPersonajeByNameAndReturnAListOfPersonajeDTONotEmpty() throws PersonajeSearchResultEmptyException {
+    public void shouldSearchAPersonajeByNameAndReturnAListOfPersonajeDTONotEmpty() throws PersonajeSearchEmptyResultException {
 
         when(this.personajeRepository.searchPersonaje(anyString())).thenReturn(Arrays.asList(mock(Personaje.class)));
 
@@ -100,7 +100,7 @@ public class PersonajeServiceImplTest {
     public void shouldSearchAPersonajeByNameAndThrowPersonajeSearchResultEmptyExceptionWhenNothingWasFound(){
         when(this.personajeRepository.searchPersonaje(anyString())).thenReturn(Collections.emptyList());
 
-        assertThrows(PersonajeSearchResultEmptyException.class, () -> {
+        assertThrows(PersonajeSearchEmptyResultException.class, () -> {
             this.personajeService.searchPersonaje(anyString());
         });
     }

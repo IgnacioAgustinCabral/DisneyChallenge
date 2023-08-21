@@ -2,7 +2,7 @@ package com.cabral.disney.controller;
 
 import com.cabral.disney.dto.PersonajeDTO;
 import com.cabral.disney.exception.PersonajeNotFoundException;
-import com.cabral.disney.exception.PersonajeSearchResultEmptyException;
+import com.cabral.disney.exception.PersonajeSearchEmptyResultException;
 import com.cabral.disney.service.PersonajeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -131,7 +131,7 @@ public class PersonajeControllerTest {
     @Test
     public void testSearchPersonajEndpointAndResponseIs200_OK() throws Exception {
         ResultActions response = mockMvc.perform(get("/personajes/personaje/")
-                .param("name","example")
+                .param("name", "example")
                 .contentType(MediaType.APPLICATION_JSON));
 
         response.andExpect(MockMvcResultMatchers.status().isOk());
@@ -140,14 +140,13 @@ public class PersonajeControllerTest {
     @Test
     public void testSearchPersonajeEndpointAndResponseIs404_NOT_FOUND() throws Exception {
 
-        when(this.personajeService.searchPersonaje(anyString())).thenThrow(PersonajeSearchResultEmptyException.class);
+        when(this.personajeService.searchPersonaje(anyString())).thenThrow(PersonajeSearchEmptyResultException.class);
 
         ResultActions response = mockMvc.perform(get("/personajes/personaje")
-                .param("name","something")
+                .param("name", "something")
                 .contentType(MediaType.APPLICATION_JSON));
 
         response.andExpect(MockMvcResultMatchers.status().isNotFound());
-
     }
 }
 
