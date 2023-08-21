@@ -14,10 +14,12 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -92,5 +94,14 @@ public class PersonajeServiceImplTest {
         List<PersonajeDTO> personajesDTOs = this.personajeService.searchPersonaje(anyString());
 
         assertThat(personajesDTOs).isNotEmpty();
+    }
+
+    @Test
+    public void shouldSearchAPersonajeByNameAndThrowPersonajeSearchResultEmptyExceptionWhenNothingWasFound(){
+        when(this.personajeRepository.searchPersonaje(anyString())).thenReturn(Collections.emptyList());
+
+        assertThrows(PersonajeSearchResultEmptyException.class, () -> {
+            this.personajeService.searchPersonaje(anyString());
+        });
     }
 }
