@@ -2,6 +2,7 @@ package com.cabral.disney.controller;
 
 import com.cabral.disney.dto.PersonajeDTO;
 import com.cabral.disney.exception.PersonajeNotFoundException;
+import com.cabral.disney.exception.PersonajeSearchEmptyResultException;
 import com.cabral.disney.service.PersonajeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,6 +35,16 @@ public class PersonajeController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
         }
     }
+
+    @GetMapping("/personaje")
+    public ResponseEntity<?> searchPersonaje(@RequestParam String name) {
+        try {
+            return ResponseEntity.ok(this.personajeService.searchPersonaje(name));
+        } catch (PersonajeSearchEmptyResultException exception) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
+        }
+    }
+
 
     @PutMapping("/personaje/{id}")
     public ResponseEntity<?> updatePersonaje(@PathVariable Long id, @RequestBody PersonajeDTO personaje) {
