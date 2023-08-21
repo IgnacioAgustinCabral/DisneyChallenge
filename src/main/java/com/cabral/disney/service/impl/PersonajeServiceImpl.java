@@ -3,7 +3,7 @@ package com.cabral.disney.service.impl;
 import com.cabral.disney.dto.PersonajeDTO;
 import com.cabral.disney.entity.Personaje;
 import com.cabral.disney.exception.PersonajeNotFoundException;
-import com.cabral.disney.exception.PersonajeSearchResultEmptyException;
+import com.cabral.disney.exception.PersonajeSearchEmptyResultException;
 import com.cabral.disney.mapper.PersonajeMapper;
 import com.cabral.disney.repository.PersonajeRepository;
 import com.cabral.disney.service.PersonajeService;
@@ -65,11 +65,11 @@ public class PersonajeServiceImpl implements PersonajeService {
     }
 
     @Override
-    public List<PersonajeDTO> searchPersonaje(String name) throws PersonajeSearchResultEmptyException {
+    public List<PersonajeDTO> searchPersonaje(String name) throws PersonajeSearchEmptyResultException {
         List<Personaje> personajes = this.personajeRepository.searchPersonaje(name);
 
         if(personajes.isEmpty()){
-            throw new PersonajeSearchResultEmptyException("No Personaje with those parameters could be found.");
+            throw new PersonajeSearchEmptyResultException("No Personaje with those parameters could be found.");
         } else {
             List<PersonajeDTO> personajeDTOS = personajes.stream().map(PersonajeMapper::mapToDTO).collect(Collectors.toList());
             return personajeDTOS;
