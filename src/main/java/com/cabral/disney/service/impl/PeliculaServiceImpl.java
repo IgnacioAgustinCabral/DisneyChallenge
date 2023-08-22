@@ -55,4 +55,11 @@ public class PeliculaServiceImpl implements PeliculaService {
 
         return PeliculaMapper.mapToDTO(updatedPelicula);
     }
+
+    @Override
+    public void deletePelicula(Long id) throws PeliculaNotFoundException {
+        Pelicula pelicula = this.peliculaRepository.findById(id).orElseThrow(() -> new PeliculaNotFoundException("Pelicula could not be found."));
+
+        this.peliculaRepository.delete(pelicula);
+    }
 }

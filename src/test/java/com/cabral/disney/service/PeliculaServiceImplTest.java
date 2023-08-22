@@ -18,8 +18,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class PeliculaServiceImplTest {
@@ -65,5 +64,16 @@ public class PeliculaServiceImplTest {
         PeliculaDTO updatedPelicula = this.peliculaService.updatePelicula(1L,mock(PeliculaDTO.class));
 
         assertThat(updatedPelicula).isInstanceOf(PeliculaDTO.class);
+    }
+
+    @Test
+    public void shouldDeleteAPeliculaById() throws PeliculaNotFoundException {
+        Pelicula mockPelicula = mock(Pelicula.class);
+
+        when(this.peliculaRepository.findById(anyLong())).thenReturn(Optional.ofNullable(mockPelicula));
+
+        this.peliculaService.deletePelicula(1L);
+
+        verify(this.peliculaRepository).delete(mockPelicula);
     }
 }
