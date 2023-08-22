@@ -37,7 +37,7 @@ public class PersonajeController {
     }
 
     @GetMapping("/personaje")
-    public ResponseEntity<?> searchPersonaje(@RequestParam String name) {
+    public ResponseEntity<?> searchPersonaje(@RequestParam(required = false) String name) {
         try {
             return ResponseEntity.ok(this.personajeService.searchPersonaje(name));
         } catch (PersonajeSearchEmptyResultException exception) {
