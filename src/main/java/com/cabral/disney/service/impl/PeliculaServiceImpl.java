@@ -40,4 +40,19 @@ public class PeliculaServiceImpl implements PeliculaService {
 
         return PeliculaMapper.mapToDTO(newPelicula);
     }
+
+    @Override
+    public PeliculaDTO updatePelicula(Long id, PeliculaDTO peliculaDTO) throws PeliculaNotFoundException {
+        Pelicula pelicula = this.peliculaRepository.findById(id).orElseThrow(() -> new PeliculaNotFoundException("Pelicula could not be found."));
+
+        pelicula.setId(peliculaDTO.getId());
+        pelicula.setImagen(peliculaDTO.getImagen());
+        pelicula.setFecha_creacion(peliculaDTO.getFecha_creacion());
+        pelicula.setCalificacion(peliculaDTO.getCalificacion());
+        pelicula.setTitulo(peliculaDTO.getTitulo());
+
+        Pelicula updatedPelicula = this.peliculaRepository.save(pelicula);
+
+        return PeliculaMapper.mapToDTO(updatedPelicula);
+    }
 }

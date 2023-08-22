@@ -56,4 +56,14 @@ public class PeliculaServiceImplTest {
 
         assertThat(createdPelicula).isInstanceOf(PeliculaDTO.class);
     }
+
+    @Test
+    public void shouldUpdateAPeliculaAndReturnPeliculaDTO() throws PeliculaNotFoundException {
+        when(this.peliculaRepository.findById(anyLong())).thenReturn(Optional.ofNullable(mock(Pelicula.class)));
+        when(this.peliculaRepository.save(any(Pelicula.class))).thenReturn(mock(Pelicula.class));
+
+        PeliculaDTO updatedPelicula = this.peliculaService.updatePelicula(1L,mock(PeliculaDTO.class));
+
+        assertThat(updatedPelicula).isInstanceOf(PeliculaDTO.class);
+    }
 }
