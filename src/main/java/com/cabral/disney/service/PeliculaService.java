@@ -13,4 +13,6 @@ public interface PeliculaService {
     PeliculaDTO getPeliculaById(Long id) throws PeliculaNotFoundException;
 
     PeliculaDTO createPelicula(PeliculaDTO peliculaDTO);
+
+    PeliculaDTO updatePelicula(Long id, PeliculaDTO peliculaDTO) throws PeliculaNotFoundException;
 }
