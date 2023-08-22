@@ -3,6 +3,7 @@ package com.cabral.disney.service.impl;
 import com.cabral.disney.dto.PeliculaDTO;
 import com.cabral.disney.entity.Pelicula;
 import com.cabral.disney.exception.PeliculaNotFoundException;
+import com.cabral.disney.exception.PeliculaSearchEmptyResultException;
 import com.cabral.disney.mapper.PeliculaMapper;
 import com.cabral.disney.repository.PeliculaRepository;
 import com.cabral.disney.service.PeliculaService;
@@ -61,5 +62,17 @@ public class PeliculaServiceImpl implements PeliculaService {
         Pelicula pelicula = this.peliculaRepository.findById(id).orElseThrow(() -> new PeliculaNotFoundException("Pelicula could not be found."));
 
         this.peliculaRepository.delete(pelicula);
+    }
+
+    @Override
+    public List<PeliculaDTO> searchPelicula(String name) throws PeliculaSearchEmptyResultException {
+        List<Pelicula> peliculas = this.peliculaRepository.searchPelicula(name);
+
+        if (peliculas.isEmpty()) {
+            throw new PeliculaSearchEmptyResultException("No Peliculas were found under that criteria.");
+        } else {
+            List<PeliculaDTO> peliculaDTOS = peliculas.stream().map(PeliculaMapper::mapToDTO).collect(Collectors.toList());
+            return peliculaDTOS;
+        }
     }
 }
