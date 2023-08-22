@@ -3,6 +3,7 @@ package com.cabral.disney.service;
 import com.cabral.disney.dto.PeliculaDTO;
 import com.cabral.disney.entity.Pelicula;
 import com.cabral.disney.exception.PeliculaNotFoundException;
+import com.cabral.disney.exception.PeliculaSearchEmptyResultException;
 import com.cabral.disney.repository.PeliculaRepository;
 import com.cabral.disney.service.impl.PeliculaServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -61,7 +62,7 @@ public class PeliculaServiceImplTest {
         when(this.peliculaRepository.findById(anyLong())).thenReturn(Optional.ofNullable(mock(Pelicula.class)));
         when(this.peliculaRepository.save(any(Pelicula.class))).thenReturn(mock(Pelicula.class));
 
-        PeliculaDTO updatedPelicula = this.peliculaService.updatePelicula(1L,mock(PeliculaDTO.class));
+        PeliculaDTO updatedPelicula = this.peliculaService.updatePelicula(1L, mock(PeliculaDTO.class));
 
         assertThat(updatedPelicula).isInstanceOf(PeliculaDTO.class);
     }
@@ -75,5 +76,16 @@ public class PeliculaServiceImplTest {
         this.peliculaService.deletePelicula(1L);
 
         verify(this.peliculaRepository).delete(mockPelicula);
+    }
+
+    @Test
+    public void shouldSearchAPeliculaByNombreAndReturnListOfPeliculaDTOs() throws PeliculaSearchEmptyResultException {
+        when(this.peliculaRepository.searchPelicula(anyString())).thenReturn(Arrays.asList(mock(Pelicula.class)));
+
+        List<PeliculaDTO> peliculasDTOs = this.peliculaService.searchPelicula(anyString());
+
+        assertThat(peliculasDTOs).isInstanceOf(List.class);
+
+        assertThat(peliculasDTOs.get(0)).isInstanceOf(PeliculaDTO.class);
     }
 }
