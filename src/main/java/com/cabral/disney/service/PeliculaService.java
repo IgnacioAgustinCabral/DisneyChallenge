@@ -15,4 +15,6 @@ public interface PeliculaService {
     PeliculaDTO createPelicula(PeliculaDTO peliculaDTO);
 
     PeliculaDTO updatePelicula(Long id, PeliculaDTO peliculaDTO) throws PeliculaNotFoundException;
+
+    void deletePelicula(Long id) throws PeliculaNotFoundException;
 }
