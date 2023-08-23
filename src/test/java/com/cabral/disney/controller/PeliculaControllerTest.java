@@ -32,4 +32,12 @@ public class PeliculaControllerTest {
 
         response.andExpect(MockMvcResultMatchers.status().isOk());
     }
+
+    @Test
+    public void testGetPeliculaEndpointAndResponseIs200_OK() throws Exception {
+
+        ResultActions response = mockMvc.perform(get("/peliculas/pelicula/{id}",1));
+
+        response.andExpect(MockMvcResultMatchers.status().isOk());
+    }
 }
