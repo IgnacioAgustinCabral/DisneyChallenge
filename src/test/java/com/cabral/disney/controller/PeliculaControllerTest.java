@@ -1,5 +1,6 @@
 package com.cabral.disney.controller;
 
+import com.cabral.disney.exception.PeliculaNotFoundException;
 import com.cabral.disney.service.PeliculaService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,6 +13,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @WebMvcTest(PeliculaController.class)
@@ -24,7 +27,7 @@ public class PeliculaControllerTest {
 
     @MockBean
     private PeliculaService peliculaService;
-    
+
 
     @Test
     public void testGetAllPeliculasEndpointAndResponseIs200_OK() throws Exception {
@@ -36,8 +39,17 @@ public class PeliculaControllerTest {
     @Test
     public void testGetPeliculaEndpointAndResponseIs200_OK() throws Exception {
 
-        ResultActions response = mockMvc.perform(get("/peliculas/pelicula/{id}",1));
+        ResultActions response = mockMvc.perform(get("/peliculas/pelicula/{id}", 1));
 
         response.andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void testGetPeliculaEndpointAndResponseIs404_NOT_FOUND() throws Exception {
+        when(this.peliculaService.getPeliculaById(anyLong())).thenThrow(PeliculaNotFoundException.class);
+
+        ResultActions response = mockMvc.perform(get("/peliculas/pelicula/{id}", 1));
+
+        response.andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 }
