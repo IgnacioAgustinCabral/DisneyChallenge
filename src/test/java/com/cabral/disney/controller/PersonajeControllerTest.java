@@ -44,8 +44,7 @@ public class PersonajeControllerTest {
     @Test
     public void testGetAllPersonajesEndpointAndResponseIs200_OK() throws Exception {
 
-        ResultActions response = mockMvc.perform(get("/personajes/personaje/all")
-                .contentType(MediaType.APPLICATION_JSON));
+        ResultActions response = mockMvc.perform(get("/personajes/personaje/all"));
 
         response.andExpect(MockMvcResultMatchers.status().isOk());
     }
