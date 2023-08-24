@@ -2,6 +2,7 @@ package com.cabral.disney.controller;
 
 import com.cabral.disney.dto.PeliculaDTO;
 import com.cabral.disney.exception.PeliculaNotFoundException;
+import com.cabral.disney.exception.PeliculaSearchEmptyResultException;
 import com.cabral.disney.service.PeliculaService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -128,8 +129,18 @@ public class PeliculaControllerTest {
     public void testSearchPeliculaEndpointAndResponseIs200_OK() throws Exception {
 
         ResultActions response = mockMvc.perform(get("/peliculas/pelicula")
-                .param("name","example"));
+                .param("name", "example"));
 
         response.andExpect(status().isOk());
+    }
+
+    @Test
+    public void testSearchPeliculaEndpointAndResponseIs404_NOT_FOUND() throws Exception {
+        when(this.peliculaService.searchPelicula(anyString())).thenThrow(PeliculaSearchEmptyResultException.class);
+
+        ResultActions response = mockMvc.perform(get("/peliculas/pelicula")
+                .param("name", "example"));
+
+        response.andExpect(status().isNotFound());
     }
 }
