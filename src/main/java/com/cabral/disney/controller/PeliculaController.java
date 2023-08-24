@@ -38,9 +38,18 @@ public class PeliculaController {
     }
 
     @PostMapping(value = "/pelicula")
-    @ResponseBody
     public ResponseEntity<PeliculaDTO> createPelicula(@RequestBody PeliculaDTO peliculaDTO) {
         PeliculaDTO createdPelicula = this.peliculaService.createPelicula(peliculaDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdPelicula);
+    }
+
+    @PutMapping("/pelicula/{id}")
+    public ResponseEntity<?> updatePelicula(@PathVariable Long id, @RequestBody PeliculaDTO peliculaDTO) {
+        try {
+            PeliculaDTO peliculaDTOUpdated = this.peliculaService.updatePelicula(id,peliculaDTO);
+            return ResponseEntity.ok(peliculaDTOUpdated);
+        } catch (PeliculaNotFoundException exception) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
+        }
     }
 }
