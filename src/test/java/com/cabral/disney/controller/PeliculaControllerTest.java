@@ -21,8 +21,7 @@ import java.time.LocalDate;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -114,5 +113,14 @@ public class PeliculaControllerTest {
         ResultActions response = mockMvc.perform(delete("/peliculas/pelicula/{id}", 1L));
 
         response.andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void testDeletePeliculaEndpointAndResponseIs404_NOT_FOUND() throws Exception {
+        doThrow(PeliculaNotFoundException.class).when(this.peliculaService).deletePelicula(anyLong());
+
+        ResultActions response = mockMvc.perform(delete("/peliculas/pelicula/{id}", 1L));
+
+        response.andExpect(status().isNotFound());
     }
 }

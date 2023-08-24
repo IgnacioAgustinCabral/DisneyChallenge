@@ -56,7 +56,7 @@ public class PeliculaController {
     public ResponseEntity<?> deletePelicula(@PathVariable Long id) {
         try {
             this.peliculaService.deletePelicula(id);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Pelicula deleted successfully.");
         } catch (PeliculaNotFoundException exception) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
         }
