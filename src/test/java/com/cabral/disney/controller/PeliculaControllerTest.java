@@ -123,4 +123,13 @@ public class PeliculaControllerTest {
 
         response.andExpect(status().isNotFound());
     }
+
+    @Test
+    public void testSearchPeliculaEndpointAndResponseIs200_OK() throws Exception {
+
+        ResultActions response = mockMvc.perform(get("/peliculas/pelicula")
+                .param("name","example"));
+
+        response.andExpect(status().isOk());
+    }
 }
