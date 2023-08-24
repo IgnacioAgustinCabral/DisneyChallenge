@@ -5,6 +5,7 @@ import com.cabral.disney.exception.PeliculaNotFoundException;
 import com.cabral.disney.service.PeliculaService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -32,6 +33,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 public class PeliculaControllerTest {
 
+    private LocalDate fechaCreacion;
+    private PeliculaDTO peliculaDTO;
     @Autowired
     private MockMvc mockMvc;
 
@@ -41,7 +44,11 @@ public class PeliculaControllerTest {
     @MockBean
     private PeliculaService peliculaService;
 
-
+    @BeforeEach
+    public void init(){
+        fechaCreacion = LocalDate.of(2023, 8, 12);
+        peliculaDTO = new PeliculaDTO(1L, "asd", fechaCreacion, 1, "imagen");
+    }
     @Test
     public void testGetAllPeliculasEndpointAndResponseIs200_OK() throws Exception {
         ResultActions response = mockMvc.perform(get("/peliculas/pelicula/all"));
@@ -68,16 +75,25 @@ public class PeliculaControllerTest {
 
     @Test
     public void testCreatePeliculaEndpointAndResponseIs201_CREATED() throws Exception {
-        LocalDate fechaCreacion = LocalDate.of(2023, 8, 12);
-        PeliculaDTO peliculaDTO = new PeliculaDTO(1L, "asd", fechaCreacion, 1, "imagen");
 
         ResultActions response = mockMvc.perform(post("/peliculas/pelicula")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(peliculaDTO))
+                .content(objectMapper.writeValueAsString(this.peliculaDTO))
                 .characterEncoding("utf-8"));
 
         response.andExpect(status().isCreated());
 //                response.andExpect(jsonPath("$.titulo").value("asd"));
 
+    }
+
+    @Test
+    public void testUpdatePeliculaEndpointAndResponseIs200_OK() throws Exception {
+
+        ResultActions response = mockMvc.perform(put("/peliculas/pelicula/{id}", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(this.peliculaDTO))
+                .characterEncoding("utf-8"));
+
+        response.andExpect(status().isOk());
     }
 }
