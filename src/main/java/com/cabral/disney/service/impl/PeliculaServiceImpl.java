@@ -8,10 +8,12 @@ import com.cabral.disney.mapper.PeliculaMapper;
 import com.cabral.disney.repository.PeliculaRepository;
 import com.cabral.disney.service.PeliculaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class PeliculaServiceImpl implements PeliculaService {
 
     private PeliculaRepository peliculaRepository;
