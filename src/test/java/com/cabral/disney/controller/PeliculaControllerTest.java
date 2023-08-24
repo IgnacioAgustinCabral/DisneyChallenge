@@ -107,4 +107,12 @@ public class PeliculaControllerTest {
 
         response.andExpect(status().isNotFound());
     }
+
+    @Test
+    public void testDeletePeliculaEndpointAndResponseIs204_NO_CONTENT() throws Exception {
+
+        ResultActions response = mockMvc.perform(delete("/peliculas/pelicula/{id}", 1L));
+
+        response.andExpect(status().isNoContent());
+    }
 }
