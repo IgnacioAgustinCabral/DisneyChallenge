@@ -2,6 +2,7 @@ package com.cabral.disney.controller;
 
 import com.cabral.disney.dto.PeliculaDTO;
 import com.cabral.disney.exception.PeliculaNotFoundException;
+import com.cabral.disney.exception.PeliculaSearchEmptyResultException;
 import com.cabral.disney.service.PeliculaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,16 @@ public class PeliculaController {
             PeliculaDTO peliculaDTO = this.peliculaService.getPeliculaById(id);
             return ResponseEntity.ok(peliculaDTO);
         } catch (PeliculaNotFoundException exception) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
+        }
+    }
+
+    @GetMapping("/pelicula")
+    public ResponseEntity<?> searchPersonajes(@RequestParam String name) {
+        try {
+            List<PeliculaDTO> peliculas = this.peliculaService.searchPelicula(name);
+            return ResponseEntity.ok(peliculas);
+        } catch (PeliculaSearchEmptyResultException exception) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
         }
     }
