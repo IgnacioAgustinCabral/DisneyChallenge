@@ -6,12 +6,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 public class PersonajeRepositoryTest {
     private Personaje personaje;
-    private Personaje personaje2;
 
     @Autowired
     private PersonajeRepository personajeRepository;
@@ -20,7 +21,6 @@ public class PersonajeRepositoryTest {
     @BeforeEach
     public void init() {
         personaje = Personaje.builder().edad(11).historia("HISTORIA").imagen("path/imagen").nombre("nombre").peso(33.3).build();
-//        personaje2 = Personaje.builder().edad(12).historia("HISTORY").imagen("path/image").nombre("name").peso(33.3).build();
         savedPersonaje = this.personajeRepository.save(personaje);
     }
 
@@ -38,7 +38,7 @@ public class PersonajeRepositoryTest {
     }
 
     @Test
-    public void retrievePersonajeById(){
+    public void retrievePersonajeById() {
 
         Personaje retrievePersonaje1 = this.personajeRepository.findById(savedPersonaje.getId()).get();
 
@@ -47,7 +47,7 @@ public class PersonajeRepositoryTest {
     }
 
     @Test
-    public void updatePersonaje(){
+    public void updatePersonaje() {
         Personaje personajeToUpdate = this.personajeRepository.findById(this.savedPersonaje.getId()).get();
 
         //UPDATE
@@ -64,5 +64,15 @@ public class PersonajeRepositoryTest {
         assertThat(updatedPersonaje.getHistoria()).isEqualTo("LA HISTORIA DE JOAQUIN");
         assertThat(updatedPersonaje.getPeso()).isEqualTo(60.5);
         assertThat(updatedPersonaje.getImagen()).isEqualTo("path/newImage");
+    }
+
+    @Test
+    public void deletePersonajeAndReturnsEmpty() {
+        this.personajeRepository.delete(this.personaje);
+
+        // was deleted so returns empty
+        Optional<Personaje> personajeOptional = this.personajeRepository.findById(this.personaje.getId());
+
+        assertThat(personajeOptional).isEmpty();
     }
 }
