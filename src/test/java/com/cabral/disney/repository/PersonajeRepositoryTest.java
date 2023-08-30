@@ -1,7 +1,6 @@
 package com.cabral.disney.repository;
 
 import com.cabral.disney.entity.Personaje;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -15,11 +14,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class PersonajeRepositoryTest {
     @Autowired
     private PersonajeRepository personajeRepository;
-//    @BeforeEach
-//    public void init() {
-//        personaje = Personaje.builder().edad(11).historia("HISTORIA").imagen("path/imagen").nombre("nombre").peso(33.3).build();
-//        savedPersonaje = this.personajeRepository.save(personaje);
-//    }
 
     @Test
     public void savePersonajeReturnPersonaje() {
@@ -40,6 +34,19 @@ public class PersonajeRepositoryTest {
         List<Personaje> personajes = this.personajeRepository.findAll();
 
         assertThat(personajes).isEmpty();
+    }
+
+    @Test
+    public void retrieveAllPersonajesReturnListIsSize2(){
+        Personaje personaje1 = Personaje.builder().edad(11).historia("HISTORIA").imagen("path/imagen").nombre("nombre").peso(33.3).build();
+        Personaje savedPersonaje1 = this.personajeRepository.save(personaje1);
+
+        Personaje personaje2 = Personaje.builder().edad(11).historia("HISTORIA").imagen("path/imagen").nombre("nombre").peso(33.3).build();
+        Personaje savedPersonaje2 = this.personajeRepository.save(personaje2);
+
+        List<Personaje> personajes = this.personajeRepository.findAll();
+
+        assertThat(personajes.size()).isEqualTo(2);
     }
     @Test
     public void retrievePersonajeById() {
