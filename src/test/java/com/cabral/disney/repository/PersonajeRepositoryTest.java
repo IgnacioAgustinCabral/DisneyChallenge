@@ -6,23 +6,20 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 public class PersonajeRepositoryTest {
-    private Personaje personaje;
-
     @Autowired
     private PersonajeRepository personajeRepository;
-    private Personaje savedPersonaje;
-
-    @BeforeEach
-    public void init() {
-        personaje = Personaje.builder().edad(11).historia("HISTORIA").imagen("path/imagen").nombre("nombre").peso(33.3).build();
-        savedPersonaje = this.personajeRepository.save(personaje);
-    }
+//    @BeforeEach
+//    public void init() {
+//        personaje = Personaje.builder().edad(11).historia("HISTORIA").imagen("path/imagen").nombre("nombre").peso(33.3).build();
+//        savedPersonaje = this.personajeRepository.save(personaje);
+//    }
 
     @Test
     public void savePersonajeReturnPersonaje() {
@@ -32,23 +29,36 @@ public class PersonajeRepositoryTest {
 //        Personaje retrievedPersonaje = em.find(Personaje.class,createdPersonaje.getId());
 //
 //        assertThat(retrievedPersonaje.getNombre()).isEqualTo("nombre");
+        Personaje personaje = Personaje.builder().edad(11).historia("HISTORIA").imagen("path/imagen").nombre("nombre").peso(33.3).build();
+        Personaje savedPersonaje = this.personajeRepository.save(personaje);
 
         assertThat(savedPersonaje.getNombre()).isEqualTo("nombre");
-
     }
 
     @Test
+    public void retrieveAllPersonajesReturnsEmpty(){
+        List<Personaje> personajes = this.personajeRepository.findAll();
+
+        assertThat(personajes).isEmpty();
+    }
+    @Test
     public void retrievePersonajeById() {
+        Personaje personaje = Personaje.builder().edad(11).historia("HISTORIA").imagen("path/imagen").nombre("nombre").peso(33.3).build();
+
+        Personaje savedPersonaje = this.personajeRepository.save(personaje);
 
         Personaje retrievePersonaje1 = this.personajeRepository.findById(savedPersonaje.getId()).get();
 
-
-        assertThat(retrievePersonaje1.getId()).isEqualTo(this.savedPersonaje.getId());
+        assertThat(retrievePersonaje1.getId()).isEqualTo(savedPersonaje.getId());
     }
 
     @Test
     public void updatePersonaje() {
-        Personaje personajeToUpdate = this.personajeRepository.findById(this.savedPersonaje.getId()).get();
+        Personaje personaje = Personaje.builder().edad(11).historia("HISTORIA").imagen("path/imagen").nombre("nombre").peso(33.3).build();
+
+        Personaje savedPersonaje = this.personajeRepository.save(personaje);
+
+        Personaje personajeToUpdate = this.personajeRepository.findById(savedPersonaje.getId()).get();
 
         //UPDATE
         personajeToUpdate.setNombre("Joaquin");
@@ -68,10 +78,14 @@ public class PersonajeRepositoryTest {
 
     @Test
     public void deletePersonajeAndReturnsEmpty() {
-        this.personajeRepository.delete(this.personaje);
+        Personaje personaje = Personaje.builder().edad(11).historia("HISTORIA").imagen("path/imagen").nombre("nombre").peso(33.3).build();
+
+        Personaje savedPersonaje = this.personajeRepository.save(personaje);
+
+        this.personajeRepository.delete(savedPersonaje);
 
         // was deleted so returns empty
-        Optional<Personaje> personajeOptional = this.personajeRepository.findById(this.personaje.getId());
+        Optional<Personaje> personajeOptional = this.personajeRepository.findById(savedPersonaje.getId());
 
         assertThat(personajeOptional).isEmpty();
     }
