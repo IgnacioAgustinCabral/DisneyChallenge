@@ -17,5 +17,5 @@ public interface PersonajeService {
 
     void deletePersonaje(Long id) throws PersonajeNotFoundException;
 
-    List<PersonajeDTO> searchPersonaje(String name) throws PersonajeSearchEmptyResultException;
+    List<PersonajeDTO> searchPersonaje(String name, Integer age) throws PersonajeSearchEmptyResultException;
 }
