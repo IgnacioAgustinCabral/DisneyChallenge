@@ -96,4 +96,15 @@ public class PersonajeRepositoryTest {
 
         assertThat(personajeOptional).isEmpty();
     }
+
+    @Test
+    public void searchPersonajeByNombreIsNotEmpty(){
+        Personaje personaje = Personaje.builder().edad(11).historia("HISTORIA").imagen("path/imagen").nombre("nombre").peso(33.3).build();
+
+        Personaje savedPersonaje = this.personajeRepository.save(personaje);
+
+        List<Personaje> personajes = this.personajeRepository.searchPersonaje(savedPersonaje.getNombre());
+
+        assertThat(personajes).isNotEmpty();
+    }
 }
