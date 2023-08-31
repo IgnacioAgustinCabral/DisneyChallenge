@@ -30,14 +30,14 @@ public class PersonajeRepositoryTest {
     }
 
     @Test
-    public void retrieveAllPersonajesReturnsEmpty(){
+    public void retrieveAllPersonajesReturnsEmpty() {
         List<Personaje> personajes = this.personajeRepository.findAll();
 
         assertThat(personajes).isEmpty();
     }
 
     @Test
-    public void retrieveAllPersonajesReturnListIsSize2(){
+    public void retrieveAllPersonajesReturnListIsSize2() {
         Personaje personaje1 = Personaje.builder().edad(11).historia("HISTORIA").imagen("path/imagen").nombre("nombre").peso(33.3).build();
         Personaje savedPersonaje1 = this.personajeRepository.save(personaje1);
 
@@ -48,6 +48,7 @@ public class PersonajeRepositoryTest {
 
         assertThat(personajes.size()).isEqualTo(2);
     }
+
     @Test
     public void retrievePersonajeById() {
         Personaje personaje = Personaje.builder().edad(11).historia("HISTORIA").imagen("path/imagen").nombre("nombre").peso(33.3).build();
@@ -98,13 +99,25 @@ public class PersonajeRepositoryTest {
     }
 
     @Test
-    public void searchPersonajeByNombreIsNotEmpty(){
+    public void searchPersonajeByNombreAndAgeIsNotEmpty() {
         Personaje personaje = Personaje.builder().edad(11).historia("HISTORIA").imagen("path/imagen").nombre("nombre").peso(33.3).build();
 
         Personaje savedPersonaje = this.personajeRepository.save(personaje);
 
-        List<Personaje> personajes = this.personajeRepository.searchPersonaje(savedPersonaje.getNombre());
+        List<Personaje> personajes = this.personajeRepository.searchPersonaje(savedPersonaje.getNombre(), savedPersonaje.getEdad());
 
         assertThat(personajes).isNotEmpty();
     }
+
+    @Test
+    public void searchPersonajeOnlyByNombreIsEmpty() {
+        Personaje personaje = Personaje.builder().edad(11).historia("HISTORIA").imagen("path/imagen").nombre("nombre").peso(33.3).build();
+
+        Personaje savedPersonaje = this.personajeRepository.save(personaje);
+
+        List<Personaje> personajes = this.personajeRepository.searchPersonaje(savedPersonaje.getNombre(), null);
+
+        assertThat(personajes).isEmpty();
+    }
+
 }

@@ -131,6 +131,7 @@ public class PersonajeControllerTest {
     public void testSearchPersonajEndpointAndResponseIs200_OK() throws Exception {
         ResultActions response = mockMvc.perform(get("/personajes/personaje/")
                 .param("name", "example")
+                .param("age","1")
                 .contentType(MediaType.APPLICATION_JSON));
 
         response.andExpect(MockMvcResultMatchers.status().isOk());
@@ -139,10 +140,11 @@ public class PersonajeControllerTest {
     @Test
     public void testSearchPersonajeEndpointAndResponseIs404_NOT_FOUND() throws Exception {
 
-        when(this.personajeService.searchPersonaje(anyString())).thenThrow(PersonajeSearchEmptyResultException.class);
+        when(this.personajeService.searchPersonaje(anyString(), anyInt())).thenThrow(PersonajeSearchEmptyResultException.class);
 
         ResultActions response = mockMvc.perform(get("/personajes/personaje")
                 .param("name", "something")
+                .param("age","1")
                 .contentType(MediaType.APPLICATION_JSON));
 
         response.andExpect(MockMvcResultMatchers.status().isNotFound());
