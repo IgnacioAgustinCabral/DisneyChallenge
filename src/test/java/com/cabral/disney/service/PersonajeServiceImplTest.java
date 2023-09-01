@@ -89,19 +89,19 @@ public class PersonajeServiceImplTest {
     @Test
     public void shouldSearchAPersonajeByNameAndReturnAListOfPersonajeDTONotEmpty() throws PersonajeSearchEmptyResultException {
 
-        when(this.personajeRepository.searchPersonaje(anyString())).thenReturn(Arrays.asList(mock(Personaje.class)));
+        when(this.personajeRepository.searchPersonaje(anyString(), anyInt())).thenReturn(Arrays.asList(mock(Personaje.class)));
 
-        List<PersonajeDTO> personajesDTOs = this.personajeService.searchPersonaje(anyString());
+        List<PersonajeDTO> personajesDTOs = this.personajeService.searchPersonaje(anyString(), anyInt());
 
         assertThat(personajesDTOs).isNotEmpty();
     }
 
     @Test
     public void shouldSearchAPersonajeByNameAndThrowPersonajeSearchResultEmptyExceptionWhenNothingWasFound(){
-        when(this.personajeRepository.searchPersonaje(anyString())).thenReturn(Collections.emptyList());
+        when(this.personajeRepository.searchPersonaje(anyString(), anyInt())).thenReturn(Collections.emptyList());
 
         assertThrows(PersonajeSearchEmptyResultException.class, () -> {
-            this.personajeService.searchPersonaje(anyString());
+            this.personajeService.searchPersonaje(anyString(), anyInt());
         });
     }
 }

@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.Set;
 
+@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity
 public class Personaje {
 
     @Id
@@ -41,3 +41,5 @@ public class Personaje {
     )
     private Set<Pelicula> peliculas_asociadas;
 }
+
+

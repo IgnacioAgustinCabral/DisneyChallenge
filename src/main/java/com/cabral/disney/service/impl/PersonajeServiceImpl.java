@@ -65,8 +65,8 @@ public class PersonajeServiceImpl implements PersonajeService {
     }
 
     @Override
-    public List<PersonajeDTO> searchPersonaje(String name) throws PersonajeSearchEmptyResultException {
-        List<Personaje> personajes = this.personajeRepository.searchPersonaje(name);
+    public List<PersonajeDTO> searchPersonaje(String name, Integer age) throws PersonajeSearchEmptyResultException {
+        List<Personaje> personajes = this.personajeRepository.searchPersonaje(name, age);
 
         if(personajes.isEmpty()){
             throw new PersonajeSearchEmptyResultException("No Personaje with those parameters could be found.");
