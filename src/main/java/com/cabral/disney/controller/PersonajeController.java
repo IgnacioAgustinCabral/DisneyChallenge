@@ -37,9 +37,9 @@ public class PersonajeController {
     }
 
     @GetMapping("/personaje")
-    public ResponseEntity<?> searchPersonaje(@RequestParam(required = false) String name) {
+    public ResponseEntity<?> searchPersonaje(@RequestParam String name, @RequestParam Integer age) {
         try {
-            return ResponseEntity.ok(this.personajeService.searchPersonaje(name));
+            return ResponseEntity.ok(this.personajeService.searchPersonaje(name, age));
         } catch (PersonajeSearchEmptyResultException exception) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
         }
