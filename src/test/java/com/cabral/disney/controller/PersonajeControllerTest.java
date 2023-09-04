@@ -110,6 +110,18 @@ public class PersonajeControllerTest {
     }
 
     @Test
+    public void testCreatePersonajeEndpointAndResponseIs400_BAD_REQUEST() throws Exception {
+        //INVALID WEIGHT PESO
+        PersonajeCreateRequest invalidPersonajeCreateRequest = PersonajeCreateRequest.builder().nombre("Aladdin").edad(22).peso(0.005).historia("HISTORIAXHISTORIAXHISTORIAXXXXX").build();
+
+        ResultActions response = mockMvc.perform(post("/personajes/personaje")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(invalidPersonajeCreateRequest)));
+
+        response.andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
     public void testDeletePersonajeEndpointAndResponseIs204_NO_CONTENT() throws Exception {
 
         ResultActions response = mockMvc.perform(delete("/personajes/personaje/{id}", 1)
