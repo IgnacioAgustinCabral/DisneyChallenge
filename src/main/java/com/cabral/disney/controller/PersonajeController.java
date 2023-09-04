@@ -4,6 +4,8 @@ import com.cabral.disney.dto.PersonajeDTO;
 import com.cabral.disney.exception.PersonajeNotFoundException;
 import com.cabral.disney.exception.PersonajeSearchEmptyResultException;
 import com.cabral.disney.payload.request.PersonajeCreateRequest;
+import com.cabral.disney.payload.request.PersonajeUpdateRequest;
+import com.cabral.disney.payload.response.PersonajeResponse;
 import com.cabral.disney.service.PersonajeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,7 +27,7 @@ public class PersonajeController {
     }
 
     @GetMapping("/personaje/all")
-    public ResponseEntity<List<PersonajeDTO>> getPersonajes() {
+    public ResponseEntity<List<PersonajeResponse>> getPersonajes() {
         return new ResponseEntity<>(this.personajeService.getAllPersonajes(), HttpStatus.OK);
     }
 
@@ -49,14 +51,14 @@ public class PersonajeController {
 
 
     @PostMapping("/personaje")
-    public ResponseEntity<PersonajeDTO> createPersonaje(@Valid @RequestBody PersonajeCreateRequest personajeCreateRequest) {
+    public ResponseEntity<PersonajeResponse> createPersonaje(@Valid @RequestBody PersonajeCreateRequest personajeCreateRequest) {
         return new ResponseEntity<>(this.personajeService.createPersonaje(personajeCreateRequest), HttpStatus.CREATED);
     }
 
     @PutMapping("/personaje/{id}")
-    public ResponseEntity<?> updatePersonaje(@PathVariable Long id, @RequestBody PersonajeDTO personaje) {
+    public ResponseEntity<?> updatePersonaje(@PathVariable Long id, @RequestBody PersonajeUpdateRequest personajeUpdateRequest) {
         try {
-            return ResponseEntity.ok(this.personajeService.updatePersonaje(id, personaje));
+            return ResponseEntity.ok(this.personajeService.updatePersonaje(id, personajeUpdateRequest));
         } catch (PersonajeNotFoundException exception) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
         }

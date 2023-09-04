@@ -4,6 +4,7 @@ import com.cabral.disney.dto.PersonajeDTO;
 import com.cabral.disney.exception.PersonajeNotFoundException;
 import com.cabral.disney.exception.PersonajeSearchEmptyResultException;
 import com.cabral.disney.payload.request.PersonajeCreateRequest;
+import com.cabral.disney.payload.request.PersonajeUpdateRequest;
 import com.cabral.disney.service.PersonajeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -74,24 +75,24 @@ public class PersonajeControllerTest {
 
     @Test
     public void testUpdatePersonajeEndpointAndResponseIs200_OK() throws Exception {
-        PersonajeDTO updatedPersonajeDTO = new PersonajeDTO();
+        PersonajeCreateRequest personajeCreateRequest = PersonajeCreateRequest.builder().nombre("Aladdin").edad(22).peso(61.3).historia("HISTORIAXHISTORIAXHISTORIAXXXXX").build();
 
         ResultActions response = mockMvc.perform(put("/personajes/personaje/{id}", 1)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(updatedPersonajeDTO)));
+                .content(objectMapper.writeValueAsString(personajeCreateRequest)));
 
         response.andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     public void testUpdatePersonajeEndpointAndResponseIs404_NOT_FOUND() throws Exception {
-        PersonajeDTO updatedPersonajeDTO = new PersonajeDTO();
+        PersonajeUpdateRequest personajeUpdateRequest = PersonajeUpdateRequest.builder().nombre("Aladdin").edad(22).peso(61.3).historia("HISTORIAXHISTORIAXHISTORIAXXXXX").build();
 
-        when(this.personajeService.updatePersonaje(anyLong(), eq(updatedPersonajeDTO))).thenThrow(PersonajeNotFoundException.class);
+        when(this.personajeService.updatePersonaje(anyLong(), eq(personajeUpdateRequest))).thenThrow(PersonajeNotFoundException.class);
 
         ResultActions response = mockMvc.perform(put("/personajes/personaje/{id}", 1)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(updatedPersonajeDTO)));
+                .content(objectMapper.writeValueAsString(personajeUpdateRequest)));
 
         response.andExpect(MockMvcResultMatchers.status().isNotFound());
     }

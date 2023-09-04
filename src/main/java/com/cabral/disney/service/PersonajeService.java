@@ -4,19 +4,21 @@ import com.cabral.disney.dto.PersonajeDTO;
 import com.cabral.disney.exception.PersonajeNotFoundException;
 import com.cabral.disney.exception.PersonajeSearchEmptyResultException;
 import com.cabral.disney.payload.request.PersonajeCreateRequest;
+import com.cabral.disney.payload.request.PersonajeUpdateRequest;
+import com.cabral.disney.payload.response.PersonajeResponse;
 
 import java.util.List;
 
 public interface PersonajeService {
-    List<PersonajeDTO> getAllPersonajes();
+    List<PersonajeResponse> getAllPersonajes();
 
-    PersonajeDTO createPersonaje(PersonajeCreateRequest personajeCreateRequest);
+    PersonajeResponse createPersonaje(PersonajeCreateRequest personajeCreateRequest);
 
-    PersonajeDTO getPersonajeById(Long id) throws PersonajeNotFoundException;
+    PersonajeResponse getPersonajeById(Long id) throws PersonajeNotFoundException;
 
-    PersonajeDTO updatePersonaje(Long id, PersonajeDTO personajeDTO) throws PersonajeNotFoundException;
+    PersonajeResponse updatePersonaje(Long id, PersonajeUpdateRequest personajeUpdateRequest) throws PersonajeNotFoundException;
 
     void deletePersonaje(Long id) throws PersonajeNotFoundException;
 
-    List<PersonajeDTO> searchPersonaje(String name, Integer age) throws PersonajeSearchEmptyResultException;
+    List<PersonajeResponse> searchPersonaje(String name, Integer age) throws PersonajeSearchEmptyResultException;
 }
