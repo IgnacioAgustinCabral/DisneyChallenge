@@ -3,6 +3,7 @@ package com.cabral.disney.controller;
 import com.cabral.disney.dto.PersonajeDTO;
 import com.cabral.disney.exception.PersonajeNotFoundException;
 import com.cabral.disney.exception.PersonajeSearchEmptyResultException;
+import com.cabral.disney.payload.request.PersonajeCreateRequest;
 import com.cabral.disney.service.PersonajeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -98,11 +99,11 @@ public class PersonajeControllerTest {
     @Test
     public void testCreatePersonajeEndpointAndResponseIs201_CREATED() throws Exception {
 
-        PersonajeDTO personajeDTO = new PersonajeDTO();
+        PersonajeCreateRequest personajeCreateRequest = PersonajeCreateRequest.builder().nombre("Aladdin").edad(22).peso(61.3).historia("HISTORIAXHISTORIAXHISTORIAXXXXX").build();
 
         ResultActions response = mockMvc.perform(post("/personajes/personaje")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(personajeDTO)));
+                .content(objectMapper.writeValueAsString(personajeCreateRequest)));
 
         response.andExpect(MockMvcResultMatchers.status().isCreated());
     }

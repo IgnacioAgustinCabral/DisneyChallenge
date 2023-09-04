@@ -5,6 +5,7 @@ import com.cabral.disney.entity.Personaje;
 import com.cabral.disney.exception.PersonajeNotFoundException;
 import com.cabral.disney.exception.PersonajeSearchEmptyResultException;
 import com.cabral.disney.mapper.PersonajeMapper;
+import com.cabral.disney.payload.request.PersonajeCreateRequest;
 import com.cabral.disney.repository.PersonajeRepository;
 import com.cabral.disney.service.PersonajeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +31,8 @@ public class PersonajeServiceImpl implements PersonajeService {
     }
 
     @Override
-    public PersonajeDTO createPersonaje(PersonajeDTO personajeDTO) {
-        Personaje newPersonaje = this.personajeRepository.save(PersonajeMapper.mapToEntity(personajeDTO));
+    public PersonajeDTO createPersonaje(PersonajeCreateRequest personajeCreateRequest) {
+        Personaje newPersonaje = this.personajeRepository.save(PersonajeMapper.mapToEntity(personajeCreateRequest));
 
         return PersonajeMapper.mapToDTO(newPersonaje);
     }

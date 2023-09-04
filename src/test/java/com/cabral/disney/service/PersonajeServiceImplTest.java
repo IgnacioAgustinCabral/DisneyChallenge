@@ -4,6 +4,7 @@ import com.cabral.disney.dto.PersonajeDTO;
 import com.cabral.disney.entity.Personaje;
 import com.cabral.disney.exception.PersonajeNotFoundException;
 import com.cabral.disney.exception.PersonajeSearchEmptyResultException;
+import com.cabral.disney.payload.request.PersonajeCreateRequest;
 import com.cabral.disney.repository.PersonajeRepository;
 import com.cabral.disney.service.impl.PersonajeServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -44,10 +45,10 @@ public class PersonajeServiceImplTest {
     @Test
     public void shouldCreateAPersonajeAndReturnPersonajeDTO(){
         Personaje personaje = Personaje.builder().imagen("images/characters/aladin.jpg").nombre("Aladin").peso(34.4).edad(25).historia("TEXTOTEXTOTEXTOTEXTOOOO").build();
-        PersonajeDTO personajeDTO = PersonajeDTO.builder().imagen("images/characters/aladin.jpg").nombre("Aladin").peso(34.4).edad(25).historia("TEXTOTEXTOTEXTOTEXTOOOO").build();
+        PersonajeCreateRequest personajeCreateRequest = PersonajeCreateRequest.builder().nombre("Aladdin").edad(22).peso(61.3).historia("HISTORIAXHISTORIAXHISTORIAXXXXX").build();
 
         when(this.personajeRepository.save(Mockito.any(Personaje.class))).thenReturn(personaje);
-        PersonajeDTO savedPersonaje = this.personajeService.createPersonaje(personajeDTO);
+        PersonajeDTO savedPersonaje = this.personajeService.createPersonaje(personajeCreateRequest);
         assertThat(savedPersonaje).isNotNull();
         assertThat(savedPersonaje).isInstanceOf(PersonajeDTO.class);
     }
