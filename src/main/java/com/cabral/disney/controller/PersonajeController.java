@@ -56,7 +56,7 @@ public class PersonajeController {
     }
 
     @PutMapping("/personaje/{id}")
-    public ResponseEntity<?> updatePersonaje(@PathVariable Long id, @RequestBody PersonajeUpdateRequest personajeUpdateRequest) {
+    public ResponseEntity<?> updatePersonaje(@PathVariable Long id, @Valid @RequestBody PersonajeUpdateRequest personajeUpdateRequest) {
         try {
             return ResponseEntity.ok(this.personajeService.updatePersonaje(id, personajeUpdateRequest));
         } catch (PersonajeNotFoundException exception) {

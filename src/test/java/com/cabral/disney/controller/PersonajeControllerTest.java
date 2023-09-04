@@ -98,6 +98,20 @@ public class PersonajeControllerTest {
     }
 
     @Test
+    public void testUpdatePersonajeEndpointAndResponseIs404_BAD_REQUEST() throws Exception {
+        //INVALID WEIGHT PESO
+        PersonajeUpdateRequest personajeUpdateRequest = PersonajeUpdateRequest.builder().nombre("Aladdin").edad(22).peso(0.0001).historia("HISTORIAXHISTORIAXHISTORIAXXXXX").build();
+
+        when(this.personajeService.updatePersonaje(anyLong(), eq(personajeUpdateRequest))).thenThrow(PersonajeNotFoundException.class);
+
+        ResultActions response = mockMvc.perform(put("/personajes/personaje/{id}", 1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(personajeUpdateRequest)));
+
+        response.andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
     public void testCreatePersonajeEndpointAndResponseIs201_CREATED() throws Exception {
 
         PersonajeCreateRequest personajeCreateRequest = PersonajeCreateRequest.builder().nombre("Aladdin").edad(22).peso(61.3).historia("HISTORIAXHISTORIAXHISTORIAXXXXX").build();
