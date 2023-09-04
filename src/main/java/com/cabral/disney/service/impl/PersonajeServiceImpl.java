@@ -6,6 +6,8 @@ import com.cabral.disney.exception.PersonajeNotFoundException;
 import com.cabral.disney.exception.PersonajeSearchEmptyResultException;
 import com.cabral.disney.mapper.PersonajeMapper;
 import com.cabral.disney.payload.request.PersonajeCreateRequest;
+import com.cabral.disney.payload.request.PersonajeUpdateRequest;
+import com.cabral.disney.payload.response.PersonajeResponse;
 import com.cabral.disney.repository.PersonajeRepository;
 import com.cabral.disney.service.PersonajeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,34 +26,34 @@ public class PersonajeServiceImpl implements PersonajeService {
     }
 
     @Override
-    public List<PersonajeDTO> getAllPersonajes() {
+    public List<PersonajeResponse> getAllPersonajes() {
         List<Personaje> personajes = this.personajeRepository.findAll();
-        List<PersonajeDTO> personajeDTOS = personajes.stream().map(personaje -> PersonajeMapper.mapToDTO(personaje)).collect(Collectors.toList());
+        List<PersonajeResponse> personajeDTOS = personajes.stream().map(personaje -> PersonajeMapper.mapToDTO(personaje)).collect(Collectors.toList());
         return personajeDTOS;
     }
 
     @Override
-    public PersonajeDTO createPersonaje(PersonajeCreateRequest personajeCreateRequest) {
+    public PersonajeResponse createPersonaje(PersonajeCreateRequest personajeCreateRequest) {
         Personaje newPersonaje = this.personajeRepository.save(PersonajeMapper.mapToEntity(personajeCreateRequest));
 
         return PersonajeMapper.mapToDTO(newPersonaje);
     }
 
     @Override
-    public PersonajeDTO getPersonajeById(Long id) throws PersonajeNotFoundException {
+    public PersonajeResponse getPersonajeById(Long id) throws PersonajeNotFoundException {
         Personaje personaje = this.personajeRepository.findById(id).orElseThrow(() -> new PersonajeNotFoundException("Personaje could not be found"));
 
         return PersonajeMapper.mapToDTO(personaje);
     }
 
     @Override
-    public PersonajeDTO updatePersonaje(Long id, PersonajeDTO personajeDTO) throws PersonajeNotFoundException {
+    public PersonajeResponse updatePersonaje(Long id, PersonajeUpdateRequest personajeUpdateRequest) throws PersonajeNotFoundException {
         Personaje personaje = this.personajeRepository.findById(id).orElseThrow(() -> new PersonajeNotFoundException("Personaje could not be found"));
-        personaje.setEdad(personajeDTO.getEdad());
-        personaje.setHistoria(personajeDTO.getHistoria());
-        personaje.setImagen(personajeDTO.getImagen());
-        personaje.setPeso(personajeDTO.getPeso());
-        personaje.setNombre(personajeDTO.getNombre());
+        personaje.setEdad(personajeUpdateRequest.getEdad());
+        personaje.setHistoria(personajeUpdateRequest.getHistoria());
+        personaje.setImagen(personajeUpdateRequest.getImagen());
+        personaje.setPeso(personajeUpdateRequest.getPeso());
+        personaje.setNombre(personajeUpdateRequest.getNombre());
 
         Personaje savedPersonaje = this.personajeRepository.save(personaje);
 
@@ -66,13 +68,13 @@ public class PersonajeServiceImpl implements PersonajeService {
     }
 
     @Override
-    public List<PersonajeDTO> searchPersonaje(String name, Integer age) throws PersonajeSearchEmptyResultException {
+    public List<PersonajeResponse> searchPersonaje(String name, Integer age) throws PersonajeSearchEmptyResultException {
         List<Personaje> personajes = this.personajeRepository.searchPersonaje(name, age);
 
         if(personajes.isEmpty()){
             throw new PersonajeSearchEmptyResultException("No Personaje with those parameters could be found.");
         } else {
-            List<PersonajeDTO> personajeDTOS = personajes.stream().map(PersonajeMapper::mapToDTO).collect(Collectors.toList());
+            List<PersonajeResponse> personajeDTOS = personajes.stream().map(PersonajeMapper::mapToDTO).collect(Collectors.toList());
             return personajeDTOS;
         }
     }
