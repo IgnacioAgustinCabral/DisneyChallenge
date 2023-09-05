@@ -1,11 +1,9 @@
 package com.cabral.disney.service;
 
-import com.cabral.disney.dto.PersonajeDTO;
 import com.cabral.disney.entity.Personaje;
 import com.cabral.disney.exception.PersonajeNotFoundException;
 import com.cabral.disney.exception.PersonajeSearchEmptyResultException;
-import com.cabral.disney.payload.request.PersonajeCreateRequest;
-import com.cabral.disney.payload.request.PersonajeUpdateRequest;
+import com.cabral.disney.payload.request.PersonajeRequest;
 import com.cabral.disney.payload.response.PersonajeResponse;
 import com.cabral.disney.repository.PersonajeRepository;
 import com.cabral.disney.service.impl.PersonajeServiceImpl;
@@ -47,10 +45,10 @@ public class PersonajeServiceImplTest {
     @Test
     public void shouldCreateAPersonajeAndReturnPersonajeResponse(){
         Personaje personaje = Personaje.builder().imagen("images/characters/aladin.jpg").nombre("Aladin").peso(34.4).edad(25).historia("TEXTOTEXTOTEXTOTEXTOOOO").build();
-        PersonajeCreateRequest personajeCreateRequest = PersonajeCreateRequest.builder().nombre("Aladdin").edad(22).peso(61.3).historia("HISTORIAXHISTORIAXHISTORIAXXXXX").build();
+        PersonajeRequest personajeRequest = PersonajeRequest.builder().nombre("Aladdin").edad(22).peso(61.3).historia("HISTORIAXHISTORIAXHISTORIAXXXXX").build();
 
         when(this.personajeRepository.save(Mockito.any(Personaje.class))).thenReturn(personaje);
-        PersonajeResponse savedPersonaje = this.personajeService.createPersonaje(personajeCreateRequest);
+        PersonajeResponse savedPersonaje = this.personajeService.createPersonaje(personajeRequest);
         assertThat(savedPersonaje).isNotNull();
         assertThat(savedPersonaje).isInstanceOf(PersonajeResponse.class);
     }
@@ -69,7 +67,7 @@ public class PersonajeServiceImplTest {
         when(this.personajeRepository.findById(anyLong())).thenReturn(Optional.ofNullable(mock(Personaje.class)));
         when(this.personajeRepository.save(any(Personaje.class))).thenReturn(mock(Personaje.class));
 
-        PersonajeResponse personaje = this.personajeService.updatePersonaje(1L,mock(PersonajeUpdateRequest.class));
+        PersonajeResponse personaje = this.personajeService.updatePersonaje(1L,mock(PersonajeRequest.class));
 
         assertThat(personaje).isNotNull();
         assertThat(personaje).isInstanceOf(PersonajeResponse.class);

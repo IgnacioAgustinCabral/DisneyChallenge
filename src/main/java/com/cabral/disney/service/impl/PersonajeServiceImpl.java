@@ -1,12 +1,10 @@
 package com.cabral.disney.service.impl;
 
-import com.cabral.disney.dto.PersonajeDTO;
 import com.cabral.disney.entity.Personaje;
 import com.cabral.disney.exception.PersonajeNotFoundException;
 import com.cabral.disney.exception.PersonajeSearchEmptyResultException;
 import com.cabral.disney.mapper.PersonajeMapper;
-import com.cabral.disney.payload.request.PersonajeCreateRequest;
-import com.cabral.disney.payload.request.PersonajeUpdateRequest;
+import com.cabral.disney.payload.request.PersonajeRequest;
 import com.cabral.disney.payload.response.PersonajeResponse;
 import com.cabral.disney.repository.PersonajeRepository;
 import com.cabral.disney.service.PersonajeService;
@@ -33,8 +31,8 @@ public class PersonajeServiceImpl implements PersonajeService {
     }
 
     @Override
-    public PersonajeResponse createPersonaje(PersonajeCreateRequest personajeCreateRequest) {
-        Personaje newPersonaje = this.personajeRepository.save(PersonajeMapper.mapToEntity(personajeCreateRequest));
+    public PersonajeResponse createPersonaje(PersonajeRequest personajeRequest) {
+        Personaje newPersonaje = this.personajeRepository.save(PersonajeMapper.mapToEntity(personajeRequest));
 
         return PersonajeMapper.mapToDTO(newPersonaje);
     }
@@ -47,13 +45,13 @@ public class PersonajeServiceImpl implements PersonajeService {
     }
 
     @Override
-    public PersonajeResponse updatePersonaje(Long id, PersonajeUpdateRequest personajeUpdateRequest) throws PersonajeNotFoundException {
+    public PersonajeResponse updatePersonaje(Long id, PersonajeRequest personajeRequest) throws PersonajeNotFoundException {
         Personaje personaje = this.personajeRepository.findById(id).orElseThrow(() -> new PersonajeNotFoundException("Personaje could not be found"));
-        personaje.setEdad(personajeUpdateRequest.getEdad());
-        personaje.setHistoria(personajeUpdateRequest.getHistoria());
-        personaje.setImagen(personajeUpdateRequest.getImagen());
-        personaje.setPeso(personajeUpdateRequest.getPeso());
-        personaje.setNombre(personajeUpdateRequest.getNombre());
+        personaje.setEdad(personajeRequest.getEdad());
+        personaje.setHistoria(personajeRequest.getHistoria());
+        personaje.setImagen(personajeRequest.getImagen());
+        personaje.setPeso(personajeRequest.getPeso());
+        personaje.setNombre(personajeRequest.getNombre());
 
         Personaje savedPersonaje = this.personajeRepository.save(personaje);
 
