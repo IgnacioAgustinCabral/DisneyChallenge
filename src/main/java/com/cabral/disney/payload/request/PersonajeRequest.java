@@ -19,7 +19,7 @@ public class PersonajeRequest {
     private String nombre;
 
     @NotNull(message = "age is required.")
-    @Min(value = 1, message = "age must be greater or equal than {min}")
+    @Min(value = 1, message = "age must be greater or equal than {value}")
     private Integer edad;
 
     @NotNull(message = "weight is required.")
