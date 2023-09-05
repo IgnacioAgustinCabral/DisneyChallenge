@@ -1,10 +1,8 @@
 package com.cabral.disney.controller;
 
-import com.cabral.disney.dto.PersonajeDTO;
 import com.cabral.disney.exception.PersonajeNotFoundException;
 import com.cabral.disney.exception.PersonajeSearchEmptyResultException;
-import com.cabral.disney.payload.request.PersonajeCreateRequest;
-import com.cabral.disney.payload.request.PersonajeUpdateRequest;
+import com.cabral.disney.payload.request.PersonajeRequest;
 import com.cabral.disney.payload.response.PersonajeResponse;
 import com.cabral.disney.service.PersonajeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,14 +49,14 @@ public class PersonajeController {
 
 
     @PostMapping("/personaje")
-    public ResponseEntity<PersonajeResponse> createPersonaje(@Valid @RequestBody PersonajeCreateRequest personajeCreateRequest) {
-        return new ResponseEntity<>(this.personajeService.createPersonaje(personajeCreateRequest), HttpStatus.CREATED);
+    public ResponseEntity<PersonajeResponse> createPersonaje(@Valid @RequestBody PersonajeRequest personajeRequest) {
+        return new ResponseEntity<>(this.personajeService.createPersonaje(personajeRequest), HttpStatus.CREATED);
     }
 
     @PutMapping("/personaje/{id}")
-    public ResponseEntity<?> updatePersonaje(@PathVariable Long id, @Valid @RequestBody PersonajeUpdateRequest personajeUpdateRequest) {
+    public ResponseEntity<?> updatePersonaje(@PathVariable Long id, @Valid @RequestBody PersonajeRequest personajeRequest) {
         try {
-            return ResponseEntity.ok(this.personajeService.updatePersonaje(id, personajeUpdateRequest));
+            return ResponseEntity.ok(this.personajeService.updatePersonaje(id, personajeRequest));
         } catch (PersonajeNotFoundException exception) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
         }

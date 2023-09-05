@@ -1,8 +1,7 @@
 package com.cabral.disney.mapper;
 
-import com.cabral.disney.dto.PersonajeDTO;
 import com.cabral.disney.entity.Personaje;
-import com.cabral.disney.payload.request.PersonajeCreateRequest;
+import com.cabral.disney.payload.request.PersonajeRequest;
 import com.cabral.disney.payload.response.PersonajeResponse;
 import org.springframework.stereotype.Component;
 
@@ -19,13 +18,13 @@ public class PersonajeMapper {
                 .build();
     }
 
-    public static Personaje mapToEntity(PersonajeCreateRequest personajeCreateRequest) {
+    public static Personaje mapToEntity(PersonajeRequest personajeRequest) {
         return Personaje.builder()
-                .nombre(personajeCreateRequest.getNombre())
-                .edad(personajeCreateRequest.getEdad())
-                .peso(personajeCreateRequest.getPeso())
-                .historia(personajeCreateRequest.getHistoria())
-                .imagen(personajeCreateRequest.getImagen())
+                .nombre(personajeRequest.getNombre())
+                .edad(personajeRequest.getEdad())
+                .peso(personajeRequest.getPeso())
+                .historia(personajeRequest.getHistoria())
+                .imagen(personajeRequest.getImagen())
                 .build();
     }
 }
