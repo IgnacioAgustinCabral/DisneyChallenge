@@ -1,9 +1,10 @@
 package com.cabral.disney.service;
 
-import com.cabral.disney.dto.PersonajeDTO;
 import com.cabral.disney.entity.Personaje;
 import com.cabral.disney.exception.PersonajeNotFoundException;
 import com.cabral.disney.exception.PersonajeSearchEmptyResultException;
+import com.cabral.disney.payload.request.PersonajeRequest;
+import com.cabral.disney.payload.response.PersonajeResponse;
 import com.cabral.disney.repository.PersonajeRepository;
 import com.cabral.disney.service.impl.PersonajeServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -36,40 +37,40 @@ public class PersonajeServiceImplTest {
     public void shouldReturnAllPersonajes(){
         when(this.personajeRepository.findAll()).thenReturn(Arrays.asList(mock(Personaje.class)));
 
-        List<PersonajeDTO> personajes = this.personajeService.getAllPersonajes();
+        List<PersonajeResponse> personajes = this.personajeService.getAllPersonajes();
 
         assertThat(personajes).isNotNull();
     }
 
     @Test
-    public void shouldCreateAPersonajeAndReturnPersonajeDTO(){
+    public void shouldCreateAPersonajeAndReturnPersonajeResponse(){
         Personaje personaje = Personaje.builder().imagen("images/characters/aladin.jpg").nombre("Aladin").peso(34.4).edad(25).historia("TEXTOTEXTOTEXTOTEXTOOOO").build();
-        PersonajeDTO personajeDTO = PersonajeDTO.builder().imagen("images/characters/aladin.jpg").nombre("Aladin").peso(34.4).edad(25).historia("TEXTOTEXTOTEXTOTEXTOOOO").build();
+        PersonajeRequest personajeRequest = PersonajeRequest.builder().nombre("Aladdin").edad(22).peso(61.3).historia("HISTORIAXHISTORIAXHISTORIAXXXXX").build();
 
         when(this.personajeRepository.save(Mockito.any(Personaje.class))).thenReturn(personaje);
-        PersonajeDTO savedPersonaje = this.personajeService.createPersonaje(personajeDTO);
+        PersonajeResponse savedPersonaje = this.personajeService.createPersonaje(personajeRequest);
         assertThat(savedPersonaje).isNotNull();
-        assertThat(savedPersonaje).isInstanceOf(PersonajeDTO.class);
+        assertThat(savedPersonaje).isInstanceOf(PersonajeResponse.class);
     }
 
     @Test
-    public void shouldGetAPersonajeByIdAndReturnPersonajeDTO() throws PersonajeNotFoundException {
+    public void shouldGetAPersonajeByIdAndReturnPersonajeResponse() throws PersonajeNotFoundException {
         when(this.personajeRepository.findById(anyLong())).thenReturn(Optional.ofNullable(mock(Personaje.class)));
-        PersonajeDTO retrievedPersonaje = this.personajeService.getPersonajeById(1L);
+        PersonajeResponse retrievedPersonaje = this.personajeService.getPersonajeById(1L);
         assertThat(retrievedPersonaje).isNotNull();
-        assertThat(retrievedPersonaje).isInstanceOf(PersonajeDTO.class);
+        assertThat(retrievedPersonaje).isInstanceOf(PersonajeResponse.class);
     }
 
     @Test
-    public void shouldUpdateAPersonajeAndReturnPersonajeDTO() throws PersonajeNotFoundException {
+    public void shouldUpdateAPersonajeAndReturnPersonajeResponse() throws PersonajeNotFoundException {
 
         when(this.personajeRepository.findById(anyLong())).thenReturn(Optional.ofNullable(mock(Personaje.class)));
         when(this.personajeRepository.save(any(Personaje.class))).thenReturn(mock(Personaje.class));
 
-        PersonajeDTO personajeDTO = this.personajeService.updatePersonaje(1L,mock(PersonajeDTO.class));
+        PersonajeResponse personaje = this.personajeService.updatePersonaje(1L,mock(PersonajeRequest.class));
 
-        assertThat(personajeDTO).isNotNull();
-        assertThat(personajeDTO).isInstanceOf(PersonajeDTO.class);
+        assertThat(personaje).isNotNull();
+        assertThat(personaje).isInstanceOf(PersonajeResponse.class);
 
     }
 
@@ -91,9 +92,9 @@ public class PersonajeServiceImplTest {
 
         when(this.personajeRepository.searchPersonaje(anyString(), anyInt())).thenReturn(Arrays.asList(mock(Personaje.class)));
 
-        List<PersonajeDTO> personajesDTOs = this.personajeService.searchPersonaje(anyString(), anyInt());
+        List<PersonajeResponse> personajes = this.personajeService.searchPersonaje(anyString(), anyInt());
 
-        assertThat(personajesDTOs).isNotEmpty();
+        assertThat(personajes).isNotEmpty();
     }
 
     @Test

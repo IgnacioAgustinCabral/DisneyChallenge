@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -30,6 +31,6 @@ public class Pelicula {
     private Set<Personaje> personajes_asociados;
 
     @ManyToMany(mappedBy = "peliculas_asociadas")
-    private Set<Genero> generos_asociados;
+    private Set<Genero> generos_asociados = new HashSet<>();
 
 }

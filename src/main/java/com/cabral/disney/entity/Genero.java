@@ -3,6 +3,7 @@ package com.cabral.disney.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -21,5 +22,5 @@ public class Genero {
             joinColumns = @JoinColumn(name = "genero_id"),
             inverseJoinColumns = @JoinColumn(name = "pelicula_id")
     )
-    private Set<Personaje> peliculas_asociadas;
+    private Set<Personaje> peliculas_asociadas = new HashSet<>();
 }

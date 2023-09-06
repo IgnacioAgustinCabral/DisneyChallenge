@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -28,7 +29,7 @@ public class Personaje {
     @Column(nullable = false)
     private Double peso;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT",nullable = false)
     private String historia;
 
     private String imagen;
@@ -39,7 +40,7 @@ public class Personaje {
             joinColumns = @JoinColumn(name = "personaje_id"),
             inverseJoinColumns = @JoinColumn(name = "pelicula_id")
     )
-    private Set<Pelicula> peliculas_asociadas;
+    private Set<Pelicula> peliculas_asociadas = new HashSet<>();
 }
 
 
