@@ -1,14 +1,16 @@
 package com.cabral.disney.controller;
 
-import com.cabral.disney.dto.PersonajeDTO;
 import com.cabral.disney.exception.PersonajeNotFoundException;
 import com.cabral.disney.exception.PersonajeSearchEmptyResultException;
+import com.cabral.disney.payload.request.PersonajeRequest;
+import com.cabral.disney.payload.response.PersonajeResponse;
 import com.cabral.disney.service.PersonajeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -23,7 +25,7 @@ public class PersonajeController {
     }
 
     @GetMapping("/personaje/all")
-    public ResponseEntity<List<PersonajeDTO>> getPersonajes() {
+    public ResponseEntity<List<PersonajeResponse>> getPersonajes() {
         return new ResponseEntity<>(this.personajeService.getAllPersonajes(), HttpStatus.OK);
     }
 
@@ -46,18 +48,18 @@ public class PersonajeController {
     }
 
 
+    @PostMapping("/personaje")
+    public ResponseEntity<PersonajeResponse> createPersonaje(@Valid @RequestBody PersonajeRequest personajeRequest) {
+        return new ResponseEntity<>(this.personajeService.createPersonaje(personajeRequest), HttpStatus.CREATED);
+    }
+
     @PutMapping("/personaje/{id}")
-    public ResponseEntity<?> updatePersonaje(@PathVariable Long id, @RequestBody PersonajeDTO personaje) {
+    public ResponseEntity<?> updatePersonaje(@PathVariable Long id, @Valid @RequestBody PersonajeRequest personajeRequest) {
         try {
-            return ResponseEntity.ok(this.personajeService.updatePersonaje(id, personaje));
+            return ResponseEntity.ok(this.personajeService.updatePersonaje(id, personajeRequest));
         } catch (PersonajeNotFoundException exception) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
         }
-    }
-
-    @PostMapping("/personaje")
-    public ResponseEntity<PersonajeDTO> createPersonaje(@RequestBody PersonajeDTO personajeDTO) {
-        return new ResponseEntity<>(this.personajeService.createPersonaje(personajeDTO), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/personaje/{id}")

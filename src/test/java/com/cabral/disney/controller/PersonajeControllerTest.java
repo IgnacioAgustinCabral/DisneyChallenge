@@ -3,6 +3,7 @@ package com.cabral.disney.controller;
 import com.cabral.disney.dto.PersonajeDTO;
 import com.cabral.disney.exception.PersonajeNotFoundException;
 import com.cabral.disney.exception.PersonajeSearchEmptyResultException;
+import com.cabral.disney.payload.request.PersonajeRequest;
 import com.cabral.disney.service.PersonajeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -73,38 +74,64 @@ public class PersonajeControllerTest {
 
     @Test
     public void testUpdatePersonajeEndpointAndResponseIs200_OK() throws Exception {
-        PersonajeDTO updatedPersonajeDTO = new PersonajeDTO();
+        PersonajeRequest personajeRequest = PersonajeRequest.builder().nombre("Aladdin").edad(22).peso(61.3).historia("HISTORIAXHISTORIAXHISTORIAXXXXX").build();
 
         ResultActions response = mockMvc.perform(put("/personajes/personaje/{id}", 1)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(updatedPersonajeDTO)));
+                .content(objectMapper.writeValueAsString(personajeRequest)));
 
         response.andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     public void testUpdatePersonajeEndpointAndResponseIs404_NOT_FOUND() throws Exception {
-        PersonajeDTO updatedPersonajeDTO = new PersonajeDTO();
+        PersonajeRequest personajeRequest = PersonajeRequest.builder().nombre("Aladdin").edad(22).peso(61.3).historia("HISTORIAXHISTORIAXHISTORIAXXXXX").build();
 
-        when(this.personajeService.updatePersonaje(anyLong(), eq(updatedPersonajeDTO))).thenThrow(PersonajeNotFoundException.class);
+        when(this.personajeService.updatePersonaje(anyLong(), eq(personajeRequest))).thenThrow(PersonajeNotFoundException.class);
 
         ResultActions response = mockMvc.perform(put("/personajes/personaje/{id}", 1)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(updatedPersonajeDTO)));
+                .content(objectMapper.writeValueAsString(personajeRequest)));
 
         response.andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
+    public void testUpdatePersonajeEndpointAndResponseIs404_BAD_REQUEST() throws Exception {
+        //INVALID WEIGHT PESO
+        PersonajeRequest personajeRequest = PersonajeRequest.builder().nombre("Aladdin").edad(22).peso(0.0001).historia("HISTORIAXHISTORIAXHISTORIAXXXXX").build();
+
+        when(this.personajeService.updatePersonaje(anyLong(), eq(personajeRequest))).thenThrow(PersonajeNotFoundException.class);
+
+        ResultActions response = mockMvc.perform(put("/personajes/personaje/{id}", 1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(personajeRequest)));
+
+        response.andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
     public void testCreatePersonajeEndpointAndResponseIs201_CREATED() throws Exception {
 
-        PersonajeDTO personajeDTO = new PersonajeDTO();
+        PersonajeRequest personajeRequest = PersonajeRequest.builder().nombre("Aladdin").edad(22).peso(61.3).historia("HISTORIAXHISTORIAXHISTORIAXXXXX").build();
 
         ResultActions response = mockMvc.perform(post("/personajes/personaje")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(personajeDTO)));
+                .content(objectMapper.writeValueAsString(personajeRequest)));
 
         response.andExpect(MockMvcResultMatchers.status().isCreated());
+    }
+
+    @Test
+    public void testCreatePersonajeEndpointAndResponseIs400_BAD_REQUEST() throws Exception {
+        //INVALID WEIGHT PESO
+        PersonajeRequest invalidPersonajeRequest = PersonajeRequest.builder().nombre("Aladdin").edad(22).peso(0.005).historia("HISTORIAXHISTORIAXHISTORIAXXXXX").build();
+
+        ResultActions response = mockMvc.perform(post("/personajes/personaje")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(invalidPersonajeRequest)));
+
+        response.andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test
