@@ -88,7 +88,7 @@ public class PersonajeServiceImplTest {
     }
 
     @Test
-    public void shouldSearchAPersonajeByNameAndReturnAListOfPersonajeDTONotEmpty() throws PersonajeSearchEmptyResultException {
+    public void shouldSearchAPersonajeByNameAndReturnAListOfPersonajeResponseNotEmpty() throws PersonajeSearchEmptyResultException {
 
         when(this.personajeRepository.searchPersonaje(anyString(), anyInt())).thenReturn(Arrays.asList(mock(Personaje.class)));
 
