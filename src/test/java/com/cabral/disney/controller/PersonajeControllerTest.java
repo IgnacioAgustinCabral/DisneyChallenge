@@ -1,6 +1,5 @@
 package com.cabral.disney.controller;
 
-import com.cabral.disney.dto.PersonajeDTO;
 import com.cabral.disney.exception.PersonajeNotFoundException;
 import com.cabral.disney.exception.PersonajeSearchEmptyResultException;
 import com.cabral.disney.payload.request.PersonajeRequest;
@@ -52,8 +51,6 @@ public class PersonajeControllerTest {
 
     @Test
     public void testGetPersonajeEndpointAndResponseIs200_OK() throws Exception {
-
-        PersonajeDTO personajeDTO = new PersonajeDTO();
 
         ResultActions response = mockMvc.perform(get("/personajes/personaje/{id}", 1)
                 .contentType(MediaType.APPLICATION_JSON));

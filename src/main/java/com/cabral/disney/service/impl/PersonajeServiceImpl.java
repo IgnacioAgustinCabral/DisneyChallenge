@@ -26,8 +26,8 @@ public class PersonajeServiceImpl implements PersonajeService {
     @Override
     public List<PersonajeResponse> getAllPersonajes() {
         List<Personaje> personajes = this.personajeRepository.findAll();
-        List<PersonajeResponse> personajeDTOS = personajes.stream().map(personaje -> PersonajeMapper.mapToDTO(personaje)).collect(Collectors.toList());
-        return personajeDTOS;
+        List<PersonajeResponse> personajeResponses = personajes.stream().map(personaje -> PersonajeMapper.mapToDTO(personaje)).collect(Collectors.toList());
+        return personajeResponses;
     }
 
     @Override
@@ -72,8 +72,8 @@ public class PersonajeServiceImpl implements PersonajeService {
         if(personajes.isEmpty()){
             throw new PersonajeSearchEmptyResultException("No Personaje with those parameters could be found.");
         } else {
-            List<PersonajeResponse> personajeDTOS = personajes.stream().map(PersonajeMapper::mapToDTO).collect(Collectors.toList());
-            return personajeDTOS;
+            List<PersonajeResponse> personajeResponses = personajes.stream().map(PersonajeMapper::mapToDTO).collect(Collectors.toList());
+            return personajeResponses;
         }
     }
 }
