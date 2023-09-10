@@ -29,7 +29,7 @@ public class UserMapper {
     }
 
     public static User mapToEntity(RegisterRequest request) {
-        Role roles = roleRepository.findByName("USER").get();
+        Role roles = roleRepository.findByName("ROLE_USER").get();
 
         // Create a list of roles and add the default role to it
 
