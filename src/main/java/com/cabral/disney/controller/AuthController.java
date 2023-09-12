@@ -2,6 +2,7 @@ package com.cabral.disney.controller;
 
 import com.cabral.disney.exception.EmailAlreadyTakenException;
 import com.cabral.disney.exception.UsernameAlreadyTakenException;
+import com.cabral.disney.payload.request.LoginRequest;
 import com.cabral.disney.payload.request.RegisterRequest;
 import com.cabral.disney.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +26,13 @@ public class AuthController {
         this.authService = authService;
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+        return ResponseEntity.ok(authService.login(request));
+    }
+
     @PostMapping("/register")
-    public ResponseEntity<?> register (@Valid @RequestBody RegisterRequest request){
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
         try {
             return ResponseEntity.ok(this.authService.register(request));
         } catch (UsernameAlreadyTakenException e) {

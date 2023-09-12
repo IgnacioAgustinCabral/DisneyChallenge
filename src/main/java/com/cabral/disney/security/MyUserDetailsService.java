@@ -1,4 +1,4 @@
-package com.cabral.disney.service.impl;
+package com.cabral.disney.security;
 
 import com.cabral.disney.entity.User;
 import com.cabral.disney.repository.UserRepository;
@@ -11,11 +11,11 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class JPAUserDetailsServiceImpl implements UserDetailsService {
+public class MyUserDetailsService implements UserDetailsService {
     private UserRepository userRepository;
 
     @Autowired
-    public JPAUserDetailsServiceImpl(UserRepository userRepository) {
+    public MyUserDetailsService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
