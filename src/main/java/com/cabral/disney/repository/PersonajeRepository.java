@@ -1,6 +1,6 @@
 package com.cabral.disney.repository;
 
-import com.cabral.disney.entity.Personaje;
+import com.cabral.disney.models.Personaje;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

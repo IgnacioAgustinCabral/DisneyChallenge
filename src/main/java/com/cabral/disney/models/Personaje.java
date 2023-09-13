@@ -1,4 +1,4 @@
-package com.cabral.disney.entity;
+package com.cabral.disney.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,11 +36,11 @@ public class Personaje {
 
     @ManyToMany
     @JoinTable(
-            name = "pelicula_personaje",
+            name = "personaje_movie",
             joinColumns = @JoinColumn(name = "personaje_id"),
-            inverseJoinColumns = @JoinColumn(name = "pelicula_id")
+            inverseJoinColumns = @JoinColumn(name = "movie_id")
     )
-    private Set<Pelicula> peliculas_asociadas = new HashSet<>();
+    private Set<Movie> peliculas_asociadas = new HashSet<>();
 }
 
 

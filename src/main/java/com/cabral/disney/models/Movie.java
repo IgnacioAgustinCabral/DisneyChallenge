@@ -1,4 +1,4 @@
-package com.cabral.disney.entity;
+package com.cabral.disney.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Pelicula {
+public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,14 +23,15 @@ public class Pelicula {
     @Column(nullable = false)
     private String titulo;
 
+    @Column(nullable = false)
     private LocalDate fecha_creacion;
     private Integer calificacion;
     private String imagen;
 
-    @ManyToMany(mappedBy = "peliculas_asociadas")
-    private Set<Personaje> personajes_asociados;
+    @ManyToMany(mappedBy = "peliculas_asociadas", fetch = FetchType.EAGER)
+    private Set<Personaje> personajes_asociados = new HashSet<>();
 
-    @ManyToMany(mappedBy = "peliculas_asociadas")
-    private Set<Genero> generos_asociados = new HashSet<>();
+    @ManyToMany(mappedBy = "associated_movies", fetch = FetchType.EAGER)
+    private Set<Genero> associated_movies = new HashSet<>();
 
 }

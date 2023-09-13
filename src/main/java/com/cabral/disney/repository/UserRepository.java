@@ -1,6 +1,6 @@
 package com.cabral.disney.repository;
 
-import com.cabral.disney.entity.User;
+import com.cabral.disney.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

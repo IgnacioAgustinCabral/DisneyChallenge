@@ -1,6 +1,6 @@
 package com.cabral.disney.service;
 
-import com.cabral.disney.entity.Personaje;
+import com.cabral.disney.models.Personaje;
 import com.cabral.disney.exception.PersonajeNotFoundException;
 import com.cabral.disney.exception.PersonajeSearchEmptyResultException;
 import com.cabral.disney.payload.request.PersonajeRequest;

@@ -1,6 +1,6 @@
 package com.cabral.disney.mapper;
 
-import com.cabral.disney.entity.Personaje;
+import com.cabral.disney.models.Personaje;
 import com.cabral.disney.payload.request.PersonajeRequest;
 import com.cabral.disney.payload.response.PersonajeResponse;
 import org.springframework.stereotype.Component;

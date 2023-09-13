@@ -1,4 +1,4 @@
-package com.cabral.disney.entity;
+package com.cabral.disney.models;
 
 import lombok.Data;
 
@@ -18,9 +18,9 @@ public class Genero {
 
     @ManyToMany
     @JoinTable(
-            name = "pelicula_genero",
+            name = "movie_genero",
             joinColumns = @JoinColumn(name = "genero_id"),
-            inverseJoinColumns = @JoinColumn(name = "pelicula_id")
+            inverseJoinColumns = @JoinColumn(name = "movie_id")
     )
-    private Set<Personaje> peliculas_asociadas = new HashSet<>();
+    private Set<Movie> associated_movies = new HashSet<>();
 }
