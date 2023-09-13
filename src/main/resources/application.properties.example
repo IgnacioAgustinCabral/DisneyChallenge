@@ -13,3 +13,6 @@ logging.level.org.hibernate.SQL=debug
 #JWT
 security.jwt.secret-key = your-secret-key
 security.jwt.expiration = your-expiration-in-minutes
+
+#MAIL
+twilio-sendgrid.mail.api-key = your-api-key

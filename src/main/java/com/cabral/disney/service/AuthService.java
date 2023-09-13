@@ -6,8 +6,10 @@ import com.cabral.disney.payload.request.LoginRequest;
 import com.cabral.disney.payload.request.RegisterRequest;
 import com.cabral.disney.payload.response.AuthResponse;
 
+import java.io.IOException;
+
 public interface AuthService {
-    AuthResponse register(RegisterRequest request) throws UsernameAlreadyTakenException, EmailAlreadyTakenException;
+    AuthResponse register(RegisterRequest request) throws UsernameAlreadyTakenException, EmailAlreadyTakenException, IOException;
 
     AuthResponse login(LoginRequest request);
 }

@@ -16,23 +16,27 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+
 @Service
 public class AuthServiceImpl implements AuthService {
     private UserRepository userRepository;
     private JwtService jwtService;
     private PasswordEncoder passwordEncoder;
     private AuthenticationManager authenticationManager;
+    private EmailService emailService;
 
     @Autowired
-    public AuthServiceImpl(UserRepository userRepository, JwtService jwtService, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
+    public AuthServiceImpl(UserRepository userRepository, JwtService jwtService, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, EmailService emailService) {
         this.userRepository = userRepository;
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
+        this.emailService = emailService;
     }
 
     @Override
-    public AuthResponse register(RegisterRequest request) throws UsernameAlreadyTakenException, EmailAlreadyTakenException {
+    public AuthResponse register(RegisterRequest request) throws UsernameAlreadyTakenException, EmailAlreadyTakenException, IOException {
         if (this.userRepository.existsByUsername(request.getUsername())) {
             throw new UsernameAlreadyTakenException("Username already in use.");
         } else if (this.userRepository.existsByEmail(request.getEmail())) {
@@ -40,6 +44,8 @@ public class AuthServiceImpl implements AuthService {
         } else {
             User newUser = UserMapper.mapToEntity(request);
             this.userRepository.save(newUser);
+//            EmailService.send(request.getEmail());
+            emailService.sendEmail(request.getEmail());
             return AuthResponse.builder().message(jwtService.getToken(newUser)).build();
         }
     }
