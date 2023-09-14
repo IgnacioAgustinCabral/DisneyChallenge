@@ -18,6 +18,6 @@ public class MovieResponse {
     private LocalDate fecha_creacion;
     private Integer calificacion;
     private String imagen;
-    private Set<Long> personajes;
+    private Set<Long> personajeIds;
     private Set<Long> generos;
 }

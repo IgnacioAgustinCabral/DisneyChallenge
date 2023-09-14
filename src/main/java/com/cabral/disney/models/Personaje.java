@@ -1,16 +1,14 @@
 package com.cabral.disney.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -34,12 +32,7 @@ public class Personaje {
 
     private String imagen;
 
-    @ManyToMany
-    @JoinTable(
-            name = "personaje_movie",
-            joinColumns = @JoinColumn(name = "personaje_id"),
-            inverseJoinColumns = @JoinColumn(name = "movie_id")
-    )
+    @ManyToMany(mappedBy = "personajes_asociados", fetch = FetchType.EAGER)
     private Set<Movie> peliculas_asociadas = new HashSet<>();
 }
 

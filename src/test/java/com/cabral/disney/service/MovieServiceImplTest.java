@@ -1,5 +1,6 @@
 package com.cabral.disney.service;
 
+import com.cabral.disney.exception.PersonajeNotFoundException;
 import com.cabral.disney.models.Movie;
 import com.cabral.disney.exception.MovieNotFoundException;
 import com.cabral.disney.exception.MovieSearchEmptyResultException;
@@ -49,7 +50,7 @@ public class MovieServiceImplTest {
     }
 
     @Test
-    public void shouldCreateAMovieAndReturnMovieResponse() {
+    public void shouldCreateAMovieAndReturnMovieResponse() throws PersonajeNotFoundException {
 
         when(this.movieRepository.save(any(Movie.class))).thenReturn(mock(Movie.class));
 

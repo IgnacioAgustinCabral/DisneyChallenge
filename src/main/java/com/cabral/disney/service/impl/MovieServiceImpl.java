@@ -1,27 +1,35 @@
 package com.cabral.disney.service.impl;
 
+import com.cabral.disney.exception.PersonajeNotFoundException;
 import com.cabral.disney.models.Movie;
 import com.cabral.disney.exception.MovieNotFoundException;
 import com.cabral.disney.exception.MovieSearchEmptyResultException;
 import com.cabral.disney.mapper.MovieMapper;
+import com.cabral.disney.models.Personaje;
 import com.cabral.disney.payload.request.MovieRequest;
 import com.cabral.disney.payload.response.MovieResponse;
 import com.cabral.disney.repository.MovieRepository;
+import com.cabral.disney.repository.PersonajeRepository;
 import com.cabral.disney.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 public class MovieServiceImpl implements MovieService {
 
     private MovieRepository movieRepository;
+    private PersonajeRepository personajeRepository;
 
     @Autowired
-    public MovieServiceImpl(MovieRepository movieRepository) {
+    public MovieServiceImpl(MovieRepository movieRepository, PersonajeRepository personajeRepository) {
         this.movieRepository = movieRepository;
+        this.personajeRepository = personajeRepository;
     }
 
     @Override
@@ -39,8 +47,26 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public MovieResponse createMovie(MovieRequest request) {
-        Movie newMovie = this.movieRepository.save(MovieMapper.mapToEntity(request));
+    @Transactional
+    public MovieResponse createMovie(MovieRequest request){
+        Set<Personaje> personajes = new HashSet<>();
+        Set<Long> personajesIds = request.getPersonajes();
+
+        if (!personajesIds.isEmpty()) {
+
+            personajesIds.stream().map(id -> {
+                        try {
+                            return this.personajeRepository.findById(id).orElseThrow(() -> new PersonajeNotFoundException("Personaje not found with id: " + id));
+                        } catch (PersonajeNotFoundException e) {
+                            throw new RuntimeException(e);
+                        }
+                    })
+                    .forEach(personajes::add);
+        }
+//        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+//        personajes.stream().forEach(personaje -> System.out.println(personaje));
+        Movie newMovie = this.movieRepository.save(MovieMapper.mapToEntity(request, personajes));
+//        System.out.println(newMovie);
 
         return MovieMapper.mapToDTO(newMovie);
     }
