@@ -24,5 +24,5 @@ public class PersonajeResponse {
 
     private String imagen;
 
-    private Set<Long> peliculas;
+    private Set<Long> peliculaIds;
 }

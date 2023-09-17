@@ -32,7 +32,7 @@ public class Personaje {
 
     private String imagen;
 
-    @ManyToMany(mappedBy = "personajes_asociados", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "personajes_asociados", fetch = FetchType.LAZY)
     private Set<Movie> peliculas_asociadas = new HashSet<>();
 }
 

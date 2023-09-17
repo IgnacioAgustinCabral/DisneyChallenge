@@ -26,7 +26,7 @@ public class Movie {
     private Integer calificacion;
     private String imagen;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "movie_personaje",
             joinColumns = @JoinColumn(name = "movie_id"),

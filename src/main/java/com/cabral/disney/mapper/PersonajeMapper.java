@@ -5,6 +5,8 @@ import com.cabral.disney.payload.request.PersonajeRequest;
 import com.cabral.disney.payload.response.PersonajeResponse;
 import org.springframework.stereotype.Component;
 
+import java.util.stream.Collectors;
+
 @Component
 public class PersonajeMapper {
     public static PersonajeResponse mapToDTO(Personaje personaje) {
@@ -15,6 +17,11 @@ public class PersonajeMapper {
                 .peso(personaje.getPeso())
                 .historia(personaje.getHistoria())
                 .imagen(personaje.getImagen())
+                .peliculaIds(
+                        personaje.getPeliculas_asociadas()
+                                .stream()
+                                .map(pelicula -> pelicula.getId())
+                                .collect(Collectors.toSet()))
                 .build();
     }
 
