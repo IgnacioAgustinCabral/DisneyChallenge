@@ -44,7 +44,7 @@ public class MovieControllerTest {
     @BeforeEach
     public void init() {
         fechaCreacion = LocalDate.of(2023, 8, 12);
-        movieRequest = MovieRequest.builder().titulo("TITULO").fecha_creacion(fechaCreacion).imagen("path/to/image").calificacion(5).build();
+        movieRequest = MovieRequest.builder().title("TITULO").creationDate(fechaCreacion).image("path/to/image").qualification(5).build();
     }
 
     @Test

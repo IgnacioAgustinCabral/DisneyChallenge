@@ -1,21 +1,20 @@
 package com.cabral.disney.service.impl;
 
-import com.cabral.disney.exception.PersonajeNotFoundException;
-import com.cabral.disney.models.Movie;
+import com.cabral.disney.exception.CharacterNotFoundException;
 import com.cabral.disney.exception.MovieNotFoundException;
 import com.cabral.disney.exception.MovieSearchEmptyResultException;
 import com.cabral.disney.mapper.MovieMapper;
-import com.cabral.disney.models.Personaje;
+import com.cabral.disney.models.Character;
+import com.cabral.disney.models.Movie;
 import com.cabral.disney.payload.request.MovieRequest;
 import com.cabral.disney.payload.response.MovieResponse;
+import com.cabral.disney.repository.CharacterRepository;
 import com.cabral.disney.repository.MovieRepository;
-import com.cabral.disney.repository.PersonajeRepository;
 import com.cabral.disney.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -24,12 +23,12 @@ import java.util.stream.Collectors;
 public class MovieServiceImpl implements MovieService {
 
     private MovieRepository movieRepository;
-    private PersonajeRepository personajeRepository;
+    private CharacterRepository characterRepository;
 
     @Autowired
-    public MovieServiceImpl(MovieRepository movieRepository, PersonajeRepository personajeRepository) {
+    public MovieServiceImpl(MovieRepository movieRepository, CharacterRepository characterRepository) {
         this.movieRepository = movieRepository;
-        this.personajeRepository = personajeRepository;
+        this.characterRepository = characterRepository;
     }
 
     @Override
@@ -48,37 +47,35 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     @Transactional
-    public MovieResponse createMovie(MovieRequest request){
-        Set<Personaje> personajes = new HashSet<>();
-        Set<Long> personajesIds = request.getPersonajes();
+    public MovieResponse createMovie(MovieRequest request) {
+        Set<Character> characters = null;
+        Set<Long> characterIds = request.getCharacterIds();
 
-        if (!personajesIds.isEmpty()) {
-
-            personajesIds.stream().map(id -> {
+        if (characterIds != null) {
+            characters = characterIds.stream().map(id -> {
                         try {
-                            return this.personajeRepository.findById(id).orElseThrow(() -> new PersonajeNotFoundException("Personaje not found with id: " + id));
-                        } catch (PersonajeNotFoundException e) {
+                            return this.characterRepository.findById(id).orElseThrow(() -> new CharacterNotFoundException("Character not found with id: " + id));
+                        } catch (CharacterNotFoundException e) {
                             throw new RuntimeException(e);
                         }
                     })
-                    .forEach(personajes::add);
+                    .collect(Collectors.toSet());
         }
-//        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-//        personajes.stream().forEach(personaje -> System.out.println(personaje));
-        Movie newMovie = this.movieRepository.save(MovieMapper.mapToEntity(request, personajes));
-//        System.out.println(newMovie);
 
-        return MovieMapper.mapToDTO(newMovie);
+        Movie newMovie = MovieMapper.mapToEntity(request, characters);
+        Movie savedMovie = movieRepository.save(newMovie);
+
+        return MovieMapper.mapToDTO(savedMovie);
     }
 
     @Override
     public MovieResponse updateMovie(Long id, MovieRequest request) throws MovieNotFoundException {
         Movie movie = this.movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundException("Movie could not be found."));
 
-        movie.setImagen(request.getImagen());
-        movie.setFecha_creacion(request.getFecha_creacion());
-        movie.setCalificacion(request.getCalificacion());
-        movie.setTitulo(request.getTitulo());
+        movie.setImage(request.getImage());
+        movie.setCreationDate(request.getCreationDate());
+        movie.setQualification(request.getQualification());
+        movie.setTitle(request.getTitle());
 
         Movie updatedMovie = this.movieRepository.save(movie);
 

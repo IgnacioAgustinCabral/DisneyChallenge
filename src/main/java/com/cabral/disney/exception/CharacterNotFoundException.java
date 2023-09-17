@@ -1,9 +1,9 @@
 package com.cabral.disney.exception;
 
-public class PersonajeNotFoundException extends Exception {
+public class CharacterNotFoundException extends Exception {
     private static final long serialVersionUID = 2L;
 
-    public PersonajeNotFoundException(String message) {
+    public CharacterNotFoundException(String message) {
         super(message);
     }
 }

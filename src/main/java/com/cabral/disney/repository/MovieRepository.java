@@ -8,6 +8,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface MovieRepository extends JpaRepository<Movie, Long> {
-    @Query("SELECT m FROM Movie m WHERE m.titulo LIKE %:name%")
+    @Query("SELECT m FROM Movie m WHERE m.title LIKE %:name%")
     List<Movie> searchMovie(@Param("name") String name);
 }

@@ -27,7 +27,7 @@ public class SecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeRequests(auth -> auth
-                        .mvcMatchers("/personajes/**").hasRole("ADMIN")
+                        .mvcMatchers("/characters/**").hasRole("ADMIN")
                         .anyRequest().permitAll())
                 .sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authProvider)

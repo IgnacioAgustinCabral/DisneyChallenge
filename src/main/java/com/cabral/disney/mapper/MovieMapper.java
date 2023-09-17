@@ -1,7 +1,7 @@
 package com.cabral.disney.mapper;
 
+import com.cabral.disney.models.Character;
 import com.cabral.disney.models.Movie;
-import com.cabral.disney.models.Personaje;
 import com.cabral.disney.payload.request.MovieRequest;
 import com.cabral.disney.payload.response.MovieResponse;
 import org.springframework.stereotype.Component;
@@ -12,28 +12,37 @@ import java.util.stream.Collectors;
 @Component
 public class MovieMapper {
     public static MovieResponse mapToDTO(Movie movie) {
-        return MovieResponse.builder()
+        MovieResponse.MovieResponseBuilder builder = MovieResponse.builder()
                 .id(movie.getId())
-                .imagen(movie.getImagen())
-                .titulo(movie.getTitulo())
-                .calificacion(movie.getCalificacion())
-                .fecha_creacion(movie.getFecha_creacion())
-                .personajeIds(
-                        movie.getPersonajes_asociados()
-                                .stream()
-                                .map(personaje -> personaje.getId())
-                                .collect(Collectors.toSet())
-                )
-                .build();
+                .title(movie.getTitle())
+                .creationDate(movie.getCreationDate())
+                .qualification(movie.getQualification())
+                .image(movie.getImage());
+
+        if (movie.getCharacterAssociations() != null) {
+            builder.characterIds(movie.getCharacterAssociations().stream()
+                    .map(character -> character.getId())
+                    .collect(Collectors.toSet()));
+        }
+
+        return builder.build();
     }
 
-    public static Movie mapToEntity(MovieRequest movieRequest, Set<Personaje> personajes) {
-        return Movie.builder()
-                .imagen(movieRequest.getImagen())
-                .titulo(movieRequest.getTitulo())
-                .calificacion(movieRequest.getCalificacion())
-                .fecha_creacion(movieRequest.getFecha_creacion())
-                .personajes_asociados(personajes)
-                .build();
+    public static Movie mapToEntity(MovieRequest request) {
+        return mapToEntity(request, null);
+    }
+
+    public static Movie mapToEntity(MovieRequest request, Set<Character> characters) {
+        Movie.MovieBuilder builder = Movie.builder()
+                .title(request.getTitle())
+                .creationDate(request.getCreationDate())
+                .qualification(request.getQualification())
+                .image(request.getImage());
+
+        if (characters != null) {
+            builder.characterAssociations(characters);
+        }
+
+        return builder.build();
     }
 }

@@ -40,7 +40,7 @@ public class MovieController {
     }
 
     @GetMapping("/movie")
-    public ResponseEntity<?> searchPersonajes(@RequestParam String name) {
+    public ResponseEntity<?> searchMovie(@RequestParam String name) {
         try {
             List<MovieResponse> movieResponses = this.movieService.searchMovie(name);
             return ResponseEntity.ok(movieResponses);

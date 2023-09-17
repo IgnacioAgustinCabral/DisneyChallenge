@@ -21,15 +21,15 @@ public class MovieRequest {
 
     @NotBlank(message = "name is required.")
     @Size(min = 1,max = 50,message = "the title must be between {min} and {max} characters long.")
-    private String titulo;
+    private String title;
 
     @NotNull(message = "The creation date is required.")
     @Past(message = "The creation date must be in the past.")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate fecha_creacion;
+    private LocalDate creationDate;
 
-    private Integer calificacion;
-    private String imagen;
-    private Set<Long> personajes;
-    private Set<Long> generos;
+    private Integer qualification;
+    private String image;
+    private Set<Long> characterIds;
+    private Set<Long> genreIds;
 }

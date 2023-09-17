@@ -12,25 +12,25 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PersonajeRequest {
+public class CharacterRequest {
 
     @NotBlank(message = "name is required.")
     @Size(min = 1,max = 300,message = "the name must be between {min} and {max} characters long.")
-    private String nombre;
+    private String name;
 
     @NotNull(message = "age is required.")
     @Min(value = 1, message = "age must be greater or equal than {value}")
-    private Integer edad;
+    private Integer age;
 
     @NotNull(message = "weight is required.")
     @DecimalMin(value = "0.1",message = "weight must be greater or equal than {value}")
-    private Double peso;
+    private Double weight;
 
     @NotBlank(message = "history is required.")
     @Size(min = 1,max = 2000,message = "the history must be between {min} and {max} characters long.")
-    private String historia;
+    private String history;
 
-    private String imagen;
+    private String image;
 
-    private Set<Long> peliculas;
+    private Set<Long> movieIds;
 }

@@ -2,7 +2,6 @@ package com.cabral.disney.service;
 
 import com.cabral.disney.exception.MovieNotFoundException;
 import com.cabral.disney.exception.MovieSearchEmptyResultException;
-import com.cabral.disney.exception.PersonajeNotFoundException;
 import com.cabral.disney.payload.request.MovieRequest;
 import com.cabral.disney.payload.response.MovieResponse;
 

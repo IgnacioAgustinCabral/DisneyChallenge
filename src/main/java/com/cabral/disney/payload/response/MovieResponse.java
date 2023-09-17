@@ -14,10 +14,10 @@ import java.util.Set;
 @Builder
 public class MovieResponse {
     private Long id;
-    private String titulo;
-    private LocalDate fecha_creacion;
-    private Integer calificacion;
-    private String imagen;
-    private Set<Long> personajeIds;
-    private Set<Long> generos;
+    private String title;
+    private LocalDate creationDate;
+    private Integer qualification;
+    private String image;
+    private Set<Long> characterIds;
+    private Set<Long> genreIds;
 }
