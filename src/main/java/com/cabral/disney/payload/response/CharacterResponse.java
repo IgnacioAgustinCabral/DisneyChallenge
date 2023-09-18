@@ -11,18 +11,18 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PersonajeResponse {
+public class CharacterResponse {
     private Long id;
 
-    private String nombre;
+    private String name;
 
-    private Integer edad;
+    private Integer age;
 
-    private Double peso;
+    private Double weight;
 
-    private String historia;
+    private String history;
 
-    private String imagen;
+    private String image;
 
-    private Set<Long> peliculas;
+    private Set<Long> movieIds;
 }

@@ -1,7 +1,7 @@
 ### Objetivo 🎯
 
 Para lograr la solicitud del cliente, deberás desarrollar una API que permita navegar por
-estos personajes y sus películas y se deberá exponer la información para que cualquier
+estos characters y sus películas y se deberá exponer la información para que cualquier
 frontend pueda consumirla. Algunos elementos que debes tener en cuenta:
 
 👉 Utilizar Spring Boot.
@@ -62,9 +62,9 @@ estadío que la tengas en base a tu conocimiento.
 ### 2. Creación, Edición y Eliminación de Personajes (CRUD)
 
 - Deberán existir las operaciones básicas de creación, edición y eliminación de
-personajes.
+characters.
 
-- Al guardar/actualizar un personaje, se deberá devolver esta entidad completa,
+- Al guardar/actualizar un character, se deberá devolver esta entidad completa,
 es decir, con sus películas o series relacionadas.
 
 - Al momento del Update, es importante solo actualizar la Entidad Personaje y
@@ -76,7 +76,7 @@ no su listado de películas
 
 ### 4. Detalle de Personaje
 
-- En el detalle deberán listarse todos los atributos del personaje, como así también sus
+- En el detalle deberán listarse todos los atributos del character, como así también sus
 películas o series relacionadas.
 
 ### 5. Búsqueda de Personajes
@@ -103,9 +103,9 @@ El endpoint deberá ser:
 
 Recordar que si ningún filtro es enviado, se deben devolver todas las entidades.
 
-### 6. Detalle de Película / Serie con sus personajes
+### 6. Detalle de Película / Serie con sus characters
 
-- Devolverá todos los campos de la película o serie junto a los personajes asociados a la
+- Devolverá todos los campos de la película o serie junto a los characters asociados a la
 misma
 
 ### 7. Creación, Edición y Eliminación de Película / Serie.
@@ -113,13 +113,13 @@ misma
 - Deberán existir las operaciones básicas de creación, edición y eliminación de películas o
 series.
 
-- Al crear una Película, crearla con sus personajes asociados
+- Al crear una Película, crearla con sus characters asociados
 
 - Al guardar/actualizar una película, se deberá devolver esta entidad
-completa, es decir, con sus personajes asociados.
+completa, es decir, con sus characters asociados.
 
 - Al momento del Update, es importante solo actualizar la Entidad
-Película y no su listado de personajes.
+Película y no su listado de characters.
 
 ### 8. Búsqueda de Películas o Series
 
@@ -149,9 +149,9 @@ El endpoint deberá ser:
 
 Recordar que si ningún filtro es enviado, se deben devolver todas las entidades.
 
-### 9. Agregar/Remover personajes a una película
+### 9. Agregar/Remover characters a una película
 
-Deberá existir un endpoint que nos permita agregar/remover personajes a una película.
+Deberá existir un endpoint que nos permita agregar/remover characters a una película.
 Los endpoint deberán ser:
 
 - POST /movies/{idMovie}/characters/{idCharacter}

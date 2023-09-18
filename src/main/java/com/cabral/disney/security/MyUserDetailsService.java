@@ -1,6 +1,6 @@
 package com.cabral.disney.security;
 
-import com.cabral.disney.entity.User;
+import com.cabral.disney.models.User;
 import com.cabral.disney.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

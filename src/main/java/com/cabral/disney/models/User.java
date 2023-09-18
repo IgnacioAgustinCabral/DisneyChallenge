@@ -1,4 +1,4 @@
-package com.cabral.disney.entity;
+package com.cabral.disney.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
