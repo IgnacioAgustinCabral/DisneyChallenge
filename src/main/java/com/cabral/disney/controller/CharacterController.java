@@ -47,7 +47,6 @@ public class CharacterController {
         }
     }
 
-
     @PostMapping("/character")
     public ResponseEntity<CharacterResponse> createCharacter(@Valid @RequestBody CharacterRequest characterRequest) {
         return new ResponseEntity<>(this.characterService.createCharacter(characterRequest), HttpStatus.CREATED);

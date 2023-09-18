@@ -68,15 +68,30 @@ public class CharacterServiceImpl implements CharacterService {
     @Override
     public CharacterResponse updateCharacter(Long id, CharacterRequest characterRequest) throws CharacterNotFoundException {
         Character character = this.characterRepository.findById(id).orElseThrow(() -> new CharacterNotFoundException("Character could not be found"));
+
         character.setAge(characterRequest.getAge());
         character.setHistory(characterRequest.getHistory());
         character.setImage(characterRequest.getImage());
         character.setWeight(characterRequest.getWeight());
         character.setName(characterRequest.getName());
 
-        Character savedCharacter = this.characterRepository.save(character);
+        Set<Long> movieIds = characterRequest.getMovieIds();
 
-        return CharacterMapper.mapToDTO(savedCharacter);
+        if (movieIds != null){
+            Set<Movie> newMovies = movieIds.stream().map(movieId -> {
+                        try {
+                             return this.movieRepository.findById(movieId).orElseThrow(() -> new MovieNotFoundException("Movie not found with id: " + id));
+                        } catch (MovieNotFoundException e) {
+                            throw new RuntimeException(e);
+                        }
+                    })
+                    .collect(Collectors.toSet());
+            character.getMovieAssociations().addAll(newMovies);
+        }
+
+        Character updatedCharacter = this.characterRepository.save(character);
+
+        return CharacterMapper.mapToDTO(updatedCharacter);
     }
 
     @Override
