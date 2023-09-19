@@ -23,4 +23,15 @@ public class GenreRepositoryTest {
         assertThat(savedGenre).isNotNull();
     }
 
+    @Test
+    public void whenGenreIsSavedWithAName_thenSavedGenreShouldHaveTheSameName(){
+        Genre genre = Genre.builder()
+                .name("Comedy")
+                .build();
+
+        Genre savedGenre = this.genreRepository.save(genre);
+
+        assertThat(savedGenre.getName()).isEqualTo("Comedy");
+    }
+
 }
