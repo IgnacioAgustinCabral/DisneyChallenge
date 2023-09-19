@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -84,6 +85,24 @@ public class GenreRepositoryTest {
 
         // Assert that the retrieved optional is empty
         assertThat(retrievedGenreOptional).isNotPresent();
+    }
+
+    @Test
+    public void whenSavingTwoGenres_thenRetrieveAllShouldContainBoth(){
+        Genre genre1 = Genre.builder()
+                .name("Comedy")
+                .build();
+
+        Genre genre2 = Genre.builder()
+                .name("Romantic")
+                .build();
+
+        this.genreRepository.save(genre1);
+        this.genreRepository.save(genre2);
+
+        List<Genre> allGenres = this.genreRepository.findAll();
+
+        assertThat(allGenres.size()).isEqualTo(2);
     }
 
 
