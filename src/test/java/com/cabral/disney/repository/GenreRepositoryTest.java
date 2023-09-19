@@ -71,4 +71,20 @@ public class GenreRepositoryTest {
             assertThat(retrievedGenre.getName()).isEqualTo(savedGenre.getName());
         });
     }
+
+    @Test
+    public void whenTryingToRetrieveNonexistentGenreByNameShouldReturnEmptyOptional(){
+        Genre genre = Genre.builder()
+                .name("Comedy")
+                .build();
+
+        this.genreRepository.save(genre);
+
+        Optional<Genre> retrievedGenreOptional = this.genreRepository.findByName("Horror");
+
+        // Assert that the retrieved optional is empty
+        assertThat(retrievedGenreOptional).isNotPresent();
+    }
+
+
 }
