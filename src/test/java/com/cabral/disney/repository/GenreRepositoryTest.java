@@ -4,8 +4,10 @@ import com.cabral.disney.models.Genre;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DataJpaTest
 public class GenreRepositoryTest {
@@ -33,5 +35,23 @@ public class GenreRepositoryTest {
 
         assertThat(savedGenre.getName()).isEqualTo("Comedy");
     }
+
+    @Test
+    public void creatingGenresWithDuplicateNamesShouldThrowException(){
+        Genre genre1 = Genre.builder()
+                .name("Comedy")
+                .build();
+
+        Genre genre2 = Genre.builder()
+                .name("Comedy")
+                .build();
+
+        Genre savedGenre1 = this.genreRepository.save(genre1);
+
+        assertThrows(DataIntegrityViolationException.class, () -> {
+            this.genreRepository.save(genre2);
+        });
+    }
+
 
 }
