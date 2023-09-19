@@ -49,7 +49,7 @@ public class GenreRepositoryTest {
                 .name("Comedy")
                 .build();
 
-        Genre savedGenre1 = this.genreRepository.save(genre1);
+        this.genreRepository.save(genre1);
 
         assertThrows(DataIntegrityViolationException.class, () -> {
             this.genreRepository.save(genre2);
@@ -57,7 +57,7 @@ public class GenreRepositoryTest {
     }
 
     @Test
-    public void whenGenreIsSaved_ThenItCanBeRetrievedByName(){
+    public void whenGenreIsSaved_ThenItCanBeRetrievedByName() {
         Genre genre = Genre.builder()
                 .name("Comedy")
                 .build();
@@ -74,7 +74,7 @@ public class GenreRepositoryTest {
     }
 
     @Test
-    public void whenTryingToRetrieveNonexistentGenreByNameShouldReturnEmptyOptional(){
+    public void whenTryingToRetrieveNonexistentGenreByNameShouldReturnEmptyOptional() {
         Genre genre = Genre.builder()
                 .name("Comedy")
                 .build();
@@ -88,7 +88,7 @@ public class GenreRepositoryTest {
     }
 
     @Test
-    public void whenSavingTwoGenres_thenRetrieveAllShouldContainBoth(){
+    public void whenSavingTwoGenres_thenRetrieveAllShouldContainBoth() {
         Genre genre1 = Genre.builder()
                 .name("Comedy")
                 .build();
@@ -103,6 +103,19 @@ public class GenreRepositoryTest {
         List<Genre> allGenres = this.genreRepository.findAll();
 
         assertThat(allGenres.size()).isEqualTo(2);
+    }
+
+    @Test
+    public void whenGenreIsSaved_ThenRetrieveItByItsId() {
+        Genre genre = Genre.builder()
+                .name("Comedy")
+                .build();
+
+        Genre savedGenre = this.genreRepository.save(genre);
+
+        Optional<Genre> retrievedGenreOptional = this.genreRepository.findById(savedGenre.getId());
+
+        assertThat(retrievedGenreOptional).isPresent().contains(savedGenre);
     }
 
 
