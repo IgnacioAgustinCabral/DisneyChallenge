@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -26,7 +28,7 @@ public class GenreRepositoryTest {
     }
 
     @Test
-    public void whenGenreIsSavedWithAName_thenSavedGenreShouldHaveTheSameName(){
+    public void whenGenreIsSavedWithAName_thenSavedGenreShouldHaveTheSameName() {
         Genre genre = Genre.builder()
                 .name("Comedy")
                 .build();
@@ -37,7 +39,7 @@ public class GenreRepositoryTest {
     }
 
     @Test
-    public void creatingGenresWithDuplicateNamesShouldThrowException(){
+    public void creatingGenresWithDuplicateNamesShouldThrowException() {
         Genre genre1 = Genre.builder()
                 .name("Comedy")
                 .build();
@@ -53,5 +55,20 @@ public class GenreRepositoryTest {
         });
     }
 
+    @Test
+    public void whenGenreIsSaved_ThenItCanBeRetrievedByName(){
+        Genre genre = Genre.builder()
+                .name("Comedy")
+                .build();
 
+        Genre savedGenre = this.genreRepository.save(genre);
+
+        Optional<Genre> retrievedGenreOptional = this.genreRepository.findByName("Comedy");
+
+        assertThat(retrievedGenreOptional).isPresent();
+
+        retrievedGenreOptional.ifPresent(retrievedGenre -> {
+            assertThat(retrievedGenre.getName()).isEqualTo(savedGenre.getName());
+        });
+    }
 }
