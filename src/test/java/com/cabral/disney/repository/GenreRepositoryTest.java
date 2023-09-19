@@ -118,5 +118,25 @@ public class GenreRepositoryTest {
         assertThat(retrievedGenreOptional).isPresent().contains(savedGenre);
     }
 
+    @Test
+    public void whenGenreIsUpdated_thenItShouldReflectTheChanges() {
+        Genre genre = Genre.builder()
+                .name("Comedy")
+                .build();
+        Genre savedGenre = genreRepository.save(genre);
+
+        // Modify the genre
+        savedGenre.setName("Drama");
+        genreRepository.save(savedGenre); // Save the updated genre
+
+        Optional<Genre> updatedGenreOptional = genreRepository.findById(savedGenre.getId());
+
+        assertThat(updatedGenreOptional).isPresent();
+        updatedGenreOptional.ifPresent(updatedGenre -> {
+            assertThat(updatedGenre.getName()).isEqualTo("Drama"); // Check if the name is updated
+            assertThat(updatedGenre.getId()).isEqualTo(savedGenre.getId()); // Check if the ID remains the same
+        });
+    }
+
 
 }
