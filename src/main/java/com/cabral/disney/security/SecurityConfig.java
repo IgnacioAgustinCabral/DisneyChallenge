@@ -3,6 +3,7 @@ package com.cabral.disney.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -27,7 +28,12 @@ public class SecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeRequests(auth -> auth
-                        .mvcMatchers("/characters/**").hasRole("ADMIN")
+                        .mvcMatchers(HttpMethod.POST, "/characters/**").hasRole("ADMIN")
+                        .mvcMatchers(HttpMethod.PUT, "/characters/**").hasRole("ADMIN")
+                        .mvcMatchers(HttpMethod.DELETE, "/characters/**").hasRole("ADMIN")
+                        .mvcMatchers(HttpMethod.POST, "/movies/**").hasRole("ADMIN")
+                        .mvcMatchers(HttpMethod.PUT, "/movies/**").hasRole("ADMIN")
+                        .mvcMatchers(HttpMethod.DELETE, "/movies/**").hasRole("ADMIN")
                         .anyRequest().permitAll())
                 .sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authProvider)
