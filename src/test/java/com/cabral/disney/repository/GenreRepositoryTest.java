@@ -123,20 +123,32 @@ public class GenreRepositoryTest {
         Genre genre = Genre.builder()
                 .name("Comedy")
                 .build();
-        Genre savedGenre = genreRepository.save(genre);
+        Genre savedGenre = this.genreRepository.save(genre);
 
         // Modify the genre
         savedGenre.setName("Drama");
-        genreRepository.save(savedGenre); // Save the updated genre
+        this.genreRepository.save(savedGenre); // Save the updated genre
 
-        Optional<Genre> updatedGenreOptional = genreRepository.findById(savedGenre.getId());
+        Optional<Genre> updatedGenreOptional = this.genreRepository.findById(savedGenre.getId());
 
         assertThat(updatedGenreOptional).isPresent();
         updatedGenreOptional.ifPresent(updatedGenre -> {
-            assertThat(updatedGenre.getName()).isEqualTo("Drama"); // Check if the name is updated
-            assertThat(updatedGenre.getId()).isEqualTo(savedGenre.getId()); // Check if the ID remains the same
+            assertThat(updatedGenre.getName()).isEqualTo("Drama");
+            assertThat(updatedGenre.getId()).isEqualTo(savedGenre.getId());
         });
     }
 
+    @Test
+    public void whenGenreIsDeleted_ThenItShouldNotBeFindableById(){
+        Genre genre = Genre.builder()
+                .name("Comedy")
+                .build();
+        Genre savedGenre = this.genreRepository.save(genre);
 
+        this.genreRepository.deleteById(savedGenre.getId());
+
+        Optional<Genre> genreOptional = this.genreRepository.findById(savedGenre.getId());
+
+        assertThat(genreOptional).isNotPresent();
+    }
 }
