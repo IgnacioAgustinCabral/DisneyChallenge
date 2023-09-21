@@ -15,8 +15,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
@@ -45,6 +46,15 @@ public class GenreServiceImplTest {
         when(this.genreRepository.findById(anyLong())).thenReturn(Optional.ofNullable(mock(Genre.class)));
 
         assertDoesNotThrow(() -> {
+            this.genreService.getGenreById(anyLong());
+        });
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenFindingByANonExistentId() throws GenreNotFoundException{
+        when(this.genreRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        assertThrows(GenreNotFoundException.class,() -> {
             this.genreService.getGenreById(anyLong());
         });
     }
