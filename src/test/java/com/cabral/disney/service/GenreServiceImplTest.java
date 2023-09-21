@@ -2,6 +2,7 @@ package com.cabral.disney.service;
 
 import com.cabral.disney.exception.GenreNotFoundException;
 import com.cabral.disney.models.Genre;
+import com.cabral.disney.payload.request.GenreRequest;
 import com.cabral.disney.payload.response.GenreResponse;
 import com.cabral.disney.repository.GenreRepository;
 import com.cabral.disney.service.impl.GenreServiceImpl;
@@ -57,5 +58,18 @@ public class GenreServiceImplTest {
         assertThrows(GenreNotFoundException.class,() -> {
             this.genreService.getGenreById(anyLong());
         });
+    }
+
+    @Test
+    public void shouldCreateAGenreReturnsGenreResponse(){
+        Genre genre = Genre.builder().name("Comedy").build();
+        GenreRequest genreRequest = GenreRequest.builder().name("Comedy").build();
+
+        when(this.genreRepository.save(genre)).thenReturn(genre);
+
+        GenreResponse genreResponse = this.genreService.createGenre(genreRequest);
+
+        assertThat(genreResponse).isInstanceOf(GenreResponse.class);
+        assertThat(genreResponse.getName()).isEqualTo("Comedy");
     }
 }

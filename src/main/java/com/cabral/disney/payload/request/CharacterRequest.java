@@ -15,7 +15,7 @@ import java.util.Set;
 public class CharacterRequest {
 
     @NotBlank(message = "name is required.")
-    @Size(min = 1,max = 300,message = "the name must be between {min} and {max} characters long.")
+    @Size(min = 1, max = 300, message = "the name must be between {min} and {max} characters long.")
     private String name;
 
     @NotNull(message = "age is required.")
@@ -23,11 +23,11 @@ public class CharacterRequest {
     private Integer age;
 
     @NotNull(message = "weight is required.")
-    @DecimalMin(value = "0.1",message = "weight must be greater or equal than {value}")
+    @DecimalMin(value = "0.1", message = "weight must be greater or equal than {value}")
     private Double weight;
 
     @NotBlank(message = "history is required.")
-    @Size(min = 1,max = 2000,message = "the history must be between {min} and {max} characters long.")
+    @Size(min = 1, max = 2000, message = "the history must be between {min} and {max} characters long.")
     private String history;
 
     private String image;

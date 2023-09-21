@@ -7,8 +7,8 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-@Setter
-@Getter
+@Data
+@EqualsAndHashCode(exclude = {"characterAssociations"})//todo excluid genreAssociations
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
