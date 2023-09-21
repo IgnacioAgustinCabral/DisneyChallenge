@@ -1,5 +1,6 @@
 package com.cabral.disney.service;
 
+import com.cabral.disney.exception.GenreNotFoundException;
 import com.cabral.disney.models.Genre;
 import com.cabral.disney.payload.response.GenreResponse;
 import com.cabral.disney.repository.GenreRepository;
@@ -12,8 +13,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -33,5 +38,14 @@ public class GenreServiceImplTest {
         List<GenreResponse> genres = this.genreService.getAllGenres();
 
         assertThat(genres.size()).isEqualTo(2);
+    }
+
+    @Test
+    public void shouldFindGenreByIdAndReturnAGenreResponse() throws GenreNotFoundException {
+        when(this.genreRepository.findById(anyLong())).thenReturn(Optional.ofNullable(mock(Genre.class)));
+
+        assertDoesNotThrow(() -> {
+            this.genreService.getGenreById(anyLong());
+        });
     }
 }
