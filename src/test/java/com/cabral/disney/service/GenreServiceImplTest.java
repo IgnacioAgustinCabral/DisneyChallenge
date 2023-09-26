@@ -108,4 +108,14 @@ public class GenreServiceImplTest {
         verify(this.genreRepository).delete(genreMock);
     }
 
+    @Test
+    public void shouldThrowExceptionWhenTryingToDeleteByNonExistentId() throws GenreNotFoundException {
+
+        when(this.genreRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+
+        assertThrows(GenreNotFoundException.class, () -> {
+            this.genreService.deleteGenre(anyLong());
+        });
+    }
 }
