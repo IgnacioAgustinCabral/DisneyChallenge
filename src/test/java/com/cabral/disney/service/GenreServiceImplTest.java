@@ -20,8 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class GenreServiceImplTest {
@@ -97,6 +96,16 @@ public class GenreServiceImplTest {
 
         assertThat(updateGenreResponse.getName()).isEqualTo("Horror");
         assertThat(updateGenreResponse.getId()).isEqualTo(genreResponse.getId());
+    }
+
+    @Test
+    public void shouldDeleteAGenreById() throws GenreNotFoundException {
+        Genre genreMock = mock(Genre.class);
+        when(this.genreRepository.findById(anyLong())).thenReturn(Optional.ofNullable(genreMock));
+
+        this.genreService.deleteGenre(anyLong());
+
+        verify(this.genreRepository).delete(genreMock);
     }
 
 }

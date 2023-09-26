@@ -56,4 +56,11 @@ public class GenreServiceImpl implements GenreService {
 
         return GenreMapper.mapToDTO(updatedGenre);
     }
+
+    @Override
+    public void deleteGenre(Long id) throws GenreNotFoundException {
+        Genre genre = this.genreRepository.findById(id).orElseThrow(() -> new GenreNotFoundException("Genre not found with id: " + id));
+
+        this.genreRepository.delete(genre);
+    }
 }

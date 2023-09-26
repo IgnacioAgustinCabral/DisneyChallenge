@@ -14,4 +14,6 @@ public interface GenreService {
     GenreResponse createGenre(GenreRequest request);
 
     GenreResponse updateGenre(Long id, GenreRequest request) throws GenreNotFoundException;
+
+    void deleteGenre(Long id) throws GenreNotFoundException;
 }
