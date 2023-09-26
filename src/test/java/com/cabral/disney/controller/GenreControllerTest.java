@@ -67,4 +67,10 @@ public class GenreControllerTest {
         ResultActions result = mockMvc.perform(get("/genres/genre/all"))
                 .andExpect(jsonPath("$",hasSize(0)));
     }
+
+    @Test
+    public void getGenreByIdEndpointShouldReturn200_OK() throws Exception {
+        ResultActions result = mockMvc.perform(get("/genres/genre/{id}",1L))
+                .andExpect(status().isOk());
+    }
 }
