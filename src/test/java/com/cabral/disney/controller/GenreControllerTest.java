@@ -1,5 +1,6 @@
 package com.cabral.disney.controller;
 
+import com.cabral.disney.payload.response.GenreResponse;
 import com.cabral.disney.service.GenreService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,6 +12,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.Arrays;
+import java.util.List;
+
+import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
@@ -29,6 +36,27 @@ public class GenreControllerTest {
 
         ResultActions result = mockMvc.perform(get("/genres/genre/all"))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void shouldReturnTwoGenreResponsesWhenFetchingAllGenres() throws Exception {
+
+        List<GenreResponse> genreResponses = Arrays.asList(
+                GenreResponse.builder().id(1L).name("Comedy").build(),
+                GenreResponse.builder().id(2L).name("Action").build()
+        );
+
+        when(this.genreService.getAllGenres()).thenReturn(genreResponses);
+
+        ResultActions result = mockMvc.perform(get("/genres/genre/all"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$",hasSize(2)))
+                //Asserts each element in the JSON array
+                .andExpect(jsonPath("$[0].id").value(1L))
+                .andExpect(jsonPath("$[0].name").value("Comedy"))
+                .andExpect(jsonPath("$[1].id").value(2L))
+                .andExpect(jsonPath("$[1].name").value("Action"));
     }
 
 }
