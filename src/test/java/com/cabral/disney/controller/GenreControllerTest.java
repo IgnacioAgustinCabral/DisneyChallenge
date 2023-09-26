@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -53,7 +54,7 @@ public class GenreControllerTest {
         ResultActions result = mockMvc.perform(get("/genres/genre/all"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$",hasSize(2)))
+                .andExpect(jsonPath("$", hasSize(2)))
                 //Asserts each element in the JSON array
                 .andExpect(jsonPath("$[0].id").value(1L))
                 .andExpect(jsonPath("$[0].name").value("Comedy"))
@@ -67,21 +68,34 @@ public class GenreControllerTest {
         when(this.genreService.getAllGenres()).thenReturn(List.of());
 
         ResultActions result = mockMvc.perform(get("/genres/genre/all"))
-                .andExpect(jsonPath("$",hasSize(0)));
+                .andExpect(jsonPath("$", hasSize(0)));
     }
 
     @Test
     public void getGenreByIdEndpointShouldReturn200_OK() throws Exception {
-        ResultActions result = mockMvc.perform(get("/genres/genre/{id}",1L))
+        ResultActions result = mockMvc.perform(get("/genres/genre/{id}", 1L))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void getGenreByNonExistenIdShouldReturn404_NOT_FOUND() throws Exception {
+    public void getGenreByNonExistentIdShouldReturn404_NOT_FOUND() throws Exception {
 
         when(this.genreService.getGenreById(anyLong())).thenThrow(GenreNotFoundException.class);
 
-        ResultActions result = mockMvc.perform(get("/genres/genre/{id}",1L))
+        ResultActions result = mockMvc.perform(get("/genres/genre/{id}", 1L))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void shouldRetrieveByIdAndAssertGenreResponseBody() throws Exception {
+
+        GenreResponse genreResponse = GenreResponse.builder().id(1L).name("Comedy").movieIds(new HashSet<>(Arrays.asList(1L, 2L, 3L))).build();
+
+        when(this.genreService.getGenreById(anyLong())).thenReturn(genreResponse);
+
+        ResultActions result = mockMvc.perform(get("/genres/genre/{id}", 1L))
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.name").value("Comedy"))
+                .andExpect(jsonPath("$.movieIds",hasSize(3)));
     }
 }
