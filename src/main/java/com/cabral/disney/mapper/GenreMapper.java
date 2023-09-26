@@ -27,8 +27,8 @@ public class GenreMapper {
 
     public static Genre mapToEntity(GenreRequest request) {
 
-        return Genre.builder().
-                name(request.getName())
+        return Genre.builder()
+                .name(request.getName())
                 .build();
     }
 }

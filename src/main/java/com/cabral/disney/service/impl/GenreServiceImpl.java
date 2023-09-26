@@ -45,4 +45,15 @@ public class GenreServiceImpl implements GenreService {
 
         return GenreMapper.mapToDTO(savedGenre);
     }
+
+    @Override
+    public GenreResponse updateGenre(Long id, GenreRequest request) throws GenreNotFoundException {
+        Genre genre = this.genreRepository.findById(id).orElseThrow(() -> new GenreNotFoundException("Genre not found with id: " + id));
+
+        genre.setName(request.getName());
+
+        Genre updatedGenre = this.genreRepository.save(genre);
+
+        return GenreMapper.mapToDTO(updatedGenre);
+    }
 }

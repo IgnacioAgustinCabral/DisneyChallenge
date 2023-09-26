@@ -19,8 +19,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -52,24 +51,52 @@ public class GenreServiceImplTest {
     }
 
     @Test
-    public void shouldThrowExceptionWhenFindingByANonExistentId() throws GenreNotFoundException{
+    public void shouldThrowExceptionWhenFindingByANonExistentId() throws GenreNotFoundException {
         when(this.genreRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        assertThrows(GenreNotFoundException.class,() -> {
+        assertThrows(GenreNotFoundException.class, () -> {
             this.genreService.getGenreById(anyLong());
         });
     }
 
     @Test
-    public void shouldCreateAGenreReturnsGenreResponse(){
-        Genre genre = Genre.builder().name("Comedy").build();
+    public void shouldCreateAGenreReturnsGenreResponse() {
         GenreRequest genreRequest = GenreRequest.builder().name("Comedy").build();
 
-        when(this.genreRepository.save(genre)).thenReturn(genre);
+        when(this.genreRepository.save(any(Genre.class))).thenReturn(Genre.builder().id(1L).name("Comedy").build());
 
         GenreResponse genreResponse = this.genreService.createGenre(genreRequest);
 
         assertThat(genreResponse).isInstanceOf(GenreResponse.class);
         assertThat(genreResponse.getName()).isEqualTo("Comedy");
+        assertThat(genreResponse.getId()).isEqualTo(1L);
     }
+
+    @Test
+    public void shouldUpdateAGenre() throws GenreNotFoundException {
+//        GenreRequest genreRequest = GenreRequest.builder().name("Comedy").build();
+
+        when(this.genreRepository.save(any(Genre.class)))
+                .thenReturn(Genre.builder().id(1L).name("Comedy").build());
+
+        GenreResponse genreResponse = this.genreService.createGenre(mock(GenreRequest.class));
+
+        GenreRequest genreUpdateRequest = GenreRequest.builder().name("Horror").build();
+
+        when(this.genreRepository.findById(genreResponse.getId()))
+                .thenReturn(Optional.ofNullable(Genre.builder().id(genreResponse.getId()).name("Horror").build()));
+
+        //Another approach
+        /*when(this.genreRepository.save(argThat(updatedGenre -> "Horror".equals(updatedGenre.getName()))))
+                .thenReturn(Genre.builder().id(genreResponse.getId()).name("Horror").build());*/
+        when(this.genreRepository.save(any(Genre.class)))
+                .thenReturn(Genre.builder().id(genreResponse.getId()).name("Horror").build());
+
+
+        GenreResponse updateGenreResponse = this.genreService.updateGenre(genreResponse.getId(), genreUpdateRequest);
+
+        assertThat(updateGenreResponse.getName()).isEqualTo("Horror");
+        assertThat(updateGenreResponse.getId()).isEqualTo(genreResponse.getId());
+    }
+
 }
