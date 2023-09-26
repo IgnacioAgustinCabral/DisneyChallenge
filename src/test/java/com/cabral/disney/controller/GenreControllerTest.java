@@ -59,4 +59,12 @@ public class GenreControllerTest {
                 .andExpect(jsonPath("$[1].name").value("Action"));
     }
 
+    @Test
+    public void shouldReturnEmptyJsonArrayWhenThereAreNoGenres() throws Exception {
+
+        when(this.genreService.getAllGenres()).thenReturn(List.of());
+
+        ResultActions result = mockMvc.perform(get("/genres/genre/all"))
+                .andExpect(jsonPath("$",hasSize(0)));
+    }
 }
