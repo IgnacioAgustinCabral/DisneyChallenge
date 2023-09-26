@@ -1,5 +1,6 @@
 package com.cabral.disney.controller;
 
+import com.cabral.disney.exception.GenreNotFoundException;
 import com.cabral.disney.payload.response.GenreResponse;
 import com.cabral.disney.service.GenreService;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -72,5 +74,14 @@ public class GenreControllerTest {
     public void getGenreByIdEndpointShouldReturn200_OK() throws Exception {
         ResultActions result = mockMvc.perform(get("/genres/genre/{id}",1L))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getGenreByNonExistenIdShouldReturn404_NOT_FOUND() throws Exception {
+
+        when(this.genreService.getGenreById(anyLong())).thenThrow(GenreNotFoundException.class);
+
+        ResultActions result = mockMvc.perform(get("/genres/genre/{id}",1L))
+                .andExpect(status().isNotFound());
     }
 }
