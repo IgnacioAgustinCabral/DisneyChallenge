@@ -23,6 +23,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -210,5 +211,16 @@ public class GenreControllerTest {
         mockMvc.perform(delete("/genres/genre/{id}", 1L))
                 .andExpect(status().isNoContent())
                 .andExpect(jsonPath("$.message").value("Genre deleted successfully"));
+    }
+
+    @Test
+    public void deletingGenreByNonExistentIdReturnsStatusCode404_NOT_FOUND_AndMessage() throws Exception {
+        Long nonExistentId = 1L;
+
+        doThrow(new GenreNotFoundException("Genre not found with id: " + nonExistentId)).when(this.genreService).deleteGenre(nonExistentId);
+
+        mockMvc.perform(delete("/genres/genre/{id}", 1L))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Genre not found with id: " + nonExistentId));
     }
 }
