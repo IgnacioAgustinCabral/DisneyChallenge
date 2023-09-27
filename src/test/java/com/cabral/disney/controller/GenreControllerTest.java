@@ -4,6 +4,7 @@ import com.cabral.disney.exception.GenreNotFoundException;
 import com.cabral.disney.payload.request.GenreRequest;
 import com.cabral.disney.payload.response.GenreResponse;
 import com.cabral.disney.service.GenreService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,9 +44,12 @@ public class GenreControllerTest {
 
     GenreRequest genreRequest;
 
+    GenreResponse genreResponse;
+
     @BeforeEach
     public void init() {
         genreRequest = GenreRequest.builder().name("Romantic").build();
+        genreResponse = GenreResponse.builder().id(1L).name("Romantic").build();
     }
 
     @Test
@@ -132,5 +136,20 @@ public class GenreControllerTest {
                 .characterEncoding("utf-8"));
 
         result.andExpect(status().isCreated());
+    }
+
+    @Test
+    public void shouldReturnGenreResponseOfTheCreatedGenre() throws Exception {
+
+        when(this.genreService.createGenre(this.genreRequest)).thenReturn(this.genreResponse);
+
+        ResultActions result = mockMvc.perform(post("/genres/genre")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(this.genreRequest))
+                .characterEncoding("utf-8"));
+
+        result
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.name").value("Romantic"));
     }
 }
