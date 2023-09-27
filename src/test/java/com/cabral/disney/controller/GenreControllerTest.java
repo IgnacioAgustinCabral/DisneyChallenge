@@ -4,7 +4,6 @@ import com.cabral.disney.exception.GenreNotFoundException;
 import com.cabral.disney.payload.request.GenreRequest;
 import com.cabral.disney.payload.response.GenreResponse;
 import com.cabral.disney.service.GenreService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,7 +25,8 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = GenreController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -170,11 +170,26 @@ public class GenreControllerTest {
     @Test
     public void updatingGenreEndpointReturnsStatusCode200_OK() throws Exception {
         ResultActions result = mockMvc.perform(put("/genres/genre/{id}", 1L)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(this.genreRequest))
-                        .characterEncoding("utf-8"));
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(this.genreRequest))
+                .characterEncoding("utf-8"));
 
         result
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void updateGenreWithNonExistentIdReturnsStatusCode404NotFoundAndMessage() throws Exception {
+        Long nonExistentId = 1L;
+        when(this.genreService.updateGenre(nonExistentId,this.genreRequest)).thenThrow(new GenreNotFoundException("Genre not found with id: " + nonExistentId));
+
+        ResultActions result = mockMvc.perform(put("/genres/genre/{id}", nonExistentId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(this.genreRequest))
+                .characterEncoding("utf-8"));
+
+        result
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Genre not found with id: " + nonExistentId));
     }
 }
