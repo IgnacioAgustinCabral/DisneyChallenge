@@ -181,7 +181,7 @@ public class GenreControllerTest {
     @Test
     public void updateGenreWithNonExistentIdReturnsStatusCode404NotFoundAndMessage() throws Exception {
         Long nonExistentId = 1L;
-        when(this.genreService.updateGenre(nonExistentId,this.genreRequest)).thenThrow(new GenreNotFoundException("Genre not found with id: " + nonExistentId));
+        when(this.genreService.updateGenre(nonExistentId, this.genreRequest)).thenThrow(new GenreNotFoundException("Genre not found with id: " + nonExistentId));
 
         ResultActions result = mockMvc.perform(put("/genres/genre/{id}", nonExistentId)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -191,5 +191,17 @@ public class GenreControllerTest {
         result
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Genre not found with id: " + nonExistentId));
+    }
+
+    @Test
+    public void updatingGenreWithLongNameShouldReturnStatusCode400_BAD_REQUEST() throws Exception {
+        ResultActions result = mockMvc.perform(put("/genres/genre/{id}", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(this.invalidGenreRequest))
+                .characterEncoding("utf-8"));
+
+        result
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errors[0].message").value("The name of the genre must be between 3 and 15"));
     }
 }
