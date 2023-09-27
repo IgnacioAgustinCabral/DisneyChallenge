@@ -38,9 +38,16 @@ public class GenreController {
     }
 
     @PostMapping("/genre")
-    public ResponseEntity<?> createGenre(@Valid @RequestBody GenreRequest request){
+    public ResponseEntity<?> createGenre(@Valid @RequestBody GenreRequest request) {
         GenreResponse genreResponse = this.genreService.createGenre(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(genreResponse);
+    }
+
+    @PutMapping("/genre/{id}")
+    public ResponseEntity<?> updateGenre(@PathVariable Long id, @Valid @RequestBody GenreRequest request) throws GenreNotFoundException {
+        GenreResponse updatedGenreResponse = this.genreService.updateGenre(id, request);
+
+        return ResponseEntity.ok(updatedGenreResponse);
     }
 }

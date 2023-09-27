@@ -25,8 +25,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = GenreController.class)
@@ -166,5 +165,16 @@ public class GenreControllerTest {
         result
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errors[0].message").value("The name of the genre must be between 3 and 15"));
+    }
+
+    @Test
+    public void updatingGenreEndpointReturnsStatusCode200_OK() throws Exception {
+        ResultActions result = mockMvc.perform(put("/genres/genre/{id}", 1L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(this.genreRequest))
+                        .characterEncoding("utf-8"));
+
+        result
+                .andExpect(status().isOk());
     }
 }
