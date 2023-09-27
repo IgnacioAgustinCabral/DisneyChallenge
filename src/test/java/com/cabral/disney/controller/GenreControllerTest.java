@@ -43,12 +43,14 @@ public class GenreControllerTest {
     GenreService genreService;
 
     GenreRequest genreRequest;
+    GenreRequest invalidGenreRequest;
 
     GenreResponse genreResponse;
 
     @BeforeEach
     public void init() {
         genreRequest = GenreRequest.builder().name("Romantic").build();
+        invalidGenreRequest = GenreRequest.builder().name("INVALID NAME FOR A GENRE !!! 1!! 1").build();
         genreResponse = GenreResponse.builder().id(1L).name("Romantic").build();
     }
 
@@ -151,5 +153,18 @@ public class GenreControllerTest {
         result
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.name").value("Romantic"));
+    }
+
+    @Test
+    public void creatingGenreWithLongNameShouldReturnStatusCode400_BAD_REQUEST() throws Exception {
+
+        ResultActions result = mockMvc.perform(post("/genres/genre")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(this.invalidGenreRequest))
+                .characterEncoding("utf-8"));
+
+        result
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errors[0].message").value("The name of the genre must be between 3 and 15"));
     }
 }
