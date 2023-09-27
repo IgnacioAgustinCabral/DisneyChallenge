@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/genres")
@@ -30,12 +32,9 @@ public class GenreController {
     }
 
     @GetMapping("/genre/{id}")
-    public ResponseEntity<?> getGenreById(@PathVariable Long id) {
-        try {
-            GenreResponse genre = this.genreService.getGenreById(id);
-            return ResponseEntity.ok(genre);
-        } catch (GenreNotFoundException exception) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
-        }
+    public ResponseEntity<?> getGenreById(@PathVariable Long id) throws GenreNotFoundException {
+
+        GenreResponse genre = this.genreService.getGenreById(id);
+        return ResponseEntity.ok(genre);
     }
 }

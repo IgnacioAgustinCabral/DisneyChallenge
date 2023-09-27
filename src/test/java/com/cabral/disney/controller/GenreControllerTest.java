@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -20,9 +21,8 @@ import java.util.List;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = GenreController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -96,6 +96,16 @@ public class GenreControllerTest {
         ResultActions result = mockMvc.perform(get("/genres/genre/{id}", 1L))
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.name").value("Comedy"))
-                .andExpect(jsonPath("$.movieIds",hasSize(3)));
+                .andExpect(jsonPath("$.movieIds", hasSize(3)));
+    }
+
+    @Test
+    public void shouldHaveMessageWhenRetrievingByNonExistentId() throws Exception {
+        Long nonExistentId = 1L;
+        when(this.genreService.getGenreById(anyLong())).thenThrow(new GenreNotFoundException("Genre not found with id: " + nonExistentId));
+
+        ResultActions result = mockMvc.perform(get("/genres/genre/{id}", nonExistentId))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Genre not found with id: " + nonExistentId));
     }
 }
