@@ -1,8 +1,11 @@
 package com.cabral.disney.controller;
 
 import com.cabral.disney.exception.GenreNotFoundException;
+import com.cabral.disney.payload.request.GenreRequest;
 import com.cabral.disney.payload.response.GenreResponse;
 import com.cabral.disney.service.GenreService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -22,6 +25,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = GenreController.class)
@@ -31,8 +35,18 @@ public class GenreControllerTest {
     @Autowired
     MockMvc mockMvc;
 
+    @Autowired
+    ObjectMapper objectMapper;
+
     @MockBean
     GenreService genreService;
+
+    GenreRequest genreRequest;
+
+    @BeforeEach
+    public void init() {
+        genreRequest = GenreRequest.builder().name("Romantic").build();
+    }
 
     @Test
     public void getAllGenresEndpointShouldReturn200_OK() throws Exception {
@@ -107,5 +121,16 @@ public class GenreControllerTest {
         ResultActions result = mockMvc.perform(get("/genres/genre/{id}", nonExistentId))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Genre not found with id: " + nonExistentId));
+    }
+
+    @Test
+    public void shouldReturn201_CREATED_WhenCreatingAGenre() throws Exception {
+
+        ResultActions result = mockMvc.perform(post("/genres/genre")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(this.genreRequest))
+                .characterEncoding("utf-8"));
+
+        result.andExpect(status().isCreated());
     }
 }
