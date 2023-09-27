@@ -34,7 +34,7 @@ public class CharacterServiceImplTest {
     private CharacterServiceImpl characterService;
 
     @Test
-    public void shouldReturnAllCharacters(){
+    public void shouldReturnAllCharacters() {
         when(this.characterRepository.findAll()).thenReturn(Arrays.asList(mock(Character.class)));
 
         List<CharacterResponse> characters = this.characterService.getAllCharacters();
@@ -43,7 +43,7 @@ public class CharacterServiceImplTest {
     }
 
     @Test
-    public void shouldCreateACharacterAndReturnCharacterResponse(){
+    public void shouldCreateACharacterAndReturnCharacterResponse() {
         when(this.characterRepository.save(any(Character.class))).thenReturn(mock(Character.class));
 
         CharacterResponse savedCharacter = this.characterService.createCharacter(mock(CharacterRequest.class));
@@ -66,7 +66,7 @@ public class CharacterServiceImplTest {
         when(this.characterRepository.findById(anyLong())).thenReturn(Optional.ofNullable(mock(Character.class)));
         when(this.characterRepository.save(any(Character.class))).thenReturn(mock(Character.class));
 
-        CharacterResponse character = this.characterService.updateCharacter(1L,mock(CharacterRequest.class));
+        CharacterResponse character = this.characterService.updateCharacter(1L, mock(CharacterRequest.class));
 
         assertThat(character).isNotNull();
         assertThat(character).isInstanceOf(CharacterResponse.class);
@@ -97,7 +97,7 @@ public class CharacterServiceImplTest {
     }
 
     @Test
-    public void shouldSearchACharacterByNameAndThrowCharacterSearchResultEmptyExceptionWhenNothingWasFound(){
+    public void shouldSearchACharacterByNameAndThrowCharacterSearchResultEmptyExceptionWhenNothingWasFound() {
         when(this.characterRepository.searchCharacter(anyString(), anyInt())).thenReturn(Collections.emptyList());
 
         assertThrows(CharacterSearchEmptyResultException.class, () -> {

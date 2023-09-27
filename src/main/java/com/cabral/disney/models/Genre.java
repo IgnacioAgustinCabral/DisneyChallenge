@@ -6,8 +6,8 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-@Setter
-@Getter
+@Data
+@EqualsAndHashCode(exclude = {"movieAssociations"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -17,9 +17,9 @@ public class Genre {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
-    @ManyToMany(mappedBy = "genreAssociations",fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "genreAssociations", fetch = FetchType.LAZY)
     private Set<Movie> movieAssociations = new HashSet<>();
 }
