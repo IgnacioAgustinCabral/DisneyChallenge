@@ -204,4 +204,11 @@ public class GenreControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errors[0].message").value("The name of the genre must be between 3 and 15"));
     }
+
+    @Test
+    public void deletingGenreEndpointReturnsStatusCode204_NO_CONTENT() throws Exception {
+        mockMvc.perform(delete("/genres/genre/{id}", 1L))
+                .andExpect(status().isNoContent())
+                .andExpect(jsonPath("$.message").value("Genre deleted successfully"));
+    }
 }

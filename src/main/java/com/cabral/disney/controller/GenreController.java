@@ -50,4 +50,14 @@ public class GenreController {
 
         return ResponseEntity.ok(updatedGenreResponse);
     }
+
+    @DeleteMapping("/genre/{id}")
+    public ResponseEntity<?> deleteGenre(@PathVariable Long id) throws GenreNotFoundException {
+        this.genreService.deleteGenre(id);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Genre deleted successfully");
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
+    }
 }
