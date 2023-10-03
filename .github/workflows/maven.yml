@@ -1,8 +1,10 @@
 name: Integracion Continua con Maven y Github Actions
 
 on:
+  push:
   pull_request:
-    branches: ["develop"]
+    branches:
+      - develop
 
 jobs:
   build:
