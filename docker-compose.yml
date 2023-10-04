@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  server-api:
+    build: .
+    container_name: disney
+    image: server-api
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./src:/app/src  # Mount your application source code for hot-reloading
+    depends_on:
+      - mysqldb
+  mysqldb:
+    image: "mysql:5.7"
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_DATABASE: disney
+      MYSQL_USER: ignacio
+      MYSQL_PASSWORD: ignacio
+      MYSQL_ROOT_PASSWORD: ignacio
