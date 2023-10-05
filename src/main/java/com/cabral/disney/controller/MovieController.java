@@ -36,13 +36,9 @@ public class MovieController {
     }
 
     @GetMapping("/movie")
-    public ResponseEntity<?> searchMovie(@RequestParam String name) {
-        try {
-            List<MovieResponse> movieResponses = this.movieService.searchMovie(name);
-            return ResponseEntity.ok(movieResponses);
-        } catch (MovieSearchEmptyResultException exception) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
-        }
+    public ResponseEntity<?> searchMovie(@RequestParam String name) throws MovieSearchEmptyResultException {
+        List<MovieResponse> movieResponses = this.movieService.searchMovie(name);
+        return ResponseEntity.ok(movieResponses);
     }
 
     @PostMapping(value = "/movie")
