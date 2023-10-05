@@ -30,13 +30,9 @@ public class MovieController {
     }
 
     @GetMapping("/movie/{id}")
-    public ResponseEntity<?> getMovie(@PathVariable Long id) {
-        try {
-            MovieResponse movieResponse = this.movieService.getMovieById(id);
-            return ResponseEntity.ok(movieResponse);
-        } catch (MovieNotFoundException exception) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
-        }
+    public ResponseEntity<?> getMovie(@PathVariable Long id) throws MovieNotFoundException {
+        MovieResponse movieResponse = this.movieService.getMovieById(id);
+        return ResponseEntity.ok(movieResponse);
     }
 
     @GetMapping("/movie")
@@ -56,22 +52,15 @@ public class MovieController {
     }
 
     @PutMapping("/movie/{id}")
-    public ResponseEntity<?> updateMovie(@PathVariable Long id, @RequestBody MovieRequest request) {
-        try {
-            MovieResponse movieUpdated = this.movieService.updateMovie(id, request);
-            return ResponseEntity.ok(movieUpdated);
-        } catch (MovieNotFoundException exception) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
-        }
+    public ResponseEntity<?> updateMovie(@PathVariable Long id, @RequestBody MovieRequest request) throws MovieNotFoundException {
+        MovieResponse movieUpdated = this.movieService.updateMovie(id, request);
+        return ResponseEntity.ok(movieUpdated);
     }
 
     @DeleteMapping("/movie/{id}")
-    public ResponseEntity<?> deleteMovie(@PathVariable Long id) {
-        try {
-            this.movieService.deleteMovie(id);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Movie deleted successfully.");
-        } catch (MovieNotFoundException exception) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
-        }
+    public ResponseEntity<?> deleteMovie(@PathVariable Long id) throws MovieNotFoundException {
+        this.movieService.deleteMovie(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Movie deleted successfully.");
+
     }
 }
