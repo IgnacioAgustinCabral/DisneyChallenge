@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Data
-@EqualsAndHashCode(exclude = {"characterAssociations"})//todo excluid genreAssociations
+@EqualsAndHashCode(exclude = {"characterAssociations", "genreAssociations"})//todo excluid genreAssociations
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
