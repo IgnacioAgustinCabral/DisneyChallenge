@@ -7,8 +7,6 @@ services:
     image: server-api
     ports:
       - "8080:8080"
-    volumes:
-      - ./src:/app/src  # Mount your application source code for hot-reloading
     depends_on:
       - mysqldb
   mysqldb:
