@@ -35,7 +35,12 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MovieSearchEmptyResultException.class)
-    public ResponseEntity handleMovieSearchEmptyResultException(MovieSearchEmptyResultException ex) {
+    public ResponseEntity<Map<String, String>> handleMovieSearchEmptyResultException(MovieSearchEmptyResultException ex) {
+        return createNotFoundResponseError(ex.getMessage());
+    }
+
+    @ExceptionHandler(CharacterNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleCharacterNotFoundException(CharacterNotFoundException ex){
         return createNotFoundResponseError(ex.getMessage());
     }
 
