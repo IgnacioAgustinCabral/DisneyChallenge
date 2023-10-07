@@ -1,4 +1,4 @@
-name: Integracion Continua con Maven y Github Actions
+name: Continuous Integration
 
 on:
   push:
