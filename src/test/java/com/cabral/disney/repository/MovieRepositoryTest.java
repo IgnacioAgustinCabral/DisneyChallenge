@@ -83,4 +83,19 @@ public class MovieRepositoryTest {
         assertThat(updatedMovie.getQualification()).isEqualTo(2);
         assertThat(updatedMovie.getId()).isEqualTo(savedMovie.getId());
     }
+
+    @Test
+    public void shouldDeleteAMovieByIdAndNotBeFindableById() {
+        Movie movie = Movie.builder().title("Aladin").image("path/to/image").creationDate(LocalDate.of(1994, 2, 2)).qualification(4).build();
+
+        Movie savedMovie = this.movieRepository.save(movie);
+
+        this.movieRepository.deleteById(movie.getId());
+
+        Optional<Movie> movieOptional = this.movieRepository.findById(movie.getId());
+
+        assertThat(movieOptional).isNotPresent();
+    }
+
+    //TODO search movie
 }
