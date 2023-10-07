@@ -40,7 +40,12 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(CharacterNotFoundException.class)
-    public ResponseEntity<Map<String, String>> handleCharacterNotFoundException(CharacterNotFoundException ex){
+    public ResponseEntity<Map<String, String>> handleCharacterNotFoundException(CharacterNotFoundException ex) {
+        return createNotFoundResponseError(ex.getMessage());
+    }
+
+    @ExceptionHandler(CharacterSearchEmptyResultException.class)
+    public ResponseEntity<Map<String, String>> handleCharacterSearchEmptyResultException(CharacterSearchEmptyResultException ex) {
         return createNotFoundResponseError(ex.getMessage());
     }
 
@@ -49,6 +54,4 @@ public class GlobalExceptionHandler {
         response.put("message", exceptionMessage);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
-
-
 }
