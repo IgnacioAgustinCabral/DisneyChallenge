@@ -34,4 +34,14 @@ public class MovieRepositoryTest {
         });
     }
 
+    @Test
+    public void shouldReturnEmptyOptionalWhenFindingByNonExistentId(){
+        Movie movie = Movie.builder().title("Aladin").image("path/to/image").creationDate(LocalDate.of(1994, 2, 2)).qualification(4).build();
+
+        this.movieRepository.save(movie);
+
+        Optional<Movie> movieOptional = this.movieRepository.findById(2L);
+
+        assertThat(movieOptional).isNotPresent();
+    }
 }
