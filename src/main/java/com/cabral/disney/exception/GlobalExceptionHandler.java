@@ -26,10 +26,32 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(GenreNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleGenreNotFoundException(GenreNotFoundException ex) {
-        Map<String, String> response = new HashMap<>();
-        response.put("message", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        return createNotFoundResponseError(ex.getMessage());
     }
 
+    @ExceptionHandler(MovieNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleMovieNotFoundException(MovieNotFoundException ex) {
+        return createNotFoundResponseError(ex.getMessage());
+    }
 
+    @ExceptionHandler(MovieSearchEmptyResultException.class)
+    public ResponseEntity<Map<String, String>> handleMovieSearchEmptyResultException(MovieSearchEmptyResultException ex) {
+        return createNotFoundResponseError(ex.getMessage());
+    }
+
+    @ExceptionHandler(CharacterNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleCharacterNotFoundException(CharacterNotFoundException ex) {
+        return createNotFoundResponseError(ex.getMessage());
+    }
+
+    @ExceptionHandler(CharacterSearchEmptyResultException.class)
+    public ResponseEntity<Map<String, String>> handleCharacterSearchEmptyResultException(CharacterSearchEmptyResultException ex) {
+        return createNotFoundResponseError(ex.getMessage());
+    }
+
+    private ResponseEntity<Map<String, String>> createNotFoundResponseError(String exceptionMessage) {
+        Map<String, String> response = new HashMap<>();
+        response.put("message", exceptionMessage);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
 }

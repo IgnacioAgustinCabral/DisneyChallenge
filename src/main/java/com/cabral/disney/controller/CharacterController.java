@@ -30,21 +30,13 @@ public class CharacterController {
     }
 
     @GetMapping("/character/{id}")
-    public ResponseEntity<?> getCharacter(@PathVariable Long id) {
-        try {
-            return ResponseEntity.ok(this.characterService.getCharacterById(id));
-        } catch (CharacterNotFoundException exception) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
-        }
+    public ResponseEntity<?> getCharacter(@PathVariable Long id) throws CharacterNotFoundException {
+        return ResponseEntity.ok(this.characterService.getCharacterById(id));
     }
 
     @GetMapping("/character")
-    public ResponseEntity<?> searchCharacter(@RequestParam String name, @RequestParam Integer age) {
-        try {
-            return ResponseEntity.ok(this.characterService.searchCharacter(name, age));
-        } catch (CharacterSearchEmptyResultException exception) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
-        }
+    public ResponseEntity<?> searchCharacter(@RequestParam String name, @RequestParam Integer age) throws CharacterSearchEmptyResultException {
+        return ResponseEntity.ok(this.characterService.searchCharacter(name, age));
     }
 
     @PostMapping("/character")
@@ -53,22 +45,14 @@ public class CharacterController {
     }
 
     @PutMapping("/character/{id}")
-    public ResponseEntity<?> updateCharacter(@PathVariable Long id, @Valid @RequestBody CharacterRequest characterRequest) {
-        try {
-            return ResponseEntity.ok(this.characterService.updateCharacter(id, characterRequest));
-        } catch (CharacterNotFoundException exception) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
-        }
+    public ResponseEntity<?> updateCharacter(@PathVariable Long id, @Valid @RequestBody CharacterRequest characterRequest) throws CharacterNotFoundException {
+        return ResponseEntity.ok(this.characterService.updateCharacter(id, characterRequest));
     }
 
     @DeleteMapping("/character/{id}")
-    public ResponseEntity<String> deleteCharacter(@PathVariable Long id) {
-        try {
-            this.characterService.deleteCharacter(id);
-            return ResponseEntity.noContent().build();
-        } catch (CharacterNotFoundException exception) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
-        }
+    public ResponseEntity<String> deleteCharacter(@PathVariable Long id) throws CharacterNotFoundException {
+        this.characterService.deleteCharacter(id);
+        return ResponseEntity.noContent().build();
     }
 }
 

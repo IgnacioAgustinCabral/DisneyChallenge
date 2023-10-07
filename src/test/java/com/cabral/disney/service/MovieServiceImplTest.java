@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
@@ -90,4 +91,15 @@ public class MovieServiceImplTest {
 
         assertThat(movieResponses.get(0)).isInstanceOf(MovieResponse.class);
     }
+
+    @Test
+    public void shouldThrowExceptionWhenFindingByNonExistentId() {
+        when(this.movieRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        assertThrows(MovieNotFoundException.class, () -> {
+            this.movieService.getMovieById(anyLong());
+        });
+    }
+
+    //TODO assertThrows SEARCH
 }
