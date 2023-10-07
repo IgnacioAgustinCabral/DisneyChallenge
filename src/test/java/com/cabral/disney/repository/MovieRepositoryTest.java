@@ -65,4 +65,22 @@ public class MovieRepositoryTest {
 
         assertThat(allMovies.size()).isEqualTo(3);
     }
+
+    @Test
+    public void shouldUpdateAMovie() {
+        Movie movie = Movie.builder().title("Aladin").image("path/to/image").creationDate(LocalDate.of(1994, 2, 2)).qualification(4).build();
+
+        Movie savedMovie = this.movieRepository.save(movie);
+
+        Movie movieToUpdate = this.movieRepository.findById(movie.getId()).get();
+
+        movieToUpdate.setTitle("Lion King");
+        movieToUpdate.setQualification(2);
+
+        Movie updatedMovie = this.movieRepository.save(movieToUpdate);
+
+        assertThat(updatedMovie.getTitle()).isEqualTo("Lion King");
+        assertThat(updatedMovie.getQualification()).isEqualTo(2);
+        assertThat(updatedMovie.getId()).isEqualTo(savedMovie.getId());
+    }
 }
