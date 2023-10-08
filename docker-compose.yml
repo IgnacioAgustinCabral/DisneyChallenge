@@ -2,13 +2,15 @@ version: "3.8"
 
 services:
   server-api:
+    restart: always
     build: .
     container_name: disney
-    image: server-api
     ports:
       - "8080:8080"
     depends_on:
-      - mysqldb
+      mysqldb:
+        condition: service_healthy
+
   mysqldb:
     image: "mysql:5.7"
     ports:
@@ -18,3 +20,8 @@ services:
       MYSQL_USER: ignacio
       MYSQL_PASSWORD: ignacio
       MYSQL_ROOT_PASSWORD: ignacio
+    restart: always
+    healthcheck:
+      test: "mysql -h mysqldb -u ignacio -pignacio -e 'SELECT 1'"
+      interval: 1s
+      retries: 20
