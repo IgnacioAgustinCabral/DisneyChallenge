@@ -1,6 +1,6 @@
 package com.cabral.disney.service.impl;
 
-import com.cabral.disney.entity.User;
+import com.cabral.disney.models.User;
 import com.cabral.disney.exception.EmailAlreadyTakenException;
 import com.cabral.disney.exception.UsernameAlreadyTakenException;
 import com.cabral.disney.mapper.UserMapper;

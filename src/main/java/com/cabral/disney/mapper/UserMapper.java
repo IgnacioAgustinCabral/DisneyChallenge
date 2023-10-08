@@ -1,7 +1,7 @@
 package com.cabral.disney.mapper;
 
-import com.cabral.disney.entity.Role;
-import com.cabral.disney.entity.User;
+import com.cabral.disney.models.Role;
+import com.cabral.disney.models.User;
 import com.cabral.disney.payload.request.RegisterRequest;
 import com.cabral.disney.payload.response.AuthResponse;
 import com.cabral.disney.repository.RoleRepository;
@@ -9,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 @Component
 public class UserMapper {
