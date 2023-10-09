@@ -5,6 +5,7 @@ import com.cabral.disney.exception.MovieSearchEmptyResultException;
 import com.cabral.disney.payload.request.MovieRequest;
 import com.cabral.disney.payload.response.MovieResponse;
 import com.cabral.disney.service.MovieService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

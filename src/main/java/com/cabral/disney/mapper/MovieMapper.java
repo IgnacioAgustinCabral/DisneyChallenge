@@ -1,6 +1,7 @@
 package com.cabral.disney.mapper;
 
 import com.cabral.disney.models.Character;
+import com.cabral.disney.models.Genre;
 import com.cabral.disney.models.Movie;
 import com.cabral.disney.payload.request.MovieRequest;
 import com.cabral.disney.payload.response.MovieResponse;
@@ -25,14 +26,20 @@ public class MovieMapper {
                     .collect(Collectors.toSet()));
         }
 
+        if (movie.getGenreAssociations() != null) {
+            builder.genreIds(movie.getGenreAssociations().stream()
+                    .map(genre -> genre.getId())
+                    .collect(Collectors.toSet()));
+        }
+
         return builder.build();
     }
 
     public static Movie mapToEntity(MovieRequest request) {
-        return mapToEntity(request, null);
+        return mapToEntity(request, null, null);
     }
 
-    public static Movie mapToEntity(MovieRequest request, Set<Character> characters) {
+    public static Movie mapToEntity(MovieRequest request, Set<Character> characters, Set<Genre> genres) {
         Movie.MovieBuilder builder = Movie.builder()
                 .title(request.getTitle())
                 .creationDate(request.getCreationDate())
@@ -41,6 +48,10 @@ public class MovieMapper {
 
         if (characters != null) {
             builder.characterAssociations(characters);
+        }
+
+        if (genres != null) {
+            builder.genreAssociations(genres);
         }
 
         return builder.build();
