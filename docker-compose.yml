@@ -1,10 +1,11 @@
 version: "3.8"
 
 services:
-  server-api:
+  disney-api:
     restart: always
     build: .
-    container_name: disney
+    image : disney-api
+    container_name: disney-api
     ports:
       - "8080:8080"
     depends_on:
@@ -12,7 +13,9 @@ services:
         condition: service_healthy
 
   mysqldb:
+    restart: always
     image: "mysql:5.7"
+    container_name: mysqldb
     ports:
       - "3307:3306"
     environment:
@@ -20,7 +23,6 @@ services:
       MYSQL_USER: ignacio
       MYSQL_PASSWORD: ignacio
       MYSQL_ROOT_PASSWORD: ignacio
-    restart: always
     healthcheck:
       test: "mysql -h mysqldb -u ignacio -pignacio -e 'SELECT 1'"
       interval: 1s
