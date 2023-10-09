@@ -25,3 +25,8 @@ services:
       test: "mysql -h mysqldb -u ignacio -pignacio -e 'SELECT 1'"
       interval: 1s
       retries: 20
+    volumes:
+      - mysqldb-data:/var/lib/mysql
+
+volumes:
+  mysqldb-data:
