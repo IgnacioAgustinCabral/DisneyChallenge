@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo "Cleaning up dangling images..."
+docker image prune -f
+
 # Run Maven clean and package
 echo "Building the application with Maven..."
 mvn clean package

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.*;
 import java.util.Set;
@@ -30,7 +31,7 @@ public class CharacterRequest {
     @Size(min = 1, max = 2000, message = "the history must be between {min} and {max} characters long.")
     private String history;
 
-    private String image;
+    private MultipartFile image;
 
     private Set<Long> movieIds;
 }

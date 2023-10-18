@@ -30,7 +30,8 @@ public class Character {
     @Column(columnDefinition = "TEXT",nullable = false)
     private String history;
 
-    private String image;
+    @Lob
+    private byte[] image;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(

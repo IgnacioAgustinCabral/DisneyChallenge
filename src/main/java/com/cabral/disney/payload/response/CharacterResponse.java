@@ -22,7 +22,7 @@ public class CharacterResponse {
 
     private String history;
 
-    private String image;
+    private byte[] imageBase64;
 
     private Set<Long> movieIds;
 }
