@@ -19,7 +19,14 @@ public class MovieRepositoryTest {
 
     @Test
     public void shouldSaveMovieWithInfoAndRetrieveWithSameInfo() {
-        Movie movie = Movie.builder().title("Aladin").image("path/to/image").creationDate(LocalDate.of(1994, 2, 2)).qualification(4).build();
+        byte[] image = new byte[]{0x12, 0x34, 0x56, 0x78};
+
+        Movie movie = Movie.builder()
+                .title("Aladin")
+                .image(image)
+                .creationDate(LocalDate.of(1994, 2, 2))
+                .synopsis("SYNOPSISISIS")
+                .build();
 
         Movie savedMovie = this.movieRepository.save(movie);
 
@@ -30,15 +37,17 @@ public class MovieRepositoryTest {
         movieOptional.ifPresent(presentMovie -> {
             assertThat(presentMovie.getId()).isEqualTo(savedMovie.getId());
             assertThat(presentMovie.getTitle()).isEqualTo(savedMovie.getTitle());
-            assertThat(presentMovie.getQualification()).isEqualTo(savedMovie.getQualification());
             assertThat(presentMovie.getCreationDate()).isEqualTo(savedMovie.getCreationDate());
             assertThat(presentMovie.getImage()).isEqualTo(savedMovie.getImage());
+            assertThat(presentMovie.getSynopsis()).isEqualTo(savedMovie.getSynopsis());
         });
     }
 
     @Test
     public void shouldReturnEmptyOptionalWhenFindingByNonExistentId() {
-        Movie movie = Movie.builder().title("Aladin").image("path/to/image").creationDate(LocalDate.of(1994, 2, 2)).qualification(4).build();
+        byte[] image = new byte[]{0x12, 0x34, 0x56, 0x78};
+
+        Movie movie = Movie.builder().title("Aladin").image(image).creationDate(LocalDate.of(1994, 2, 2)).synopsis("SYNOPSISISIS").build();
 
         this.movieRepository.save(movie);
 
@@ -49,11 +58,13 @@ public class MovieRepositoryTest {
 
     @Test
     public void shouldReturnListOfThreeMoviesWhenRetrievingAllMovies() {
-        Movie movie1 = Movie.builder().title("Aladin").image("path/to/image").creationDate(LocalDate.of(1994, 2, 2)).qualification(4).build();
+        byte[] image = new byte[]{0x12, 0x34, 0x56, 0x78};
 
-        Movie movie2 = Movie.builder().title("Aladin").image("path/to/image").creationDate(LocalDate.of(1994, 2, 2)).qualification(4).build();
+        Movie movie1 = Movie.builder().title("Aladin").image(image).creationDate(LocalDate.of(1994, 2, 2)).synopsis("SYNOPSISISIS").build();
 
-        Movie movie3 = Movie.builder().title("Aladin").image("path/to/image").creationDate(LocalDate.of(1994, 2, 2)).qualification(4).build();
+        Movie movie2 = Movie.builder().title("Aladin").image(image).creationDate(LocalDate.of(1994, 2, 2)).synopsis("SYNOPSISISIS").build();
+
+        Movie movie3 = Movie.builder().title("Aladin").image(image).creationDate(LocalDate.of(1994, 2, 2)).synopsis("SYNOPSISISIS").build();
         List<Movie> moviesToSave = new LinkedList<>();
         moviesToSave.add(movie1);
         moviesToSave.add(movie2);
@@ -68,25 +79,27 @@ public class MovieRepositoryTest {
 
     @Test
     public void shouldUpdateAMovie() {
-        Movie movie = Movie.builder().title("Aladin").image("path/to/image").creationDate(LocalDate.of(1994, 2, 2)).qualification(4).build();
+        byte[] image = new byte[]{0x12, 0x34, 0x56, 0x78};
+
+        Movie movie = Movie.builder().title("Aladin").image(image).creationDate(LocalDate.of(1994, 2, 2)).synopsis("SYNOPSISISIS").build();
 
         Movie savedMovie = this.movieRepository.save(movie);
 
         Movie movieToUpdate = this.movieRepository.findById(movie.getId()).get();
 
         movieToUpdate.setTitle("Lion King");
-        movieToUpdate.setQualification(2);
 
         Movie updatedMovie = this.movieRepository.save(movieToUpdate);
 
         assertThat(updatedMovie.getTitle()).isEqualTo("Lion King");
-        assertThat(updatedMovie.getQualification()).isEqualTo(2);
         assertThat(updatedMovie.getId()).isEqualTo(savedMovie.getId());
     }
 
     @Test
     public void shouldDeleteAMovieByIdAndNotBeFindableById() {
-        Movie movie = Movie.builder().title("Aladin").image("path/to/image").creationDate(LocalDate.of(1994, 2, 2)).qualification(4).build();
+        byte[] image = new byte[]{0x12, 0x34, 0x56, 0x78};
+
+        Movie movie = Movie.builder().title("Aladin").image(image).creationDate(LocalDate.of(1994, 2, 2)).synopsis("SYNOPSISISIS").build();
 
         Movie savedMovie = this.movieRepository.save(movie);
 
