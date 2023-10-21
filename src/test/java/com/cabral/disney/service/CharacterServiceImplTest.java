@@ -13,7 +13,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -43,10 +45,13 @@ public class CharacterServiceImplTest {
     }
 
     @Test
-    public void shouldCreateACharacterAndReturnCharacterResponse() {
+    public void shouldCreateACharacterAndReturnCharacterResponse() throws IOException {
+        MultipartFile mockFile = mock(MultipartFile.class);
+        when(mockFile.getBytes()).thenReturn(new byte[]{0x12, 0x34, 0x56, 0x78});
+
         when(this.characterRepository.save(any(Character.class))).thenReturn(mock(Character.class));
 
-        CharacterResponse savedCharacter = this.characterService.createCharacter(mock(CharacterRequest.class));
+        CharacterResponse savedCharacter = this.characterService.createCharacter(mock(CharacterRequest.class), mockFile);
 
         assertThat(savedCharacter).isNotNull();
         assertThat(savedCharacter).isInstanceOf(CharacterResponse.class);
@@ -61,16 +66,18 @@ public class CharacterServiceImplTest {
     }
 
     @Test
-    public void shouldUpdateACharacterAndReturnCharacterResponse() throws CharacterNotFoundException {
+    public void shouldUpdateACharacterAndReturnCharacterResponse() throws CharacterNotFoundException, IOException {
 
         when(this.characterRepository.findById(anyLong())).thenReturn(Optional.ofNullable(mock(Character.class)));
         when(this.characterRepository.save(any(Character.class))).thenReturn(mock(Character.class));
 
-        CharacterResponse character = this.characterService.updateCharacter(1L, mock(CharacterRequest.class));
+        MultipartFile mockFile = mock(MultipartFile.class);
+        when(mockFile.getBytes()).thenReturn(new byte[]{0x12, 0x34, 0x56, 0x78});
+
+        CharacterResponse character = this.characterService.updateCharacter(1L, mock(CharacterRequest.class), mockFile);
 
         assertThat(character).isNotNull();
         assertThat(character).isInstanceOf(CharacterResponse.class);
-
     }
 
     @Test

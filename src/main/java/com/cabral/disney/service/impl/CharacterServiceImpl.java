@@ -13,7 +13,10 @@ import com.cabral.disney.repository.MovieRepository;
 import com.cabral.disney.service.CharacterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -37,7 +40,7 @@ public class CharacterServiceImpl implements CharacterService {
     }
 
     @Override
-    public CharacterResponse createCharacter(CharacterRequest characterRequest) {
+    public CharacterResponse createCharacter(CharacterRequest characterRequest, MultipartFile image) {
         Set<Movie> movies = null;
         Set<Long> movieIds = characterRequest.getMovieIds();
 
@@ -52,7 +55,7 @@ public class CharacterServiceImpl implements CharacterService {
                     .collect(Collectors.toSet());
         }
 
-        Character newCharacter = CharacterMapper.mapToEntity(characterRequest,movies);
+        Character newCharacter = CharacterMapper.mapToEntity(characterRequest,movies,image);
         Character savedCharacter = this.characterRepository.save(newCharacter);
 
         return CharacterMapper.mapToDTO(savedCharacter);
@@ -66,33 +69,43 @@ public class CharacterServiceImpl implements CharacterService {
     }
 
     @Override
-    public CharacterResponse updateCharacter(Long id, CharacterRequest characterRequest) throws CharacterNotFoundException {
+    public CharacterResponse updateCharacter(Long id, CharacterRequest characterRequest, MultipartFile image) throws CharacterNotFoundException {
         Character character = this.characterRepository.findById(id).orElseThrow(() -> new CharacterNotFoundException("Character could not be found"));
+        byte[] imageBytes = null;
+
+        if (image != null) {
+            try {
+                imageBytes = Base64.getEncoder().encode(image.getBytes());
+            } catch (IOException e) {
+                // Handle the exception
+            }
+        }
 
         character.setAge(characterRequest.getAge());
         character.setHistory(characterRequest.getHistory());
-        character.setImage(characterRequest.getImage());
         character.setWeight(characterRequest.getWeight());
         character.setName(characterRequest.getName());
+        character.setImage(imageBytes);
 
         Set<Long> movieIds = characterRequest.getMovieIds();
-
-        if (movieIds != null){
-            Set<Movie> newMovies = movieIds.stream().map(movieId -> {
+        if (movieIds != null) {
+            Set<Movie> newMovies = movieIds.stream()
+                    .map(movieId -> {
                         try {
-                             return this.movieRepository.findById(movieId).orElseThrow(() -> new MovieNotFoundException("Movie not found with id: " + id));
+                            return this.movieRepository.findById(movieId).orElseThrow(() -> new MovieNotFoundException("Movie not found with id: " + movieId));
                         } catch (MovieNotFoundException e) {
                             throw new RuntimeException(e);
                         }
                     })
                     .collect(Collectors.toSet());
-            character.getMovieAssociations().addAll(newMovies);
+            character.setMovieAssociations(newMovies);
         }
 
         Character updatedCharacter = this.characterRepository.save(character);
 
         return CharacterMapper.mapToDTO(updatedCharacter);
     }
+
 
     @Override
     public void deleteCharacter(Long id) throws CharacterNotFoundException {

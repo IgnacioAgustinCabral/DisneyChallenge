@@ -5,10 +5,13 @@ import com.cabral.disney.exception.CharacterSearchEmptyResultException;
 import com.cabral.disney.payload.request.CharacterRequest;
 import com.cabral.disney.payload.response.CharacterResponse;
 import com.cabral.disney.service.CharacterService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -40,19 +43,36 @@ public class CharacterController {
     }
 
     @PostMapping("/character")
-    public ResponseEntity<CharacterResponse> createCharacter(@Valid @RequestBody CharacterRequest characterRequest) {
-        return new ResponseEntity<>(this.characterService.createCharacter(characterRequest), HttpStatus.CREATED);
+    public ResponseEntity<?> createCharacter(@RequestPart("characterRequest") @Valid CharacterRequest characterRequest,
+                                             @RequestPart("image") MultipartFile image) {
+
+        return new ResponseEntity<>(this.characterService.createCharacter(characterRequest, image), HttpStatus.CREATED);
     }
 
     @PutMapping("/character/{id}")
-    public ResponseEntity<?> updateCharacter(@PathVariable Long id, @Valid @RequestBody CharacterRequest characterRequest) throws CharacterNotFoundException {
-        return ResponseEntity.ok(this.characterService.updateCharacter(id, characterRequest));
+    public ResponseEntity<?> updateCharacter(@PathVariable Long id,
+                                             @RequestPart("characterRequest") @Valid CharacterRequest characterRequest,
+                                             @RequestPart("image") MultipartFile image) throws CharacterNotFoundException {
+        CharacterResponse characterResponse = characterService.updateCharacter(id, characterRequest, image);
+        return ResponseEntity.ok(characterResponse);
     }
 
     @DeleteMapping("/character/{id}")
     public ResponseEntity<String> deleteCharacter(@PathVariable Long id) throws CharacterNotFoundException {
         this.characterService.deleteCharacter(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/character/{characterId}/image")
+    public ResponseEntity<byte[]> getCharacterImage(@PathVariable Long characterId) throws CharacterNotFoundException {
+        CharacterResponse character = characterService.getCharacterById(characterId);
+        if (character != null && character.getImageBase64() != null) {
+            return ResponseEntity.ok()
+                    .contentType(MediaType.IMAGE_JPEG) // Adjust content type as needed
+                    .body(character.getImageBase64());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
 
