@@ -7,6 +7,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -47,6 +48,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CharacterSearchEmptyResultException.class)
     public ResponseEntity<Map<String, String>> handleCharacterSearchEmptyResultException(CharacterSearchEmptyResultException ex) {
         return createNotFoundResponseError(ex.getMessage());
+    }
+
+    @ExceptionHandler(MissingServletRequestPartException.class)
+    public ResponseEntity<Map<String, String>> handleMissingServletRequestPartException(MissingServletRequestPartException ex) {
+        Map<String, String> response = new HashMap<>();
+        response.put("error", "Required request part '" + ex.getRequestPartName() + "' is not present");
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
     private ResponseEntity<Map<String, String>> createNotFoundResponseError(String exceptionMessage) {

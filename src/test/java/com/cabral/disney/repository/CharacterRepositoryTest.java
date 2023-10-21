@@ -12,18 +12,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 public class CharacterRepositoryTest {
+
     @Autowired
     private CharacterRepository characterRepository;
 
     @Test
     public void saveCharacterReturnCharacter() {
+        byte[] image = new byte[]{0x12, 0x34, 0x56, 0x78}; // Sample image data as a byte array
 
-//        Character createdCharacter = em.persistAndFlush(this.personaje);
-//
-//        Character retrievedCharacter = em.find(Character.class,createdCharacter.getId());
-//
-//        assertThat(retrievedCharacter.getName()()).isEqualTo("name");
-        Character character = Character.builder().age(11).history("HISTORIA").image("path/image").name("name").weight(33.3).build();
+        Character character = Character.builder()
+                .age(11)
+                .history("HISTORIA")
+                .image(image) // Use byte array for the image
+                .name("name")
+                .weight(33.3)
+                .build();
+
         Character savedCharacter = this.characterRepository.save(character);
 
         assertThat(savedCharacter.getName()).isEqualTo("name");
@@ -38,10 +42,26 @@ public class CharacterRepositoryTest {
 
     @Test
     public void retrieveAllCharactersReturnListIsSize2() {
-        Character character1 = Character.builder().age(11).history("HISTORIA").image("path/image").name("name").weight(33.3).build();
+        byte[] image = new byte[]{0x12, 0x34, 0x56, 0x78}; // Sample image data as a byte array
+
+        Character character1 = Character.builder()
+                .age(11)
+                .history("HISTORIA")
+                .image(image) // Use byte array for the image
+                .name("name")
+                .weight(33.3)
+                .build();
+
         Character savedCharacter1 = this.characterRepository.save(character1);
 
-        Character character2 = Character.builder().age(11).history("HISTORIA").image("path/image").name("name").weight(33.3).build();
+        Character character2 = Character.builder()
+                .age(11)
+                .history("HISTORIA")
+                .image(image) // Use byte array for the image
+                .name("name")
+                .weight(33.3)
+                .build();
+
         Character savedCharacter2 = this.characterRepository.save(character2);
 
         List<Character> characters = this.characterRepository.findAll();
@@ -51,7 +71,15 @@ public class CharacterRepositoryTest {
 
     @Test
     public void retrieveCharacterById() {
-        Character character = Character.builder().age(11).history("HISTORIA").image("path/image").name("name").weight(33.3).build();
+        byte[] image = new byte[]{0x12, 0x34, 0x56, 0x78}; // Sample image data as a byte array
+
+        Character character = Character.builder()
+                .age(11)
+                .history("HISTORIA")
+                .image(image) // Use byte array for the image
+                .name("name")
+                .weight(33.3)
+                .build();
 
         Character savedCharacter = this.characterRepository.save(character);
 
@@ -62,18 +90,25 @@ public class CharacterRepositoryTest {
 
     @Test
     public void updateCharacter() {
-        Character character = Character.builder().age(11).history("HISTORIA").image("path/image").name("name").weight(33.3).build();
+        byte[] image = new byte[]{0x12, 0x34, 0x56, 0x78}; // Sample image data as a byte array
+
+        Character character = Character.builder()
+                .age(11)
+                .history("HISTORIA")
+                .image(image) // Use byte array for the image
+                .name("name")
+                .weight(33.3)
+                .build();
 
         Character savedCharacter = this.characterRepository.save(character);
 
         Character characterToUpdate = this.characterRepository.findById(savedCharacter.getId()).get();
 
-        //UPDATE
+        // UPDATE
         characterToUpdate.setName("Joaquin");
         characterToUpdate.setAge(33);
         characterToUpdate.setHistory("LA HISTORIA DE JOAQUIN");
         characterToUpdate.setWeight(60.5);
-        characterToUpdate.setImage("path/newImage");
 
         Character updatedCharacter = this.characterRepository.save(characterToUpdate);
 
@@ -81,12 +116,19 @@ public class CharacterRepositoryTest {
         assertThat(updatedCharacter.getAge()).isEqualTo(33);
         assertThat(updatedCharacter.getHistory()).isEqualTo("LA HISTORIA DE JOAQUIN");
         assertThat(updatedCharacter.getWeight()).isEqualTo(60.5);
-        assertThat(updatedCharacter.getImage()).isEqualTo("path/newImage");
     }
 
     @Test
     public void deleteCharacterAndReturnsEmpty() {
-        Character character = Character.builder().age(11).history("HISTORIA").image("path/image").name("name").weight(33.3).build();
+        byte[] image = new byte[]{0x12, 0x34, 0x56, 0x78}; // Sample image data as a byte array
+
+        Character character = Character.builder()
+                .age(11)
+                .history("HISTORIA")
+                .image(image) // Use byte array for the image
+                .name("name")
+                .weight(33.3)
+                .build();
 
         Character savedCharacter = this.characterRepository.save(character);
 
@@ -100,7 +142,15 @@ public class CharacterRepositoryTest {
 
     @Test
     public void searchCharacterByNombreAndAgeIsNotEmpty() {
-        Character character = Character.builder().age(11).history("HISTORIA").image("path/image").name("name").weight(33.3).build();
+        byte[] image = new byte[]{0x12, 0x34, 0x56, 0x78}; // Sample image data as a byte array
+
+        Character character = Character.builder()
+                .age(11)
+                .history("HISTORIA")
+                .image(image) // Use byte array for the image
+                .name("name")
+                .weight(33.3)
+                .build();
 
         Character savedCharacter = this.characterRepository.save(character);
 
@@ -111,7 +161,15 @@ public class CharacterRepositoryTest {
 
     @Test
     public void searchCharacterOnlyByNombreIsEmpty() {
-        Character character = Character.builder().age(11).history("HISTORIA").image("path/image").name("name").weight(33.3).build();
+        byte[] image = new byte[]{0x12, 0x34, 0x56, 0x78}; // Sample image data as a byte array
+
+        Character character = Character.builder()
+                .age(11)
+                .history("HISTORIA")
+                .image(image) // Use byte array for the image
+                .name("name")
+                .weight(33.3)
+                .build();
 
         Character savedCharacter = this.characterRepository.save(character);
 
@@ -119,5 +177,4 @@ public class CharacterRepositoryTest {
 
         assertThat(characters).isEmpty();
     }
-
 }

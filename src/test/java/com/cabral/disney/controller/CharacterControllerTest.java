@@ -7,46 +7,51 @@ import com.cabral.disney.service.CharacterService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockPart;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(CharacterController.class)
+@WebMvcTest(controllers = CharacterController.class)
 @AutoConfigureMockMvc(addFilters = false)
 @ExtendWith(MockitoExtension.class)
 public class CharacterControllerTest {
 
     @Autowired
-    private MockMvc mockMvc;
+    MockMvc mockMvc;
 
     @Autowired
-    private ObjectMapper objectMapper;
+    ObjectMapper objectMapper;
 
     @MockBean
-    private CharacterService characterService;
-
-    @InjectMocks
-    private CharacterController characterController;
-
+    CharacterService characterService;
 
     @Test
     public void testGetAllCharactersEndpointAndResponseIs200_OK() throws Exception {
 
         ResultActions response = mockMvc.perform(get("/characters/character/all"));
 
-        response.andExpect(MockMvcResultMatchers.status().isOk());
+        response.andExpect(status().isOk());
     }
 
     @Test
@@ -55,7 +60,7 @@ public class CharacterControllerTest {
         ResultActions response = mockMvc.perform(get("/characters/character/{id}", 1)
                 .contentType(MediaType.APPLICATION_JSON));
 
-        response.andExpect(MockMvcResultMatchers.status().isOk());
+        response.andExpect(status().isOk());
     }
 
     @Test
@@ -66,70 +71,126 @@ public class CharacterControllerTest {
         ResultActions response = mockMvc.perform(get("/characters/character/{id}", 1)
                 .contentType(MediaType.APPLICATION_JSON));
 
-        response.andExpect(MockMvcResultMatchers.status().isNotFound());
+        response.andExpect(status().isNotFound());
     }
 
     @Test
     public void testUpdateCharacterEndpointAndResponseIs200_OK() throws Exception {
-        CharacterRequest characterRequest = CharacterRequest.builder().name("Aladdin").age(22).weight(61.3).history("HISTORIAXHISTORIAXHISTORIAXXXXX").build();
+        Path path = Paths.get("src/test/resources/image/jafar.jpg");
+        byte[] imageBytes = Files.readAllBytes(path);
+        MockPart filePart = new MockPart("image", "name", imageBytes);
 
-        ResultActions response = mockMvc.perform(put("/characters/character/{id}", 1)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(characterRequest)));
+        //valid json
+        byte[] json = "{\"name\":\"Aladdin\",\"age\": 22,\"weight\": 55.6, \"history\": \"SOMEHISTORYYYYYYYY\"}".getBytes();
+        MockPart jsonPart = new MockPart("characterRequest", "json", json);
+        jsonPart.getHeaders().setContentType(MediaType.APPLICATION_JSON);
 
-        response.andExpect(MockMvcResultMatchers.status().isOk());
+        ResultActions response = mockMvc.perform(
+                MockMvcRequestBuilders.multipart(HttpMethod.PUT, "/characters/character/{id}", 1)
+                        .part(filePart)
+                        .part(jsonPart)
+        );
+
+        response.andExpect(status().isOk());
     }
 
     @Test
     public void testUpdateCharacterEndpointAndResponseIs404_NOT_FOUND() throws Exception {
-        CharacterRequest characterRequest = CharacterRequest.builder().name("Aladdin").age(22).weight(61.3).history("HISTORIAXHISTORIAXHISTORIAXXXXX").build();
+        Long nonExistentId = 1L;
 
-        when(this.characterService.updateCharacter(anyLong(), eq(characterRequest))).thenThrow(CharacterNotFoundException.class);
+        CharacterRequest characterRequest = CharacterRequest.builder().name("Aladdin").age(22).weight(61.3).history("SOMEHISTORYYYYYYYY").build();
 
-        ResultActions response = mockMvc.perform(put("/characters/character/{id}", 1)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(characterRequest)));
+        Path path = Paths.get("src/test/resources/image/jafar.jpg");
+        byte[] imageBytes = Files.readAllBytes(path);
+        MockPart filePart = new MockPart("image", "name", imageBytes);
 
-        response.andExpect(MockMvcResultMatchers.status().isNotFound());
+        //valid json
+        byte[] json = "{\"name\":\"Aladdin\",\"age\": 22,\"weight\": 61.3, \"history\": \"SOMEHISTORYYYYYYYY\"}".getBytes();
+        MockPart jsonPart = new MockPart("characterRequest", "json", json);
+        jsonPart.getHeaders().setContentType(MediaType.APPLICATION_JSON);
+
+        // Make characterService mock throw CharacterNotFoundException
+        when(this.characterService.updateCharacter(eq(nonExistentId), eq(characterRequest), any(MultipartFile.class)))
+                .thenThrow(new CharacterNotFoundException("Character Not Found"));
+
+
+        ResultActions response = mockMvc.perform(
+                MockMvcRequestBuilders.multipart(HttpMethod.PUT, "/characters/character/{id}", nonExistentId)
+                        .part(filePart)
+                        .part(jsonPart)
+        );
+
+        response.andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Character Not Found"));
     }
 
     @Test
-    public void testUpdateCharacterEndpointAndResponseIs404_BAD_REQUEST() throws Exception {
-        //INVALID WEIGHT PESO
-        CharacterRequest characterRequest = CharacterRequest.builder().name("Aladdin").age(22).weight(0.001).history("HISTORIAXHISTORIAXHISTORIAXXXXX").build();
+    public void testUpdateCharacterEndpointAndResponseIs400_BAD_REQUEST() throws Exception {
+        Path path = Paths.get("src/test/resources/image/jafar.jpg");
+        byte[] imageBytes = Files.readAllBytes(path);
+        MockPart filePart = new MockPart("image", "name", imageBytes);
 
-        when(this.characterService.updateCharacter(anyLong(), eq(characterRequest))).thenThrow(CharacterNotFoundException.class);
+        //invalid json / weight
+        byte[] json = "{\"name\":\"Aladdin\",\"age\": 22,\"weight\": 0.000001, \"history\": \"SOMEHISTORYYYYYYYY\"}".getBytes();
+        MockPart jsonPart = new MockPart("characterRequest", "json", json);
+        jsonPart.getHeaders().setContentType(MediaType.APPLICATION_JSON);
 
-        ResultActions response = mockMvc.perform(put("/characters/character/{id}", 1)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(characterRequest)));
 
-        response.andExpect(MockMvcResultMatchers.status().isBadRequest());
+        ResultActions response = mockMvc.perform(
+                MockMvcRequestBuilders.multipart(HttpMethod.PUT, "/characters/character/{id}", 1L)
+                        .part(filePart)
+                        .part(jsonPart)
+        );
+
+        response.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errors[0].field").value("weight"))
+                .andExpect(jsonPath("$.errors[0].message").value("weight must be greater or equal than 0.1"));
     }
+
 
     @Test
     public void testCreateCharacterEndpointAndResponseIs201_CREATED() throws Exception {
+        Path path = Paths.get("src/test/resources/image/jafar.jpg");
+        byte[] imageBytes = Files.readAllBytes(path);
+        MockPart filePart = new MockPart("image", "name", imageBytes);
 
-        CharacterRequest characterRequest = CharacterRequest.builder().name("Aladdin").age(22).weight(61.3).history("HISTORIAXHISTORIAXHISTORIAXXXXX").build();
+        //valid json
+        byte[] json = "{\"name\":\"Aladdin\",\"age\": 22,\"weight\": 56.3, \"history\": \"SOMEHISTORYYYYYYYY\"}".getBytes();
+        MockPart jsonPart = new MockPart("characterRequest", "json", json);
+        jsonPart.getHeaders().setContentType(MediaType.APPLICATION_JSON);
 
-        ResultActions response = mockMvc.perform(post("/characters/character")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(characterRequest)));
+        ResultActions response = mockMvc.perform(
+                MockMvcRequestBuilders.multipart("/characters/character")
+                        .part(filePart)
+                        .part(jsonPart)
+        );
 
-        response.andExpect(MockMvcResultMatchers.status().isCreated());
+        response.andExpect(status().isCreated());
     }
 
     @Test
     public void testCreateCharacterEndpointAndResponseIs400_BAD_REQUEST() throws Exception {
-        //INVALID WEIGHT PESO
-        CharacterRequest invalidCharacterRequest = CharacterRequest.builder().name("Aladdin").age(22).weight(0.001).history("HISTORIAXHISTORIAXHISTORIAXXXXX").build();
+        Path path = Paths.get("src/test/resources/image/jafar.jpg");
+        byte[] imageBytes = Files.readAllBytes(path);
+        MockPart filePart = new MockPart("image", "name", imageBytes);
 
-        ResultActions response = mockMvc.perform(post("/characters/character")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(invalidCharacterRequest)));
+        //invalid json with invalid weight
+        byte[] json = "{\"name\":\"Aladdin\",\"age\": 22,\"weight\": 0.0000001, \"history\": \"SOMEHISTORYYYYYYYY\"}".getBytes();
+        MockPart jsonPart = new MockPart("characterRequest", "json", json);
+        jsonPart.getHeaders().setContentType(MediaType.APPLICATION_JSON);
 
-        response.andExpect(MockMvcResultMatchers.status().isBadRequest());
+        // Perform the request with invalid data
+        ResultActions response = mockMvc.perform(
+                MockMvcRequestBuilders.multipart("/characters/character")
+                        .part(filePart) // Attach the image file
+                        .part(jsonPart) // Send characterRequest as a parameter
+        );
+
+        response.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errors[0].field").value("weight"))
+                .andExpect(jsonPath("$.errors[0].message").value("weight must be greater or equal than 0.1"));
     }
+
 
     @Test
     public void testDeleteCharacterEndpointAndResponseIs204_NO_CONTENT() throws Exception {
@@ -137,7 +198,7 @@ public class CharacterControllerTest {
         ResultActions response = mockMvc.perform(delete("/characters/character/{id}", 1)
                 .contentType(MediaType.APPLICATION_JSON));
 
-        response.andExpect(MockMvcResultMatchers.status().isNoContent());
+        response.andExpect(status().isNoContent());
     }
 
     @Test
@@ -148,17 +209,17 @@ public class CharacterControllerTest {
         ResultActions response = mockMvc.perform(delete("/characters/character/{id}", 1)
                 .contentType(MediaType.APPLICATION_JSON));
 
-        response.andExpect(MockMvcResultMatchers.status().isNotFound());
+        response.andExpect(status().isNotFound());
     }
 
     @Test
     public void testSearchCharacterEndpointAndResponseIs200_OK() throws Exception {
         ResultActions response = mockMvc.perform(get("/characters/character/")
                 .param("name", "example")
-                .param("age","1")
+                .param("age", "1")
                 .contentType(MediaType.APPLICATION_JSON));
 
-        response.andExpect(MockMvcResultMatchers.status().isOk());
+        response.andExpect(status().isOk());
     }
 
     @Test
@@ -168,10 +229,10 @@ public class CharacterControllerTest {
 
         ResultActions response = mockMvc.perform(get("/characters/character")
                 .param("name", "something")
-                .param("age","1")
+                .param("age", "1")
                 .contentType(MediaType.APPLICATION_JSON));
 
-        response.andExpect(MockMvcResultMatchers.status().isNotFound());
+        response.andExpect(status().isNotFound());
     }
 }
 

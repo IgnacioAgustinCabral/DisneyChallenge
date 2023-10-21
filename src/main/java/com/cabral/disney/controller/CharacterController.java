@@ -5,6 +5,7 @@ import com.cabral.disney.exception.CharacterSearchEmptyResultException;
 import com.cabral.disney.payload.request.CharacterRequest;
 import com.cabral.disney.payload.response.CharacterResponse;
 import com.cabral.disney.service.CharacterService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -42,16 +43,16 @@ public class CharacterController {
     }
 
     @PostMapping("/character")
-    public ResponseEntity<CharacterResponse> createCharacter(@Valid CharacterRequest characterRequest,
-                                                             @RequestParam("image") MultipartFile image) {
+    public ResponseEntity<?> createCharacter(@RequestPart("characterRequest") @Valid CharacterRequest characterRequest,
+                                             @RequestPart("image") MultipartFile image) {
+
         return new ResponseEntity<>(this.characterService.createCharacter(characterRequest, image), HttpStatus.CREATED);
     }
 
     @PutMapping("/character/{id}")
-    public ResponseEntity<CharacterResponse> updateCharacter(@PathVariable Long id,
-                                                             @Valid CharacterRequest characterRequest,
-                                                             @RequestParam(name = "image") MultipartFile image
-    ) throws CharacterNotFoundException {
+    public ResponseEntity<?> updateCharacter(@PathVariable Long id,
+                                             @RequestPart("characterRequest") @Valid CharacterRequest characterRequest,
+                                             @RequestPart("image") MultipartFile image) throws CharacterNotFoundException {
         CharacterResponse characterResponse = characterService.updateCharacter(id, characterRequest, image);
         return ResponseEntity.ok(characterResponse);
     }

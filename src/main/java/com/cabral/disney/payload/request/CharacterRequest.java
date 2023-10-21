@@ -1,10 +1,7 @@
 package com.cabral.disney.payload.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
+import lombok.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.validation.constraints.*;
 import java.util.Set;
@@ -30,8 +27,6 @@ public class CharacterRequest {
     @NotBlank(message = "history is required.")
     @Size(min = 1, max = 2000, message = "the history must be between {min} and {max} characters long.")
     private String history;
-
-    private MultipartFile image;
 
     private Set<Long> movieIds;
 }
