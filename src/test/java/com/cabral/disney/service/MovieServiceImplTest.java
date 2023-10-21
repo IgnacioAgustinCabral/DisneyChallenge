@@ -13,7 +13,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -51,21 +53,26 @@ public class MovieServiceImplTest {
     }
 
     @Test
-    public void shouldCreateAMovieAndReturnMovieResponse() throws CharacterNotFoundException {
+    public void shouldCreateAMovieAndReturnMovieResponse() throws  IOException {
+        MultipartFile mockFile = mock(MultipartFile.class);
+        when(mockFile.getBytes()).thenReturn(new byte[]{0x12, 0x34, 0x56, 0x78});
 
         when(this.movieRepository.save(any(Movie.class))).thenReturn(mock(Movie.class));
 
-        MovieResponse createdMovie = this.movieService.createMovie(mock(MovieRequest.class));
+        MovieResponse createdMovie = this.movieService.createMovie(mock(MovieRequest.class), mockFile);
 
         assertThat(createdMovie).isInstanceOf(MovieResponse.class);
     }
 
     @Test
-    public void shouldUpdateAMovieAndReturnMovieResponse() throws MovieNotFoundException {
+    public void shouldUpdateAMovieAndReturnMovieResponse() throws MovieNotFoundException, IOException {
+        MultipartFile mockFile = mock(MultipartFile.class);
+        when(mockFile.getBytes()).thenReturn(new byte[]{0x12, 0x34, 0x56, 0x78});
+
         when(this.movieRepository.findById(anyLong())).thenReturn(Optional.ofNullable(mock(Movie.class)));
         when(this.movieRepository.save(any(Movie.class))).thenReturn(mock(Movie.class));
 
-        MovieResponse updatedMovie = this.movieService.updateMovie(1L, mock(MovieRequest.class));
+        MovieResponse updatedMovie = this.movieService.updateMovie(1L, mock(MovieRequest.class),mockFile);
 
         assertThat(updatedMovie).isInstanceOf(MovieResponse.class);
     }
