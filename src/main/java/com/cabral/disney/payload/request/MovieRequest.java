@@ -19,7 +19,6 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 public class MovieRequest {
-
     @NotBlank(message = "name is required.")
     @Size(min = 1, max = 50, message = "the title must be between {min} and {max} characters long.")
     private String title;
@@ -29,8 +28,11 @@ public class MovieRequest {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate creationDate;
 
-    private Integer qualification;
-    private String image;
+    @NotBlank
+    @Size(min = 100, max = 400)
+    private String synopsis;
+
     private Set<Long> characterIds;
+
     private Set<Long> genreIds;
 }

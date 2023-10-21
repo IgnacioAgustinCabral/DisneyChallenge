@@ -77,7 +77,7 @@ public class CharacterServiceImpl implements CharacterService {
             try {
                 imageBytes = Base64.getEncoder().encode(image.getBytes());
             } catch (IOException e) {
-                // Handle the exception
+                throw new RuntimeException(e);
             }
         }
 

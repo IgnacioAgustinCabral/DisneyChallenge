@@ -6,7 +6,10 @@ import com.cabral.disney.models.Movie;
 import com.cabral.disney.payload.request.MovieRequest;
 import com.cabral.disney.payload.response.MovieResponse;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.Base64;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -17,8 +20,15 @@ public class MovieMapper {
                 .id(movie.getId())
                 .title(movie.getTitle())
                 .creationDate(movie.getCreationDate())
-                .qualification(movie.getQualification())
-                .image(movie.getImage());
+                .synopsis(movie.getSynopsis());
+
+        if (movie.getImage() != null) {
+            byte[] imageBytes = Base64.getDecoder().decode(movie.getImage());
+
+            builder.image(imageBytes); // Store the binary image data in the response
+        } else {
+            builder.image(null);
+        }
 
         if (movie.getCharacterAssociations() != null) {
             builder.characterIds(movie.getCharacterAssociations().stream()
@@ -35,16 +45,23 @@ public class MovieMapper {
         return builder.build();
     }
 
-    public static Movie mapToEntity(MovieRequest request) {
-        return mapToEntity(request, null, null);
+    public static Movie mapToEntity(MovieRequest request, MultipartFile file) {
+        return mapToEntity(request, null, null, file);
     }
 
-    public static Movie mapToEntity(MovieRequest request, Set<Character> characters, Set<Genre> genres) {
+    public static Movie mapToEntity(MovieRequest request, Set<Character> characters, Set<Genre> genres, MultipartFile file) {
         Movie.MovieBuilder builder = Movie.builder()
                 .title(request.getTitle())
                 .creationDate(request.getCreationDate())
-                .qualification(request.getQualification())
-                .image(request.getImage());
+                .synopsis(request.getSynopsis());
+
+        if (file != null) {
+            try {
+                builder.image(Base64.getEncoder().encode(file.getBytes()));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
         if (characters != null) {
             builder.characterAssociations(characters);

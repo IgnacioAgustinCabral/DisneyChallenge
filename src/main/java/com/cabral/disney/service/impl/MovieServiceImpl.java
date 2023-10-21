@@ -14,11 +14,13 @@ import com.cabral.disney.repository.CharacterRepository;
 import com.cabral.disney.repository.GenreRepository;
 import com.cabral.disney.repository.MovieRepository;
 import com.cabral.disney.service.MovieService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -52,7 +54,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     @Transactional
-    public MovieResponse createMovie(MovieRequest request) {
+    public MovieResponse createMovie(MovieRequest request, MultipartFile file) {
         Set<Character> characters = null;
         Set<Genre> genres = null;
         Set<Long> characterIds = request.getCharacterIds();
@@ -80,20 +82,30 @@ public class MovieServiceImpl implements MovieService {
                     .collect(Collectors.toSet());
         }
 
-        Movie newMovie = MovieMapper.mapToEntity(request, characters, genres);
+        Movie newMovie = MovieMapper.mapToEntity(request, characters, genres, file);
         Movie savedMovie = movieRepository.save(newMovie);
 
         return MovieMapper.mapToDTO(savedMovie);
     }
 
     @Override
-    public MovieResponse updateMovie(Long id, MovieRequest request) throws MovieNotFoundException {
+    public MovieResponse updateMovie(Long id, MovieRequest request, MultipartFile file) throws MovieNotFoundException {
         Movie movie = this.movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundException("Movie could not be found."));
 
-        movie.setImage(request.getImage());
+        byte[] imageBytes = null;
+
+        if (file != null) {
+            try {
+                imageBytes = Base64.getEncoder().encode(file.getBytes());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
         movie.setCreationDate(request.getCreationDate());
-        movie.setQualification(request.getQualification());
         movie.setTitle(request.getTitle());
+        movie.setSynopsis(request.getSynopsis());
+        movie.setImage(imageBytes);
 
         Movie updatedMovie = this.movieRepository.save(movie);
 

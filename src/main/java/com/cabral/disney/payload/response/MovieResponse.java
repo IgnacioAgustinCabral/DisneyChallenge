@@ -16,8 +16,8 @@ public class MovieResponse {
     private Long id;
     private String title;
     private LocalDate creationDate;
-    private Integer qualification;
-    private String image;
+    private String synopsis;
+    private byte[] image;
     private Set<Long> characterIds;
     private Set<Long> genreIds;
 }

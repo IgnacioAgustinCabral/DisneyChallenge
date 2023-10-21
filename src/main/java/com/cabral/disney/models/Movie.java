@@ -23,8 +23,12 @@ public class Movie {
 
     @Column(nullable = false)
     private LocalDate creationDate;
-    private Integer qualification;
-    private String image;
+
+    @Column(columnDefinition = "TEXT", nullable = false)
+    private String synopsis;
+
+    @Lob
+    private byte[] image;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
