@@ -17,7 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockPart;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Files;
@@ -27,8 +26,7 @@ import java.nio.file.Paths;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -86,7 +84,7 @@ public class CharacterControllerTest {
         jsonPart.getHeaders().setContentType(MediaType.APPLICATION_JSON);
 
         ResultActions response = mockMvc.perform(
-                MockMvcRequestBuilders.multipart(HttpMethod.PUT, "/characters/character/{id}", 1)
+                multipart(HttpMethod.PUT, "/characters/character/{id}", 1)
                         .part(filePart)
                         .part(jsonPart)
         );
@@ -115,7 +113,7 @@ public class CharacterControllerTest {
 
 
         ResultActions response = mockMvc.perform(
-                MockMvcRequestBuilders.multipart(HttpMethod.PUT, "/characters/character/{id}", nonExistentId)
+                multipart(HttpMethod.PUT, "/characters/character/{id}", nonExistentId)
                         .part(filePart)
                         .part(jsonPart)
         );
@@ -137,7 +135,7 @@ public class CharacterControllerTest {
 
 
         ResultActions response = mockMvc.perform(
-                MockMvcRequestBuilders.multipart(HttpMethod.PUT, "/characters/character/{id}", 1L)
+                multipart(HttpMethod.PUT, "/characters/character/{id}", 1L)
                         .part(filePart)
                         .part(jsonPart)
         );
@@ -160,7 +158,7 @@ public class CharacterControllerTest {
         jsonPart.getHeaders().setContentType(MediaType.APPLICATION_JSON);
 
         ResultActions response = mockMvc.perform(
-                MockMvcRequestBuilders.multipart("/characters/character")
+                multipart("/characters/character")
                         .part(filePart)
                         .part(jsonPart)
         );
@@ -181,7 +179,7 @@ public class CharacterControllerTest {
 
         // Perform the request with invalid data
         ResultActions response = mockMvc.perform(
-                MockMvcRequestBuilders.multipart("/characters/character")
+                multipart("/characters/character")
                         .part(filePart) // Attach the image file
                         .part(jsonPart) // Send characterRequest as a parameter
         );
