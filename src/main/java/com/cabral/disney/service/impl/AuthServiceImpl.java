@@ -44,7 +44,6 @@ public class AuthServiceImpl implements AuthService {
         } else {
             User newUser = UserMapper.mapToEntity(request);
             this.userRepository.save(newUser);
-//            EmailService.send(request.getEmail());
             emailService.sendEmail(request.getEmail());
             return AuthResponse.builder().message(jwtService.getToken(newUser)).build();
         }
@@ -52,7 +51,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse login(LoginRequest request) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(),request.getPassword()));
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
         UserDetails user = userRepository.findByUsername(request.getUsername()).orElseThrow();
         String token = jwtService.getToken(user);
 

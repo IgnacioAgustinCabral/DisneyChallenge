@@ -1,16 +1,18 @@
 version: "3.8"
 
 services:
-  disney-api:
+  java-api:
     restart: always
     build: .
-    image : disney-api
-    container_name: disney-api
+    image: java-api
+    container_name: java-api
     ports:
       - "8080:8080"
     depends_on:
       mysqldb:
         condition: service_healthy
+    networks:
+      - disney
 
   mysqldb:
     restart: always
@@ -24,11 +26,17 @@ services:
       MYSQL_PASSWORD: ignacio
       MYSQL_ROOT_PASSWORD: ignacio
     healthcheck:
-      test: "mysql -h mysqldb -u ignacio -pignacio -e 'SELECT 1'"
+      test: [ "CMD", "mysqladmin", "ping", "-h", "mysqldb", "-u", "ignacio", "-pignacio" ]
       interval: 1s
       retries: 20
     volumes:
       - mysqldb-data:/var/lib/mysql
+    networks:
+      - disney
 
 volumes:
   mysqldb-data:
+
+networks:
+  disney:
+    driver: bridge
