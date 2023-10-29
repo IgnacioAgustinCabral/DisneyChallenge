@@ -8,7 +8,10 @@ import com.cabral.disney.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.Base64;
 import java.util.Collections;
 
 @Component
@@ -26,15 +29,25 @@ public class UserMapper {
         return AuthResponse.builder().message(message).build();
     }
 
-    public static User mapToEntity(RegisterRequest request) {
+    public static User mapToEntity(RegisterRequest request, MultipartFile profilePicture) {
+
         Role roles = roleRepository.findByName("ROLE_USER").get();
 
         // Create a list of roles and add the default role to it
-
-        return User.builder().username(request.getUsername())
+        User.UserBuilder builder = User.builder()
+                .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .email(request.getEmail())
-                .roles(Collections.singletonList(roles))
-                .build();
+                .roles(Collections.singletonList(roles));
+
+        if (profilePicture != null) {
+            try {
+                builder.profile_picture(Base64.getEncoder().encode(profilePicture.getBytes()));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return builder.build();
     }
 }

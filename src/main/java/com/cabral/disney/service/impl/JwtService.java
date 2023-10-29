@@ -1,5 +1,6 @@
 package com.cabral.disney.service.impl;
 
+import com.cabral.disney.models.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
@@ -25,11 +26,13 @@ public class JwtService {
     @Value("${security.jwt.expiration}")
     private Long EXPIRATION_MINUTES;
 
-    public String getToken(UserDetails user) {
+    public String getToken(User user) {
         Map<String, Object> claims = new HashMap<>();
 
         // Add user roles to the claims
         claims.put("roles", user.getAuthorities());
+        // Add user id to the claims
+        claims.put("id",user.getId());
         return getToken(claims, user);
     }
 

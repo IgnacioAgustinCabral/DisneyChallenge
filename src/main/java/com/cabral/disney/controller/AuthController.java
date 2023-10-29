@@ -8,10 +8,8 @@ import com.cabral.disney.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -33,13 +31,8 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
-        try {
-            return ResponseEntity.ok(this.authService.register(request));
-        } catch (UsernameAlreadyTakenException | EmailAlreadyTakenException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public ResponseEntity<?> register(@Valid @RequestPart("registerRequest") RegisterRequest request,
+                                      @RequestPart("profile_picture") MultipartFile profilePicture) throws EmailAlreadyTakenException,IOException, UsernameAlreadyTakenException {
+        return ResponseEntity.ok(this.authService.register(request, profilePicture));
     }
 }

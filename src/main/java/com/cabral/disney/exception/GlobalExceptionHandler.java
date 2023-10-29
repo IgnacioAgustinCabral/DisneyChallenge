@@ -58,9 +58,25 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
+    @ExceptionHandler(UsernameAlreadyTakenException.class)
+    public ResponseEntity<Map<String, String>> handleUsernameAlreadyTakenException(UsernameAlreadyTakenException ex) {
+        return createBadRequestResponseError(ex.getMessage());
+    }
+
+    @ExceptionHandler(EmailAlreadyTakenException.class)
+    public ResponseEntity<Map<String, String>> handleEmailAlreadyTakenException(EmailAlreadyTakenException ex) {
+        return createBadRequestResponseError(ex.getMessage());
+    }
+
     private ResponseEntity<Map<String, String>> createNotFoundResponseError(String exceptionMessage) {
         Map<String, String> response = new HashMap<>();
         response.put("message", exceptionMessage);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+    private ResponseEntity<Map<String, String>> createBadRequestResponseError(String exceptionMessage) {
+        Map<String, String> response = new HashMap<>();
+        response.put("message", exceptionMessage);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 }

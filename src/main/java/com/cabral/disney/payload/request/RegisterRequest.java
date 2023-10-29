@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -25,4 +26,6 @@ public class RegisterRequest {
     @NotBlank(message = "email required.")
     @Email
     private String email;
+
+    private MultipartFile profile_picture;
 }
