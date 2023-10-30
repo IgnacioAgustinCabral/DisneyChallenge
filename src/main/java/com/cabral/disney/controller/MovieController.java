@@ -19,7 +19,7 @@ import java.util.List;
 @RequestMapping("/movies")
 public class MovieController {
 
-    private final MovieService movieService;
+    private MovieService movieService;
 
     @Autowired
     public MovieController(MovieService movieService) {
@@ -43,7 +43,7 @@ public class MovieController {
         return ResponseEntity.ok(movieResponses);
     }
 
-    @PostMapping(value = "/movie")
+    @PostMapping("/movie")
     public ResponseEntity<MovieResponse> createMovie(
             @RequestPart("movieRequest") @Valid MovieRequest request,
             @RequestPart(value = "image", required = false) MultipartFile file

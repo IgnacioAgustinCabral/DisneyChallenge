@@ -6,7 +6,6 @@ import com.cabral.disney.payload.request.LoginRequest;
 import com.cabral.disney.payload.request.RegisterRequest;
 import com.cabral.disney.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
