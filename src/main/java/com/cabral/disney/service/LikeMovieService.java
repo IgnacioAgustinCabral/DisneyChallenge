@@ -5,4 +5,6 @@ import com.cabral.disney.exception.MovieNotFoundException;
 public interface LikeMovieService {
 
     String likeMovie(Long movieId, Long userId) throws MovieNotFoundException;
+
+    String removeLike(Long movieId, Long userId) throws MovieNotFoundException;
 }

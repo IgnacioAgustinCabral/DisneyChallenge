@@ -34,4 +34,17 @@ public class LikeMovieServiceImpl implements LikeMovieService {
 
         return movie.getTitle();
     }
+
+    @Override
+    public String removeLike(Long movieId, Long userId) throws MovieNotFoundException {
+        Movie movie = this.movieRepository.findById(movieId).orElseThrow(() -> new MovieNotFoundException("Movie not found"));
+
+        User user = this.userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        user.getLikedMovies().remove(movie);
+
+        this.userRepository.save(user);
+
+        return movie.getTitle();
+    }
 }

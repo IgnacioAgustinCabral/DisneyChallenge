@@ -6,10 +6,7 @@ import com.cabral.disney.service.LikeMovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,6 +29,17 @@ public class UserController {
         Map<String, String> response = new HashMap<>();
 
         response.put("message", "You've liked " + movieTitle);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/remove-like/{movieId}")
+    public ResponseEntity<?> removeLike(@PathVariable Long movieId, @AuthenticationPrincipal User userDetails) throws MovieNotFoundException {
+        String movieTitle = this.likeMovieService.removeLike(movieId,userDetails.getId());
+
+        Map<String, String> response = new HashMap<>();
+
+        response.put("message", "You've removed " + movieTitle + " from your liked movies");
 
         return ResponseEntity.ok(response);
     }
