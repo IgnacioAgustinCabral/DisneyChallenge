@@ -41,13 +41,8 @@ public class User implements UserDetails {
     )
     private List<Role> roles = new ArrayList<>();
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "liked_movies",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "movie_id", referencedColumnName = "id")
-    )
-    private Set<Movie> likedMovies = new HashSet<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<LikedMovies> likedMovies;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
