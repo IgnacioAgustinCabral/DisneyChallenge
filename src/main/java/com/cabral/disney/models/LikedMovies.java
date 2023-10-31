@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Data
-@EqualsAndHashCode(exclude = {"user", "movie"}) // Exclude user and movie fields for now
+@EqualsAndHashCode(exclude = {"user", "movie"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

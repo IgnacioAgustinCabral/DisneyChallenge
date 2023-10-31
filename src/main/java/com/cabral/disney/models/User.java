@@ -41,7 +41,7 @@ public class User implements UserDetails {
     )
     private List<Role> roles = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<LikedMovies> likedMovies;
 
     @Override
