@@ -37,6 +37,8 @@ public class SecurityConfig {
                         .mvcMatchers(HttpMethod.POST, "/genres/**").hasRole("ADMIN")
                         .mvcMatchers(HttpMethod.PUT, "/genres/**").hasRole("ADMIN")
                         .mvcMatchers(HttpMethod.DELETE, "/genres/**").hasRole("ADMIN")
+                        .mvcMatchers(HttpMethod.POST, "/user/**").authenticated()
+                        .mvcMatchers(HttpMethod.DELETE, "/user/**").authenticated()
                         .anyRequest().permitAll())
                 .sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authProvider)

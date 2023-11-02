@@ -15,6 +15,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
@@ -36,13 +37,13 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AuthResponse register(RegisterRequest request) throws UsernameAlreadyTakenException, EmailAlreadyTakenException, IOException {
+    public AuthResponse register(RegisterRequest request, MultipartFile profilePicture) throws UsernameAlreadyTakenException, EmailAlreadyTakenException, IOException {
         if (this.userRepository.existsByUsername(request.getUsername())) {
             throw new UsernameAlreadyTakenException("Username already in use.");
         } else if (this.userRepository.existsByEmail(request.getEmail())) {
             throw new EmailAlreadyTakenException("Email already in use");
         } else {
-            User newUser = UserMapper.mapToEntity(request);
+            User newUser = UserMapper.mapToEntity(request,profilePicture);
             this.userRepository.save(newUser);
             emailService.sendEmail(request.getEmail());
             return AuthResponse.builder().message(jwtService.getToken(newUser)).build();
@@ -52,7 +53,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthResponse login(LoginRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-        UserDetails user = userRepository.findByUsername(request.getUsername()).orElseThrow();
+        User user = userRepository.findByUsername(request.getUsername()).orElseThrow();
         String token = jwtService.getToken(user);
 
         return AuthResponse.builder()
