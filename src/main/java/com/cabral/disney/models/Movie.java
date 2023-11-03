@@ -48,4 +48,7 @@ public class Movie {
 
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<LikedMovies> likedMovies;
+
+    @ManyToMany(mappedBy = "moviesInList")
+    private Set<UserList> listsContainingMovie = new HashSet<>();
 }

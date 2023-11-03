@@ -16,6 +16,7 @@ import java.util.*;
 @NoArgsConstructor
 @Builder
 @Entity
+@Table(name = "`user`")
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,6 +44,9 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<LikedMovies> likedMovies;
+
+    @OneToMany(mappedBy = "user")
+    private List<UserList> movieLists;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
