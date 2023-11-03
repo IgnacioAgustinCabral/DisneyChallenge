@@ -1,9 +1,6 @@
 package com.cabral.disney.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -46,7 +43,8 @@ public class User implements UserDetails {
     private Set<LikedMovies> likedMovies;
 
     @OneToMany(mappedBy = "user")
-    private List<UserList> movieLists;
+    @ToString.Exclude
+    private List<UserList> movieLists = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

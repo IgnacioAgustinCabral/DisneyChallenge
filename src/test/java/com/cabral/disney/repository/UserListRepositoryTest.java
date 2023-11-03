@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -21,11 +22,15 @@ public class UserListRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    MovieRepository movieRepository;
+
+    @Autowired
+    private EntityManager entityManager;
     private User user;
     private Movie movie1;
     private Movie movie2;
-
-    private User savedUser;
 
     @BeforeEach
     public void init() {
@@ -34,13 +39,12 @@ public class UserListRepositoryTest {
         user = User.builder().email("asd@gmail.com").password("123123").profile_picture(image).username("Kippur").build();
         movie1 = Movie.builder().title("Aladin").synopsis("synopsis").creationDate(LocalDate.of(1994, 2, 2)).build();
         movie2 = Movie.builder().title("LionKing").synopsis("synopsis").creationDate(LocalDate.of(1994, 2, 2)).build();
-
-        savedUser = this.userRepository.save(this.user);
     }
 
     @Test
     public void aUserCanCreateAList() {
-        UserList userList = UserList.builder().name("Action Movies").isPublic(true).moviesInList(Set.of(movie1,movie2)).user(this.user).build();
+        User savedUser = this.userRepository.save(this.user);
+        UserList userList = UserList.builder().name("Action Movies").isPublic(true).moviesInList(Set.of(movie1, movie2)).user(savedUser).build();
 
         UserList savedUserList = this.userListRepository.save(userList);
 
@@ -53,6 +57,28 @@ public class UserListRepositoryTest {
         assertThat(savedUserList.getUser().getId()).isEqualTo(savedUser.getId());
 
         assertThat(savedUserList.getName()).isEqualTo("Action Movies");
+    }
+
+    @Test
+    public void aUserCanHaveMultipleLists() {
+        this.movieRepository.save(movie1);
+        this.movieRepository.save(movie2);
+
+        User savedUser = this.userRepository.save(this.user);
+
+        UserList userList1 = UserList.builder().name("Action Movies").isPublic(true).moviesInList(Set.of(movie1, movie2)).user(savedUser).build();
+
+        UserList userList2 = UserList.builder().name("Romance Movies").isPublic(true).moviesInList(Set.of(movie1, movie2)).user(savedUser).build();
+
+        this.userListRepository.save(userList1);
+        this.userListRepository.save(userList2);
+
+        // refreshes the user, changes may not be always be in sync with the db
+        entityManager.refresh(savedUser);
+
+        User retrievedUser = this.userRepository.findByUsername(savedUser.getUsername()).get();
+
+        assertThat(retrievedUser.getMovieLists().size()).isEqualTo(2);
     }
 
 }
