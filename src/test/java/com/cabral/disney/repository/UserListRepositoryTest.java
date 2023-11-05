@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,13 +25,15 @@ public class UserListRepositoryTest {
     private UserRepository userRepository;
 
     @Autowired
-    MovieRepository movieRepository;
+    private MovieRepository movieRepository;
 
     @Autowired
     private EntityManager entityManager;
     private User user;
     private Movie movie1;
     private Movie movie2;
+
+    private Set<Movie> movies = new HashSet<>();
 
     @BeforeEach
     public void init() {
@@ -39,6 +42,9 @@ public class UserListRepositoryTest {
         user = User.builder().email("asd@gmail.com").password("123123").profile_picture(image).username("Kippur").build();
         movie1 = Movie.builder().title("Aladin").synopsis("synopsis").creationDate(LocalDate.of(1994, 2, 2)).build();
         movie2 = Movie.builder().title("LionKing").synopsis("synopsis").creationDate(LocalDate.of(1994, 2, 2)).build();
+
+        movies.add(movie1);
+        movies.add(movie2);
     }
 
     @Test
@@ -79,6 +85,19 @@ public class UserListRepositoryTest {
         User retrievedUser = this.userRepository.findByUsername(savedUser.getUsername()).get();
 
         assertThat(retrievedUser.getMovieLists().size()).isEqualTo(2);
+    }
+
+    @Test
+    public void aUserCanRemoveMoviesFromAList() {
+        UserList userList = UserList.builder().name("Action Movies").isPublic(true).moviesInList(movies).user(user).build();
+
+        this.userListRepository.save(userList);
+
+        userList.getMoviesInList().remove(movie1);
+
+        UserList updatedList = this.userListRepository.findById(userList.getId()).orElse(null);
+
+        assertThat(updatedList.getMoviesInList().size()).isEqualTo(1);
     }
 
 }
