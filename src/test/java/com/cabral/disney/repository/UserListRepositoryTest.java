@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -72,9 +73,9 @@ public class UserListRepositoryTest {
 
         User savedUser = this.userRepository.save(this.user);
 
-        UserList userList1 = UserList.builder().name("Action Movies").isPublic(true).moviesInList(Set.of(movie1, movie2)).user(savedUser).build();
+        UserList userList1 = UserList.builder().name("Action Movies").isPublic(true).moviesInList(movies).user(savedUser).build();
 
-        UserList userList2 = UserList.builder().name("Romance Movies").isPublic(true).moviesInList(Set.of(movie1, movie2)).user(savedUser).build();
+        UserList userList2 = UserList.builder().name("Romance Movies").isPublic(true).moviesInList(movies).user(savedUser).build();
 
         this.userListRepository.save(userList1);
         this.userListRepository.save(userList2);
@@ -98,6 +99,19 @@ public class UserListRepositoryTest {
         UserList updatedList = this.userListRepository.findById(userList.getId()).orElse(null);
 
         assertThat(updatedList.getMoviesInList().size()).isEqualTo(1);
+    }
+
+    @Test
+    public void aUserCanDeleteAList(){
+        UserList userList = UserList.builder().name("Action Movies").isPublic(true).moviesInList(movies).user(user).build();
+
+        UserList savedList = this.userListRepository.save(userList);
+
+        this.userListRepository.delete(savedList);
+
+        Optional<UserList> removedUserList = this.userListRepository.findById(savedList.getId());
+
+        assertThat(removedUserList).isNotPresent();
     }
 
 }
