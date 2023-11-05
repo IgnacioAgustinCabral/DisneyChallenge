@@ -114,4 +114,17 @@ public class UserListRepositoryTest {
         assertThat(removedUserList).isNotPresent();
     }
 
+    @Test
+    public void aUserCanChangeTheVisibilityOfAList(){
+        UserList userList = UserList.builder().name("Action Movies").isPublic(true).moviesInList(movies).user(user).build();
+
+        UserList savedList = this.userListRepository.save(userList);
+
+        savedList.setIsPublic(false);
+
+        UserList updatedList = this.userListRepository.save(userList);
+
+        assertThat(updatedList.getIsPublic()).isEqualTo(false);
+    }
+
 }
