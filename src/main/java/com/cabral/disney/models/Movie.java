@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Data
-@EqualsAndHashCode(exclude = {"characterAssociations", "genreAssociations"})//todo excluid genreAssociations
+@EqualsAndHashCode(exclude = {"characterAssociations", "genreAssociations","likedMovies","listsContainingMovie"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -46,9 +46,10 @@ public class Movie {
     )
     private Set<Genre> genreAssociations = new HashSet<>();
 
-    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "movie")
     private Set<LikedMovies> likedMovies;
 
     @ManyToMany(mappedBy = "moviesInList")
+    @ToString.Exclude
     private Set<UserList> listsContainingMovie = new HashSet<>();
 }

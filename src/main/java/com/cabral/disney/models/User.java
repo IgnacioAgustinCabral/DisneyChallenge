@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.util.*;
 
 @Data
+@EqualsAndHashCode(exclude = {"roles", "likedMovies","movieLists"})
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -39,7 +40,7 @@ public class User implements UserDetails {
     )
     private List<Role> roles = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user")
     private Set<LikedMovies> likedMovies;
 
     @OneToMany(mappedBy = "user")

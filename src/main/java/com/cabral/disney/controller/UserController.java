@@ -1,14 +1,19 @@
 package com.cabral.disney.controller;
 
+import com.cabral.disney.exception.ListCreationValidationException;
 import com.cabral.disney.exception.MovieNotFoundException;
 import com.cabral.disney.models.User;
+import com.cabral.disney.payload.request.ListRequest;
 import com.cabral.disney.payload.response.MovieResponse;
+import com.cabral.disney.payload.response.ListResponse;
 import com.cabral.disney.service.LikeMovieService;
+import com.cabral.disney.service.UserListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,10 +23,12 @@ import java.util.Map;
 public class UserController {
 
     private LikeMovieService likeMovieService;
+    private UserListService userListService;
 
     @Autowired
-    public UserController(LikeMovieService likeMovieService) {
+    public UserController(LikeMovieService likeMovieService, UserListService userListService) {
         this.likeMovieService = likeMovieService;
+        this.userListService = userListService;
     }
 
     @PostMapping("/like-movie/{movieId}")
@@ -50,10 +57,13 @@ public class UserController {
     public ResponseEntity<?> listLikedMovies(@PathVariable String username) {
         List<MovieResponse> likedMovies = this.likeMovieService.getMoviesLikedByUser(username);
 
-//        Map<String, List<LikedMovies>> response = new HashMap<>();
-//
-//        response.put("message", likedMovies);
-
         return ResponseEntity.ok(likedMovies);
+    }
+
+    @PostMapping("/new-list")
+    public ResponseEntity<?> createList(@Valid @RequestBody ListRequest listRequest, @AuthenticationPrincipal User user) throws ListCreationValidationException {
+        ListResponse listResponse = this.userListService.createList(listRequest, user);
+
+        return ResponseEntity.ok(listResponse);
     }
 }
