@@ -2,6 +2,7 @@ package com.cabral.disney.service.impl;
 
 import com.cabral.disney.exception.ListCreationValidationException;
 import com.cabral.disney.exception.MovieNotFoundException;
+import com.cabral.disney.exception.UsernameNotFoundException;
 import com.cabral.disney.mapper.UserListMapper;
 import com.cabral.disney.models.Movie;
 import com.cabral.disney.models.User;
@@ -10,10 +11,12 @@ import com.cabral.disney.payload.request.ListRequest;
 import com.cabral.disney.payload.response.ListResponse;
 import com.cabral.disney.repository.MovieRepository;
 import com.cabral.disney.repository.UserListRepository;
+import com.cabral.disney.repository.UserRepository;
 import com.cabral.disney.service.UserListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -21,11 +24,13 @@ import java.util.stream.Collectors;
 public class UserListServiceImpl implements UserListService {
     private UserListRepository userListRepository;
     private MovieRepository movieRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    public UserListServiceImpl(UserListRepository userListRepository, MovieRepository movieRepository) {
+    public UserListServiceImpl(UserListRepository userListRepository, MovieRepository movieRepository, UserRepository userRepository) {
         this.userListRepository = userListRepository;
         this.movieRepository = movieRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -46,10 +51,34 @@ public class UserListServiceImpl implements UserListService {
                 })
                 .collect(Collectors.toSet());
 
-        UserList list = UserListMapper.mapToEntity(listRequest, user , movies);
+        UserList list = UserListMapper.mapToEntity(listRequest, user, movies);
 
         UserList savedList = this.userListRepository.save(list);
 
         return UserListMapper.mapToDTO(savedList);
+    }
+
+    @Override
+    public List<ListResponse> getListForUser(User user) {
+        List<UserList> userLists = this.userListRepository.findUserListByUser_Id(user.getId());
+
+        List<ListResponse> lists = userLists.stream()
+                .map(list -> UserListMapper.mapToDTO(list))
+                .collect(Collectors.toList());
+
+        return lists;
+    }
+
+    @Override
+    public List<ListResponse> getPublicListsByUsername(String username) throws UsernameNotFoundException {
+        User user = this.userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("user " + username + " not found"));
+
+        List<UserList> publicLists = this.userListRepository.findUserListByUser_IdAndIsPublicIsTrue(user.getId());
+
+        List<ListResponse> lists = publicLists.stream()
+                .map(list -> UserListMapper.mapToDTO(list))
+                .collect(Collectors.toList());
+
+        return lists;
     }
 }

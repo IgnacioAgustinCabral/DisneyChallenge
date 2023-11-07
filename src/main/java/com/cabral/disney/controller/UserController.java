@@ -2,6 +2,7 @@ package com.cabral.disney.controller;
 
 import com.cabral.disney.exception.ListCreationValidationException;
 import com.cabral.disney.exception.MovieNotFoundException;
+import com.cabral.disney.exception.UsernameNotFoundException;
 import com.cabral.disney.models.User;
 import com.cabral.disney.payload.request.ListRequest;
 import com.cabral.disney.payload.response.MovieResponse;
@@ -65,5 +66,18 @@ public class UserController {
         ListResponse listResponse = this.userListService.createList(listRequest, user);
 
         return ResponseEntity.ok(listResponse);
+    }
+
+    @GetMapping("/{username}/lists")
+    public ResponseEntity<?> getAllLists(@PathVariable String username,@AuthenticationPrincipal User user) throws UsernameNotFoundException {
+
+        if(user!= null && user.getUsername().equals(username)){
+            List<ListResponse> lists = this.userListService.getListForUser(user);
+            return ResponseEntity.ok(lists);
+        }
+
+        List<ListResponse> publicLists = this.userListService.getPublicListsByUsername(username);
+
+        return ResponseEntity.ok(publicLists);
     }
 }
