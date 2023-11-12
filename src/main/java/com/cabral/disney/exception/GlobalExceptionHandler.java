@@ -83,6 +83,11 @@ public class GlobalExceptionHandler {
         return createNotFoundResponseError(ex.getMessage());
     }
 
+    @ExceptionHandler(ListNameAlreadyExistsException.class)
+    public ResponseEntity<Map<String, String>> handleListNameAlreadyExistsException(ListNameAlreadyExistsException ex) {
+        return createBadRequestResponseError(ex.getMessage());
+    }
+
     private ResponseEntity<Map<String, String>> createNotFoundResponseError(String exceptionMessage) {
         Map<String, String> response = new HashMap<>();
         response.put("message", exceptionMessage);

@@ -1,9 +1,6 @@
 package com.cabral.disney.service.impl;
 
-import com.cabral.disney.exception.ListCreationValidationException;
-import com.cabral.disney.exception.ListNotFoundException;
-import com.cabral.disney.exception.MovieNotFoundException;
-import com.cabral.disney.exception.UsernameNotFoundException;
+import com.cabral.disney.exception.*;
 import com.cabral.disney.mapper.UserListMapper;
 import com.cabral.disney.models.Movie;
 import com.cabral.disney.models.User;
@@ -18,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -36,13 +32,15 @@ public class UserListServiceImpl implements UserListService {
     }
 
     @Override
-    public ListResponse createList(ListRequest listRequest, User user) throws ListCreationValidationException {
+    public ListResponse createList(ListRequest listRequest, User user) throws ListCreationValidationException, ListNameAlreadyExistsException {
         Set<Movie> movies;
         Set<Long> movieIdsInRequest = listRequest.getMovieIds();
 
         if (movieIdsInRequest.size() < 1) {
             throw new ListCreationValidationException("List must have at least one movie");
         }
+
+        existsListName(listRequest);
 
         movies = movieIdsInRequest.stream().map(id -> {
                     try {
@@ -93,5 +91,11 @@ public class UserListServiceImpl implements UserListService {
         this.userListRepository.delete(list);
 
         return list.getName();
+    }
+
+    private void existsListName(ListRequest listRequest) throws ListNameAlreadyExistsException {
+        if (this.userListRepository.existsByName(listRequest.getName())) {
+            throw new ListNameAlreadyExistsException("You already have a list called " + listRequest.getName() + " try another name");
+        }
     }
 }

@@ -12,4 +12,6 @@ public interface UserListRepository extends JpaRepository<UserList, Long> {
     List<UserList> findUserListByUser_IdAndIsPublicIsTrue(Long id);
 
     Optional<UserList> findUserListByNameAndUser_Id(String listName, Long id);
+
+    Boolean existsByName(String name);
 }

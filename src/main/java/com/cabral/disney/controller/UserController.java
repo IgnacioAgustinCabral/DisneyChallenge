@@ -1,9 +1,6 @@
 package com.cabral.disney.controller;
 
-import com.cabral.disney.exception.ListCreationValidationException;
-import com.cabral.disney.exception.ListNotFoundException;
-import com.cabral.disney.exception.MovieNotFoundException;
-import com.cabral.disney.exception.UsernameNotFoundException;
+import com.cabral.disney.exception.*;
 import com.cabral.disney.models.User;
 import com.cabral.disney.payload.request.ListRequest;
 import com.cabral.disney.payload.response.MovieResponse;
@@ -64,7 +61,7 @@ public class UserController {
     }
 
     @PostMapping("/new-list")
-    public ResponseEntity<?> createList(@Valid @RequestBody ListRequest listRequest, @AuthenticationPrincipal User user) throws ListCreationValidationException {
+    public ResponseEntity<?> createList(@Valid @RequestBody ListRequest listRequest, @AuthenticationPrincipal User user) throws ListCreationValidationException, ListNameAlreadyExistsException {
         ListResponse listResponse = this.userListService.createList(listRequest, user);
 
         return ResponseEntity.ok(listResponse);
