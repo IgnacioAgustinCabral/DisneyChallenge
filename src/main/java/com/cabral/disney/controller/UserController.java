@@ -1,6 +1,7 @@
 package com.cabral.disney.controller;
 
 import com.cabral.disney.exception.ListCreationValidationException;
+import com.cabral.disney.exception.ListNotFoundException;
 import com.cabral.disney.exception.MovieNotFoundException;
 import com.cabral.disney.exception.UsernameNotFoundException;
 import com.cabral.disney.models.User;
@@ -10,6 +11,7 @@ import com.cabral.disney.payload.response.ListResponse;
 import com.cabral.disney.service.LikeMovieService;
 import com.cabral.disney.service.UserListService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -69,9 +71,9 @@ public class UserController {
     }
 
     @GetMapping("/{username}/lists")
-    public ResponseEntity<?> getAllLists(@PathVariable String username,@AuthenticationPrincipal User user) throws UsernameNotFoundException {
+    public ResponseEntity<?> getAllLists(@PathVariable String username, @AuthenticationPrincipal User user) throws UsernameNotFoundException {
 
-        if(user!= null && user.getUsername().equals(username)){
+        if (user != null && user.getUsername().equals(username)) {
             List<ListResponse> lists = this.userListService.getListForUser(user);
             return ResponseEntity.ok(lists);
         }
@@ -79,5 +81,23 @@ public class UserController {
         List<ListResponse> publicLists = this.userListService.getPublicListsByUsername(username);
 
         return ResponseEntity.ok(publicLists);
+    }
+
+    @DeleteMapping("/{username}/list/{listName}")
+    public ResponseEntity<?> deleteList(@PathVariable String username, @PathVariable String listName, @AuthenticationPrincipal User user) throws ListNotFoundException {
+        
+        if (!user.getUsername().equals(username)) {
+            Map<String, String> unauthorizedResponse = new HashMap<>();
+            unauthorizedResponse.put("message", "You are not authorized to make this action");
+
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(unauthorizedResponse);
+        }
+        String list = this.userListService.deleteList(username, listName);
+
+        Map<String, String> response = new HashMap<>();
+
+        response.put("message", "Your " + list + " list was deleted");
+
+        return ResponseEntity.ok(response);
     }
 }

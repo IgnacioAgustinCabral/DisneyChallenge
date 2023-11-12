@@ -36,7 +36,9 @@ services:
 
 volumes:
   mysqldb-data:
+    name: mysqldb-data
 
 networks:
   disney:
+    name: disney
     driver: bridge

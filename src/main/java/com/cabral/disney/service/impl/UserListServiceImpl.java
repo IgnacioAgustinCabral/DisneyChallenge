@@ -1,6 +1,7 @@
 package com.cabral.disney.service.impl;
 
 import com.cabral.disney.exception.ListCreationValidationException;
+import com.cabral.disney.exception.ListNotFoundException;
 import com.cabral.disney.exception.MovieNotFoundException;
 import com.cabral.disney.exception.UsernameNotFoundException;
 import com.cabral.disney.mapper.UserListMapper;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -80,5 +82,16 @@ public class UserListServiceImpl implements UserListService {
                 .collect(Collectors.toList());
 
         return lists;
+    }
+
+    @Override
+    public String deleteList(String username, String listName) throws ListNotFoundException {
+        User user = this.userRepository.findByUsername(username).get();
+
+        UserList list = this.userListRepository.findUserListByNameAndUser_Id(listName, user.getId()).orElseThrow(() -> new ListNotFoundException("This list doesn't exist"));
+
+        this.userListRepository.delete(list);
+
+        return list.getName();
     }
 }

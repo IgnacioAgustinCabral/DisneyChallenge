@@ -74,7 +74,12 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity<Map<String, String>> handleUsernameNotFoundException(UsernameNotFoundException ex){
+    public ResponseEntity<Map<String, String>> handleUsernameNotFoundException(UsernameNotFoundException ex) {
+        return createNotFoundResponseError(ex.getMessage());
+    }
+
+    @ExceptionHandler(ListNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleListNotFoundException(ListNotFoundException ex) {
         return createNotFoundResponseError(ex.getMessage());
     }
 
