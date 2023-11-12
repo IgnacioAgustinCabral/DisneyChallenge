@@ -34,6 +34,15 @@ services:
     networks:
       - disney
 
+  adminer:
+    image: adminer:4.8.1-standalone
+    container_name: adminer
+    restart: always
+    ports:
+      - "9090:8080"
+    networks:
+      - disney
+
 volumes:
   mysqldb-data:
     name: mysqldb-data
