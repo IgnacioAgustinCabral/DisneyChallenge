@@ -93,6 +93,31 @@ public class UserListServiceImpl implements UserListService {
         return list.getName();
     }
 
+    @Override
+    public ListResponse updateList(String listName, ListRequest listRequest, User user) throws ListNotFoundException, ListNameAlreadyExistsException {
+        UserList list = this.userListRepository.findUserListByNameAndUser_Id(listName, user.getId()).orElseThrow(() -> new ListNotFoundException("This list doesn't exist"));
+
+        existsListName(listRequest);
+
+        list.setName(listRequest.getName());
+        list.setIsPublic(listRequest.getIsPublic());
+        Set<Movie> movies = listRequest.getMovieIds().stream().map(id ->
+                {
+                    try {
+                        return this.movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundException("Movie not found with ID: " + id));
+                    } catch (MovieNotFoundException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+        ).collect(Collectors.toSet());
+
+        list.setMoviesInList(movies);
+
+        UserList updatedList = this.userListRepository.save(list);
+
+        return UserListMapper.mapToDTO(updatedList);
+    }
+
     private void existsListName(ListRequest listRequest) throws ListNameAlreadyExistsException {
         if (this.userListRepository.existsByName(listRequest.getName())) {
             throw new ListNameAlreadyExistsException("You already have a list called " + listRequest.getName() + " try another name");

@@ -82,7 +82,7 @@ public class UserController {
 
     @DeleteMapping("/{username}/list/{listName}")
     public ResponseEntity<?> deleteList(@PathVariable String username, @PathVariable String listName, @AuthenticationPrincipal User user) throws ListNotFoundException {
-        
+
         if (!user.getUsername().equals(username)) {
             Map<String, String> unauthorizedResponse = new HashMap<>();
             unauthorizedResponse.put("message", "You are not authorized to make this action");
@@ -96,5 +96,12 @@ public class UserController {
         response.put("message", "Your " + list + " list was deleted");
 
         return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/edit/{listName}")
+    public ResponseEntity<?> updateList(@PathVariable String listName, @Valid @RequestBody ListRequest listRequest, @AuthenticationPrincipal User user) throws ListNotFoundException, MovieNotFoundException, ListNameAlreadyExistsException {
+        ListResponse updateList = this.userListService.updateList(listName, listRequest, user);
+
+        return ResponseEntity.ok(updateList);
     }
 }
