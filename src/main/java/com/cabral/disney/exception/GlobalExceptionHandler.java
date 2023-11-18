@@ -68,6 +68,26 @@ public class GlobalExceptionHandler {
         return createBadRequestResponseError(ex.getMessage());
     }
 
+    @ExceptionHandler(ListCreationValidationException.class)
+    public ResponseEntity<Map<String, String>> handleListCreationValidationException(ListCreationValidationException ex) {
+        return createBadRequestResponseError(ex.getMessage());
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleUsernameNotFoundException(UsernameNotFoundException ex) {
+        return createNotFoundResponseError(ex.getMessage());
+    }
+
+    @ExceptionHandler(ListNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleListNotFoundException(ListNotFoundException ex) {
+        return createNotFoundResponseError(ex.getMessage());
+    }
+
+    @ExceptionHandler(ListNameAlreadyExistsException.class)
+    public ResponseEntity<Map<String, String>> handleListNameAlreadyExistsException(ListNameAlreadyExistsException ex) {
+        return createBadRequestResponseError(ex.getMessage());
+    }
+
     private ResponseEntity<Map<String, String>> createNotFoundResponseError(String exceptionMessage) {
         Map<String, String> response = new HashMap<>();
         response.put("message", exceptionMessage);

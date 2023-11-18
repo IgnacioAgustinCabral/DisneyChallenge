@@ -1,9 +1,6 @@
 package com.cabral.disney.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,10 +9,12 @@ import javax.persistence.*;
 import java.util.*;
 
 @Data
+@EqualsAndHashCode(exclude = {"roles", "likedMovies","movieLists"})
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
+@Table(name = "`user`")
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,8 +40,12 @@ public class User implements UserDetails {
     )
     private List<Role> roles = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user")
     private Set<LikedMovies> likedMovies;
+
+    @OneToMany(mappedBy = "user")
+    @ToString.Exclude
+    private List<UserList> movieLists = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
