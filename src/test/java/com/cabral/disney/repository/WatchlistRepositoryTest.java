@@ -59,4 +59,16 @@ public class WatchlistRepositoryTest {
 
         assertThat(list.size()).isEqualTo(2);
     }
+
+    @Test
+    public void userCanRemoveMovieFromWatchlist() {
+        Watchlist movieInWatchlist = this.watchlistRepository.findByMovie_IdAndUser_Id(savedMovie1.getId(), savedUser.getId()).get();
+
+        this.watchlistRepository.delete(movieInWatchlist);
+
+        List<Watchlist> moviesInWatchlist = this.watchlistRepository.findAllByUser_Id(savedUser.getId());
+
+        assertThat(moviesInWatchlist.size()).isEqualTo(1);
+        assertThat(moviesInWatchlist.get(0).getMovie().getTitle()).isEqualTo(savedMovie2.getTitle());
+    }
 }
