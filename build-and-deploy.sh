@@ -4,5 +4,4 @@ docker image prune -f
 
 # Start the application using Docker Compose
 echo "Starting the application with Docker Compose..."
-docker-compose build --no-cache
-docker-compose up
+docker-compose up --build
