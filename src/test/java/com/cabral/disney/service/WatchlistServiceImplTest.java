@@ -1,6 +1,7 @@
 package com.cabral.disney.service;
 
 import com.cabral.disney.exception.EmptyWatchlistException;
+import com.cabral.disney.exception.MovieNotFoundException;
 import com.cabral.disney.models.Movie;
 import com.cabral.disney.models.Watchlist;
 import com.cabral.disney.payload.response.WatchlistResponse;
@@ -16,12 +17,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class WatchlistServiceImplTest {
@@ -55,13 +56,24 @@ public class WatchlistServiceImplTest {
     }
 
     @Test
-    public void givenEmptyWatchlist_whenRetrieveWatchlist_thenThrowsEmptyWatchlistException(){
+    public void givenEmptyWatchlist_whenRetrieveWatchlist_thenThrowsEmptyWatchlistException() {
         when(this.watchlistRepository.findAllByUser_Id(anyLong())).thenReturn(Collections.emptyList());
 
-        assertThrows(EmptyWatchlistException.class,() -> {
+        assertThrows(EmptyWatchlistException.class, () -> {
             this.watchlistService.getAllMoviesInWatchlist(1L);
         });
 
+    }
+
+    @Test
+    public void givenExistingMovieIdAndUserId_whenRemovingMovieFromWatchlist_thenVerifyDeletion() throws MovieNotFoundException {
+        Watchlist mock = mock(Watchlist.class);
+
+        when(this.watchlistRepository.findByMovie_IdAndUser_Id(anyLong(), anyLong())).thenReturn(Optional.of(mock));
+
+        this.watchlistService.removeMovieFromWatchlist(1L, 1L);
+
+        verify(this.watchlistRepository).delete(mock);
     }
 
 }

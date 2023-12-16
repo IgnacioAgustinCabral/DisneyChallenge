@@ -1,6 +1,7 @@
 package com.cabral.disney.service.impl;
 
 import com.cabral.disney.exception.EmptyWatchlistException;
+import com.cabral.disney.exception.MovieNotFoundException;
 import com.cabral.disney.mapper.WatchlistMapper;
 import com.cabral.disney.models.Watchlist;
 import com.cabral.disney.payload.response.WatchlistResponse;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,6 +38,17 @@ public class WatchlistServiceImpl implements WatchlistService {
 
         } else {
             throw new EmptyWatchlistException("No films in watchlist yet");
+        }
+    }
+
+    @Override
+    public void removeMovieFromWatchlist(Long movieId, Long userId) throws MovieNotFoundException {
+        Optional<Watchlist> watchlistOptional = this.watchlistRepository.findByMovie_IdAndUser_Id(movieId, userId);
+
+        if (watchlistOptional.isPresent()) {
+            this.watchlistRepository.delete(watchlistOptional.get());
+        } else {
+            throw new MovieNotFoundException("Movie not found in the watchlist");
         }
     }
 
