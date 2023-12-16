@@ -1,5 +1,6 @@
 package com.cabral.disney.service.impl;
 
+import com.cabral.disney.exception.EmptyWatchlistException;
 import com.cabral.disney.mapper.WatchlistMapper;
 import com.cabral.disney.models.Watchlist;
 import com.cabral.disney.payload.response.WatchlistResponse;
@@ -22,14 +23,20 @@ public class WatchlistServiceImpl implements WatchlistService {
     }
 
     @Override
-    public List<WatchlistResponse> getAllMoviesInWatchlist(Long userId) {
+    public List<WatchlistResponse> getAllMoviesInWatchlist(Long userId) throws EmptyWatchlistException {
         List<Watchlist> watchlists = this.watchlistRepository.findAllByUser_Id(userId);
 
-        List<WatchlistResponse> watchlistResponses = watchlists.stream()
-                .map(watchlist -> WatchlistMapper.mapToDTO(watchlist))
-                .collect(Collectors.toList());
+        if (!watchlists.isEmpty()) {
 
-        return watchlistResponses;
+            List<WatchlistResponse> watchlistResponses = watchlists.stream()
+                    .map(watchlist -> WatchlistMapper.mapToDTO(watchlist))
+                    .collect(Collectors.toList());
+
+            return watchlistResponses;
+
+        } else {
+            throw new EmptyWatchlistException("No films in watchlist yet");
+        }
     }
 
 }

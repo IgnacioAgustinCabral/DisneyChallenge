@@ -1,7 +1,7 @@
 package com.cabral.disney.service;
 
+import com.cabral.disney.exception.EmptyWatchlistException;
 import com.cabral.disney.models.Movie;
-import com.cabral.disney.models.User;
 import com.cabral.disney.models.Watchlist;
 import com.cabral.disney.payload.response.WatchlistResponse;
 import com.cabral.disney.repository.WatchlistRepository;
@@ -14,9 +14,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -30,32 +32,36 @@ public class WatchlistServiceImplTest {
     @InjectMocks
     private WatchlistServiceImpl watchlistService;
 
-    private Watchlist watchlist1;
-    private Watchlist watchlist2;
-
-    @BeforeEach
-    public void init() {
+    @Test
+    public void getAllMoviesInAUserWatchlistAndReturnWatchlistResponse() throws EmptyWatchlistException {
         Movie movie1 = mock(Movie.class);
         when(movie1.getId()).thenReturn(1L);
 
         Movie movie2 = mock(Movie.class);
         when(movie2.getId()).thenReturn(2L);
 
-        watchlist1 = mock(Watchlist.class);
+        Watchlist watchlist1 = mock(Watchlist.class);
         when(watchlist1.getMovie()).thenReturn(movie1);
 
-        watchlist2 = mock(Watchlist.class);
+        Watchlist watchlist2 = mock(Watchlist.class);
         when(watchlist2.getMovie()).thenReturn(movie2);
-    }
 
-    @Test
-    public void getAllMoviesInAUserWatchlistAndReturnWatchlistResponse() {
         when(this.watchlistRepository.findAllByUser_Id(anyLong())).thenReturn(Arrays.asList(watchlist1, watchlist2));
 
         List<WatchlistResponse> watchlistResponses = this.watchlistService.getAllMoviesInWatchlist(1L);
 
         assertThat(watchlistResponses.size()).isEqualTo(2);
         assertThat(watchlistResponses.get(0)).isInstanceOf(WatchlistResponse.class);
+    }
+
+    @Test
+    public void givenEmptyWatchlist_whenRetrieveWatchlist_thenThrowsEmptyWatchlistException(){
+        when(this.watchlistRepository.findAllByUser_Id(anyLong())).thenReturn(Collections.emptyList());
+
+        assertThrows(EmptyWatchlistException.class,() -> {
+            this.watchlistService.getAllMoviesInWatchlist(1L);
+        });
+
     }
 
 }
