@@ -7,7 +7,6 @@ import com.cabral.disney.models.Watchlist;
 import com.cabral.disney.payload.response.WatchlistResponse;
 import com.cabral.disney.repository.WatchlistRepository;
 import com.cabral.disney.service.impl.WatchlistServiceImpl;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -74,6 +73,17 @@ public class WatchlistServiceImplTest {
         this.watchlistService.removeMovieFromWatchlist(1L, 1L);
 
         verify(this.watchlistRepository).delete(mock);
+    }
+
+    @Test
+    public void givenNonExistentMovieId_whenRemovingMovieFromWatchlist_thenThrowException() {
+        when(this.watchlistRepository.findByMovie_IdAndUser_Id(anyLong(), anyLong())).thenReturn(Optional.empty());
+
+
+        assertThrows(MovieNotFoundException.class, () -> {
+            this.watchlistService.removeMovieFromWatchlist(1L, 1L);
+        });
+
     }
 
 }
