@@ -10,4 +10,6 @@ public interface WatchlistService {
     List<WatchlistResponse> getAllMoviesInWatchlist(Long userId) throws EmptyWatchlistException;
 
     void removeMovieFromWatchlist(Long movieId, Long userId) throws MovieNotFoundException;
+
+    String addMovieToWatchlist(Long movieId, String username) throws MovieNotFoundException;
 }

@@ -3,8 +3,11 @@ package com.cabral.disney.service;
 import com.cabral.disney.exception.EmptyWatchlistException;
 import com.cabral.disney.exception.MovieNotFoundException;
 import com.cabral.disney.models.Movie;
+import com.cabral.disney.models.User;
 import com.cabral.disney.models.Watchlist;
 import com.cabral.disney.payload.response.WatchlistResponse;
+import com.cabral.disney.repository.MovieRepository;
+import com.cabral.disney.repository.UserRepository;
 import com.cabral.disney.repository.WatchlistRepository;
 import com.cabral.disney.service.impl.WatchlistServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -28,6 +31,10 @@ public class WatchlistServiceImplTest {
 
     @Mock
     private WatchlistRepository watchlistRepository;
+    @Mock
+    private MovieRepository movieRepository;
+    @Mock
+    private UserRepository userRepository;
 
     @InjectMocks
     private WatchlistServiceImpl watchlistService;
@@ -84,6 +91,22 @@ public class WatchlistServiceImplTest {
             this.watchlistService.removeMovieFromWatchlist(1L, 1L);
         });
 
+    }
+
+    @Test
+    public void userCanAddMovieToTheirWatchlist() throws MovieNotFoundException {
+        Movie movie1 = mock(Movie.class);
+        when(movie1.getTitle()).thenReturn("Movie Title");
+
+        User user = mock(User.class);
+
+        when(this.movieRepository.findById(anyLong())).thenReturn(Optional.of(movie1));
+        when(this.userRepository.findByUsername(anyString())).thenReturn(Optional.of(user));
+
+        when(this.watchlistRepository.save(any(Watchlist.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        String response = this.watchlistService.addMovieToWatchlist(1L, "username");
+
+        assertThat(response).isEqualTo(movie1.getTitle());
     }
 
 }
