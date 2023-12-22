@@ -1,7 +1,7 @@
 FROM maven:3.9.1-eclipse-temurin-11-alpine AS dependencies
 WORKDIR /app
 COPY pom.xml .
-RUN mvn -e -B dependency:resolve
+RUN mvn -e -B dependency:go-offline
 
 FROM dependencies AS build
 COPY src ./src

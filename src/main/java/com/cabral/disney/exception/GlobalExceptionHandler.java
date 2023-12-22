@@ -1,18 +1,21 @@
 package com.cabral.disney.exception;
 
 import com.cabral.disney.payload.response.ValidationErrorResponse;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException ex) {
@@ -86,6 +89,28 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ListNameAlreadyExistsException.class)
     public ResponseEntity<Map<String, String>> handleListNameAlreadyExistsException(ListNameAlreadyExistsException ex) {
         return createBadRequestResponseError(ex.getMessage());
+    }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<Map<String, String>> handleExpiredJwtException() {
+        return createForbiddenResponseError("Expired JWT, log in again.");
+    }
+
+    @ExceptionHandler(SignatureException.class)
+    public ResponseEntity<Map<String, String>> handleSignatureException(SignatureException ex) {
+        return createForbiddenResponseError(ex.getMessage());
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<Map<String, String>> handleBadCredentialsException() {
+        return createForbiddenResponseError("Incorrect username or password");
+                //podria ser tambien un 401 en vez de 403
+    }
+
+    private ResponseEntity<Map<String, String>> createForbiddenResponseError(String exceptionMessage) {
+        Map<String, String> response = new HashMap<>();
+        response.put("message", exceptionMessage);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
     }
 
     private ResponseEntity<Map<String, String>> createNotFoundResponseError(String exceptionMessage) {
