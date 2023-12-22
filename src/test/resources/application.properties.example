@@ -3,3 +3,11 @@ spring.datasource.username=kippur
 spring.datasource.password=
 spring.datasource.driver-class-name=org.h2.Driver
 spring.jpa.hibernate.ddl-auto=create-drop
+
+#JWT
+security.jwt.secret-key = your-secret-key
+security.jwt.expiration = your-expiration-in-minutes
+
+#MAIL
+twilio-sendgrid.mail.api-key = your-api-key
+from.email.address = your-sendgrid-mail

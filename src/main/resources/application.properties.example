@@ -16,3 +16,4 @@ security.jwt.expiration = your-expiration-in-minutes
 
 #MAIL
 twilio-sendgrid.mail.api-key = your-api-key
+from.email.address = your-sendgrid-mail
