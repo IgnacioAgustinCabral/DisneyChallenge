@@ -1,3 +1,8 @@
+### Requirements:
+- Maven 3.8.7 
+- Java 11
+- MySQL 8.0
+
 ### Objetivo 🎯
 
 Para lograr la solicitud del cliente, deberás desarrollar una API que permita navegar por
