@@ -47,6 +47,7 @@ public class SecurityConfig {
                         .mvcMatchers(HttpMethod.DELETE, "/user/**").authenticated()
                         .mvcMatchers(HttpMethod.PUT, "/user/**").authenticated()
                         .mvcMatchers(HttpMethod.POST, "/watchlist/{movieId}/add-to-watchlist").hasRole("USER")
+                        .mvcMatchers(HttpMethod.DELETE,"/watchlist/{movieId}/remove").hasRole("USER")
                         .anyRequest().permitAll())
                 .sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authProvider)

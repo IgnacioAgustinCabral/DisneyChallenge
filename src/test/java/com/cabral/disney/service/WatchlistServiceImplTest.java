@@ -16,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -73,22 +74,27 @@ public class WatchlistServiceImplTest {
 
     @Test
     public void givenExistingMovieIdAndUserId_whenRemovingMovieFromWatchlist_thenVerifyDeletion() throws MovieNotFoundException {
-        Watchlist mock = mock(Watchlist.class);
+        byte[] image = new byte[]{0x12, 0x34, 0x56, 0x78};
+        User user = User.builder().email("asd@gmail.com").password("123123").profile_picture(image).username("Kippur").build();
 
-        when(this.watchlistRepository.findByMovie_IdAndUser_Id(anyLong(), anyLong())).thenReturn(Optional.of(mock));
+        Movie movie = Movie.builder().title("Aladin").creationDate(LocalDate.of(1994, 2, 2)).synopsis("SYNOPSISISIS").build();
 
-        this.watchlistService.removeMovieFromWatchlist(1L, 1L);
+        Watchlist watchlist = Watchlist.builder().movie(movie).user(user).build();
+        when(this.userRepository.findByUsername(anyString())).thenReturn(Optional.of(user));
+        when(this.watchlistRepository.findByMovie_IdAndUser_Id(1L, user.getId())).thenReturn(Optional.of(watchlist));
+        this.watchlistService.removeMovieFromWatchlist(1L, user.getUsername());
 
-        verify(this.watchlistRepository).delete(mock);
+        verify(this.watchlistRepository).delete(watchlist);
     }
 
     @Test
     public void givenNonExistentMovieId_whenRemovingMovieFromWatchlist_thenThrowException() {
+        when(this.userRepository.findByUsername(anyString())).thenReturn(Optional.ofNullable(mock(User.class)));
         when(this.watchlistRepository.findByMovie_IdAndUser_Id(anyLong(), anyLong())).thenReturn(Optional.empty());
 
 
         assertThrows(MovieNotFoundException.class, () -> {
-            this.watchlistService.removeMovieFromWatchlist(1L, 1L);
+            this.watchlistService.removeMovieFromWatchlist(1L, "Example");
         });
 
     }

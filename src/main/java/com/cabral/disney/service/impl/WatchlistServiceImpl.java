@@ -11,6 +11,7 @@ import com.cabral.disney.repository.MovieRepository;
 import com.cabral.disney.repository.UserRepository;
 import com.cabral.disney.repository.WatchlistRepository;
 import com.cabral.disney.service.WatchlistService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class WatchlistServiceImpl implements WatchlistService {
 
     private WatchlistRepository watchlistRepository;
@@ -50,11 +52,13 @@ public class WatchlistServiceImpl implements WatchlistService {
     }
 
     @Override
-    public void removeMovieFromWatchlist(Long movieId, Long userId) throws MovieNotFoundException {
-        Optional<Watchlist> watchlistOptional = this.watchlistRepository.findByMovie_IdAndUser_Id(movieId, userId);
+    public String removeMovieFromWatchlist(Long movieId, String username) throws MovieNotFoundException {
+        User user = this.userRepository.findByUsername(username).get();
+        Optional<Watchlist> watchlistOptional = this.watchlistRepository.findByMovie_IdAndUser_Id(movieId, user.getId());
 
         if (watchlistOptional.isPresent()) {
             this.watchlistRepository.delete(watchlistOptional.get());
+            return watchlistOptional.get().getMovie().getTitle();
         } else {
             throw new MovieNotFoundException("Movie not found in the watchlist");
         }
