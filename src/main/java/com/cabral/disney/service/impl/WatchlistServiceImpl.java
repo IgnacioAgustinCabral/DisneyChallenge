@@ -60,7 +60,7 @@ public class WatchlistServiceImpl implements WatchlistService {
             this.watchlistRepository.delete(watchlistOptional.get());
             return watchlistOptional.get().getMovie().getTitle();
         } else {
-            throw new MovieNotFoundException("Movie not found in the watchlist");
+            throw new MovieNotFoundException("Movie not found in your watchlist");
         }
     }
 

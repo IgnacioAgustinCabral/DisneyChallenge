@@ -37,8 +37,8 @@ public class WatchlistController {
     @DeleteMapping("/{movieId}/remove")
     public ResponseEntity<?> removeFromWatchlist(@PathVariable Long movieId, @AuthenticationPrincipal UserDetails user) throws MovieNotFoundException {
         String movieTitle = this.watchlistService.removeMovieFromWatchlist(movieId, user.getUsername());
-        Map<String,String> response = new HashMap<>();
-        response.put("message",movieTitle+" was removed from your watchlist.");
+        Map<String, String> response = new HashMap<>();
+        response.put("message", movieTitle + " was removed from your watchlist.");
 
         return ResponseEntity.ok(response);
     }
