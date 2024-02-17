@@ -32,11 +32,11 @@ public class JwtService {
         // Add user roles to the claims
         claims.put("roles", user.getAuthorities());
         // Add user id to the claims
-        claims.put("id",user.getId());
-        return getToken(claims, user);
+        claims.put("id", user.getId());
+        return generateToken(claims, user);
     }
 
-    private String getToken(Map<String, Object> extraClaims, UserDetails user) {
+    private String generateToken(Map<String, Object> extraClaims, UserDetails user) {
         return Jwts.builder()
                 .setClaims(extraClaims)
                 .setSubject(user.getUsername())
@@ -53,7 +53,7 @@ public class JwtService {
     }
 
     public String getUsernameFromToken(String token) {
-        return getClaim(token,Claims::getSubject);
+        return getClaim(token, Claims::getSubject);
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
@@ -74,11 +74,11 @@ public class JwtService {
         return claimResolver.apply(claims);
     }
 
-    private Date getExpiration(String token){
-        return getClaim(token,Claims::getExpiration);
+    private Date getExpiration(String token) {
+        return getClaim(token, Claims::getExpiration);
     }
 
-    private boolean isTokenExpired(String token){
+    private boolean isTokenExpired(String token) {
         return getExpiration(token).before(new Date());
     }
 }
