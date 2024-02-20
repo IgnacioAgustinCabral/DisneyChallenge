@@ -9,7 +9,7 @@ import javax.persistence.*;
 import java.util.*;
 
 @Data
-@EqualsAndHashCode(exclude = {"roles", "likedMovies","movieLists"})
+@EqualsAndHashCode(exclude = {"roles", "likedMovies","movieLists","watchedMovies"})
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -46,6 +46,10 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     @ToString.Exclude
     private List<UserList> movieLists = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    @ToString.Exclude
+    private List<WatchedMovie> watchedMovies = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
