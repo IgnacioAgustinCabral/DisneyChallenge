@@ -65,4 +65,17 @@ public class WatchedMoviesRepositoryTest {
         assertThat(retrievedUser.getWatchedMovies().size()).isEqualTo(2);
     }
 
+    @Test
+    public void aUserCanUnmarkAMovieAsWatched(){
+        entityManager.flush();
+
+        User retrievedUser = this.userRepository.findByUsername(user.getUsername()).get();
+
+        this.watchedMoviesRepository.delete(retrievedUser.getWatchedMovies().get(0));
+
+        User modifiedWatchedMovies = this.userRepository.findByUsername(user.getUsername()).get();
+
+        assertThat(modifiedWatchedMovies.getWatchedMovies().size()).isEqualTo(2);
+    }
+
 }
