@@ -5,4 +5,6 @@ import com.cabral.disney.payload.response.WatchedMovieResponse;
 
 public interface WatchedMovieService {
     WatchedMovieResponse addToWatchedMovies(String username, Long movieId) throws MovieNotFoundException;
+
+    WatchedMovieResponse removeFromWatchedMovies(String username, Long movieId) throws MovieNotFoundException;
 }

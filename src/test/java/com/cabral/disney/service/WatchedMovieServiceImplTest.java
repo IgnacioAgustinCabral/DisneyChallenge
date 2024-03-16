@@ -19,8 +19,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class WatchedMovieServiceImplTest {
@@ -43,8 +42,6 @@ public class WatchedMovieServiceImplTest {
 
         Movie movie = mock(Movie.class);
 
-        WatchedMovie.builder().movie(movie).user(user).build();
-
         when(this.movieRepository.findById(anyLong())).thenReturn(Optional.of(movie));
         when(this.userRepository.findByUsername(anyString())).thenReturn(Optional.of(user));
 
@@ -54,5 +51,25 @@ public class WatchedMovieServiceImplTest {
         assertThat(responseDTO).isInstanceOf(WatchedMovieResponse.class);
         assertThat(responseDTO.getMovie()).isEqualTo(movie);
         assertThat(responseDTO.getWatchedStatus()).isTrue();
+    }
+
+    @Test
+    public void unmarkingAMovieAsWatchedReturnsWatchedMovieResponseDTO() throws MovieNotFoundException {
+        User user = mock(User.class);
+
+        Movie movie = mock(Movie.class);
+
+        WatchedMovie watchedMovie = WatchedMovie.builder().movie(movie).user(user).build();
+
+        when(this.movieRepository.findById(anyLong())).thenReturn(Optional.of(movie));
+        when(this.userRepository.findByUsername(anyString())).thenReturn(Optional.of(user));
+        when(this.watchedMoviesRepository.findByMovie_IdAndUser_Id(anyLong(), anyLong())).thenReturn(Optional.of(watchedMovie));
+
+        WatchedMovieResponse watchedMovieResponse = this.watchedMoviesService.removeFromWatchedMovies("some_username", 1L);
+
+        assertThat(watchedMovieResponse).isInstanceOf(WatchedMovieResponse.class);
+        assertThat(watchedMovieResponse.getMovie()).isEqualTo(movie);
+        assertThat(watchedMovieResponse.getWatchedStatus()).isFalse();
+        verify(this.watchedMoviesRepository).delete(watchedMovie);
     }
 }
