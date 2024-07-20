@@ -9,6 +9,6 @@ RUN mvn -e -B clean package -DskipTests
 
 FROM eclipse-temurin:11-jre-focal
 WORKDIR /api
-EXPOSE 8080
+EXPOSE 9090
 COPY --from=build /app/target/disney-0.0.1-SNAPSHOT.jar ./app.jar
 ENTRYPOINT ["java","-jar","app.jar"]
